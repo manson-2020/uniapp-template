@@ -1,0 +1,27 @@
+{
+    "local": {
+        "isSecureProtocol": true,
+        "host": "",
+        "port": {
+            "socket": "",
+            "api": ""
+        }
+    },
+    "online": {
+        "isSecureProtocol": true,
+        "host": "",
+        "port": {
+            "socket": "",
+            "api": ""
+        }
+    },
+    "path": {
+        "api": "/home",
+        "socket": "",
+        "login": "/api/login"
+    },
+    "page": {
+        "login": "",
+        "home": "/pages/index"
+    }
+}
