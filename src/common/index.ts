@@ -1,7 +1,7 @@
 import { Storage, transformQueryString } from '@/libs/utils';
 import Vue from "vue";
 import request, { Options } from "../libs/request";
-import config, { local, online, path, loginPage } from "./config.json";
+import config, { local, online, path, page } from "./config.json";
 
 export const env: any = process.env.NODE_ENV === 'development' ? local : online;
 
@@ -18,13 +18,15 @@ const pretreatment: { debounce: boolean, codeHandler: { [props: string]: any } }
             pretreatment.debounce = true;
             Storage.clear();
 
-            loginPage ?
+            page.login ?
                 uni.showToast({
                     title: data.msg,
                     icon: "none",
                     duration: 1200,
                     success: () =>
-                        setTimeout(() => uni.reLaunch({ url: `/pages/${loginPage}` }), 1200)
+                        setTimeout(() => uni.reLaunch({
+                            url: page.login
+                        }), 1200)
                 }) :
                 uni.login({
                     complete: uni.hideLoading,
@@ -52,7 +54,7 @@ const pretreatment: { debounce: boolean, codeHandler: { [props: string]: any } }
 
                         const pages = getCurrentPages(),
                             { route, options }: any = pages[pages.length - 1],
-                            url = `/${route}?${transformQueryString(options)}`;
+                            url = `/ ${route} ? ${transformQueryString(options)}`;
 
                         pretreatment.debounce = false;
 
@@ -65,7 +67,7 @@ const pretreatment: { debounce: boolean, codeHandler: { [props: string]: any } }
 
         "1": ({ data }: UniApp.RequestSuccessCallbackResult): any => data,
 
-        "3": (res: UniApp.RequestSuccessCallbackResult) => {
+        "-2": (res: UniApp.RequestSuccessCallbackResult) => {
             uni.showModal({ title: "Prompt", content: JSON.stringify(res, null, 2), showCancel: false, confirmText: "i got it" });
         },
 

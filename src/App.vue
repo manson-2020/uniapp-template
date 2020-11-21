@@ -3,10 +3,6 @@
     import { Storage } from "@/libs/utils";
     export default Vue.extend({
         mpType: "app",
-        onLaunch() {},
-        onHide() {
-            console.log("App Hide");
-        },
         onPageNotFound() {
             uni.redirectTo({ url: "/pages/notFound" });
         },
