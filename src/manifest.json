@@ -1,5 +1,5 @@
 {
-    "name" : "掌上电工",
+    "name" : "uni-app",
     "appid" : "__UNI__DC79FBA",
     "description" : "...",
     "versionName" : "1.2.7",
@@ -60,71 +60,8 @@
                 "idfa" : false
             },
             /* SDK配置 */
-            "sdkConfigs" : {
-                "share" : {
-                    "weixin" : {
-                        "appid" : "wx582d582a06124354",
-                        "UniversalLinks" : "https://www.ah108.cn/"
-                    },
-                    "qq" : {
-                        "appid" : "101857861"
-                    }
-                },
-                "oauth" : {
-                    "weixin" : {
-                        "appid" : "wx582d582a06124354",
-                        "appsecret" : "560a999c183166e53e2a2573e777bd2e",
-                        "UniversalLinks" : "https://www.ah108.cn/"
-                    }
-                },
-                "ad" : {},
-                "speech" : {
-                    "ifly" : {}
-                },
-                "payment" : {
-                    "weixin" : {
-                        "__platform__" : [ "ios", "android" ],
-                        "appid" : "wx582d582a06124354",
-                        "UniversalLinks" : "https://www.ah108.cn/"
-                    },
-                    "alipay" : {
-                        "__platform__" : [ "ios", "android" ]
-                    },
-                    "appleiap" : {}
-                }
-            },
-            "icons" : {
-                "android" : {
-                    "hdpi" : "unpackage/res/icons/72x72.png",
-                    "xhdpi" : "unpackage/res/icons/96x96.png",
-                    "xxhdpi" : "unpackage/res/icons/144x144.png",
-                    "xxxhdpi" : "unpackage/res/icons/192x192.png"
-                },
-                "ios" : {
-                    "appstore" : "unpackage/res/icons/1024x1024.png",
-                    "ipad" : {
-                        "app" : "unpackage/res/icons/76x76.png",
-                        "app@2x" : "unpackage/res/icons/152x152.png",
-                        "notification" : "unpackage/res/icons/20x20.png",
-                        "notification@2x" : "unpackage/res/icons/40x40.png",
-                        "proapp@2x" : "unpackage/res/icons/167x167.png",
-                        "settings" : "unpackage/res/icons/29x29.png",
-                        "settings@2x" : "unpackage/res/icons/58x58.png",
-                        "spotlight" : "unpackage/res/icons/40x40.png",
-                        "spotlight@2x" : "unpackage/res/icons/80x80.png"
-                    },
-                    "iphone" : {
-                        "app@2x" : "unpackage/res/icons/120x120.png",
-                        "app@3x" : "unpackage/res/icons/180x180.png",
-                        "notification@2x" : "unpackage/res/icons/40x40.png",
-                        "notification@3x" : "unpackage/res/icons/60x60.png",
-                        "settings@2x" : "unpackage/res/icons/58x58.png",
-                        "settings@3x" : "unpackage/res/icons/87x87.png",
-                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
-                        "spotlight@3x" : "unpackage/res/icons/120x120.png"
-                    }
-                }
-            }
+            "sdkConfigs" : {},
+            "icons" : {}
         },
         "nativePlugins" : {},
         "uniStatistics" : {
@@ -158,12 +95,12 @@
         "devServer" : {
             "https" : false
         },
-        "domain" : "https://ios.dgong365.com",
+        "domain" : "",
         "optimization" : {
             "treeShaking" : {
                 "enable" : true
             }
         },
-        "title" : "掌上电工"
+        "title" : "uni-app"
     }
 }
