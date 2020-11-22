@@ -15,14 +15,14 @@ export const $config: any = Object.assign(config, {
 const pretreatment: { debounce: boolean, codeHandler: { [props: string]: any } } = {
     debounce: false,
     codeHandler: {
-        "-1": ({ data }: { data: Response }) => {
+        "-1": ({ data: { msg: title } }: { data: Response }) => {
             if (pretreatment.debounce) return;
             pretreatment.debounce = true;
             Storage.clear();
 
             page.login ?
                 uni.showToast({
-                    title: data.msg,
+                    title,
                     icon: "none",
                     duration: 1200,
                     success: () => setTimeout(() => uni.reLaunch({ url: page.login }), 1200)
