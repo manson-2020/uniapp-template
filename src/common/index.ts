@@ -1,5 +1,7 @@
-import { Storage, transformQueryString } from '@/libs/utils';
+
 import Vue from "vue";
+import { Response } from "./type";
+import { Storage, transformQueryString } from '@/libs/utils';
 import request, { Options } from "../libs/request";
 import config, { local, online, path, page } from "./config.json";
 
@@ -13,7 +15,7 @@ export const $config: any = Object.assign(config, {
 const pretreatment: { debounce: boolean, codeHandler: { [props: string]: any } } = {
     debounce: false,
     codeHandler: {
-        "-1": ({ data }: any) => {
+        "-1": ({ data }: { data: Response }) => {
             if (pretreatment.debounce) return;
             pretreatment.debounce = true;
             Storage.clear();
@@ -23,17 +25,14 @@ const pretreatment: { debounce: boolean, codeHandler: { [props: string]: any } }
                     title: data.msg,
                     icon: "none",
                     duration: 1200,
-                    success: () =>
-                        setTimeout(() => uni.reLaunch({
-                            url: page.login
-                        }), 1200)
+                    success: () => setTimeout(() => uni.reLaunch({ url: page.login }), 1200)
                 }) :
                 uni.login({
                     complete: uni.hideLoading,
                     success: async ({ code }) => {
 
                         const [logFail, loginRes]: any = (await uni.request({
-                            url: `${$config.API_URL}/${path.login}`,
+                            url: `${$config.API_URL}${path.api}${path.login}`,
                             data: { code }
                         }));
 
@@ -63,11 +62,11 @@ const pretreatment: { debounce: boolean, codeHandler: { [props: string]: any } }
                 });
         },
 
-        "0": ({ data: result }: any) => { uni.showToast({ title: result.msg, icon: "none" }) },
+        "0": ({ data: result }: { data: Response }) => { uni.showToast({ title: result.msg, icon: "none" }) },
 
-        "1": ({ data }: UniApp.RequestSuccessCallbackResult): any => data,
+        "1": ({ data }: { data: Response }): Response => data,
 
-        "-2": (res: UniApp.RequestSuccessCallbackResult) => {
+        "-2": (res: { data: Response }) => {
             uni.showModal({ title: "Prompt", content: JSON.stringify(res, null, 2), showCancel: false, confirmText: "i got it" });
         },
 
