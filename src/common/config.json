@@ -16,12 +16,12 @@
         }
     },
     "path": {
-        "api": "/home",
+        "api": "/api",
         "socket": "",
-        "login": "/api/login"
+        "login": "/login"
     },
     "page": {
-        "login": "",
-        "home": "/pages/index"
+        "login": "/pages/login",
+        "home": "/pages/home"
     }
 }
