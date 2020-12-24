@@ -1,0 +1,28 @@
+{
+    "local": {
+        "isSecureProtocol": false,
+        "host": "192.168.1.123",
+        "port": {
+            "socket": "",
+            "api": "44"
+        }
+    },
+    "online": {
+        "isSecureProtocol": true,
+        "host": "xc.watsys.cn",
+        "port": {
+            "socket": "",
+            "api": ""
+        }
+    },
+    "path": {
+        "api_prefix": "/api",
+        "socket": "",
+        "login_api": "/api/login"
+    },
+    "page": {
+        "login": "",
+        "home": "/pages/home"
+    },
+    "authorizationValidPeriod": 86400
+}

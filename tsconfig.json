@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "resolveJsonModule": true,
     "target": "esnext",
     "module": "esnext",
     "strict": true,
@@ -8,7 +9,7 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "experimentalDecorators":true,
+    "experimentalDecorators": true,
     "sourceMap": true,
     "skipLibCheck": true,
     "baseUrl": ".",
@@ -34,5 +35,5 @@
     "node_modules",
     "unpackage",
     "src/**/*.nvue"
-  ]
+  ],
 }

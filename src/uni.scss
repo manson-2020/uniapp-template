@@ -21,32 +21,32 @@ $uni-color-warning: #f0ad4e;
 $uni-color-error: #dd524d;
 
 /* 文字基本颜色 */
-$uni-text-color:#333;//基本色
-$uni-text-color-inverse:#fff;//反色
-$uni-text-color-grey:#999;//辅助灰色，如加载更多的提示信息
+$uni-text-color: #333; //基本色
+$uni-text-color-inverse: #fff; //反色
+$uni-text-color-grey: #999; //辅助灰色，如加载更多的提示信息
 $uni-text-color-placeholder: #808080;
-$uni-text-color-disable:#c0c0c0;
+$uni-text-color-disable: #c0c0c0;
 
 /* 背景颜色 */
-$uni-bg-color:#ffffff;
-$uni-bg-color-grey:#f8f8f8;
-$uni-bg-color-hover:#f1f1f1;//点击状态颜色
-$uni-bg-color-mask:rgba(0, 0, 0, 0.4);//遮罩颜色
+$uni-bg-color: #ffffff;
+$uni-bg-color-grey: #f8f8f8;
+$uni-bg-color-hover: #f1f1f1; //点击状态颜色
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4); //遮罩颜色
 
 /* 边框颜色 */
-$uni-border-color:#c8c7cc;
+$uni-border-color: #c8c7cc;
 
 /* 尺寸变量 */
 
 /* 文字尺寸 */
-$uni-font-size-sm:24rpx;
-$uni-font-size-base:28rpx;
-$uni-font-size-lg:32rpx;
+$uni-font-size-sm: 24rpx;
+$uni-font-size-base: 28rpx;
+$uni-font-size-lg: 32rpx;
 
 /* 图片尺寸 */
-$uni-img-size-sm:40rpx;
-$uni-img-size-base:52rpx;
-$uni-img-size-lg:80rpx;
+$uni-img-size-sm: 40rpx;
+$uni-img-size-base: 52rpx;
+$uni-img-size-lg: 80rpx;
 
 /* Border Radius */
 $uni-border-radius-sm: 4rpx;
@@ -68,9 +68,128 @@ $uni-spacing-col-lg: 24rpx;
 $uni-opacity-disabled: 0.3; // 组件禁用态的透明度
 
 /* 文章场景相关 */
-$uni-color-title: #2C405A; // 文章标题颜色
-$uni-font-size-title:40rpx;
+$uni-color-title: #2c405a; // 文章标题颜色
+$uni-font-size-title: 40rpx;
 $uni-color-subtitle: #555555; // 二级标题颜色
-$uni-font-size-subtitle:36rpx;
-$uni-color-paragraph: #3F536E; // 文章段落颜色
-$uni-font-size-paragraph:30rpx;
+$uni-font-size-subtitle: 36rpx;
+$uni-color-paragraph: #3f536e; // 文章段落颜色
+$uni-font-size-paragraph: 30rpx;
+
+// 公共类
+@for $flex from 1 through 5 {
+    .f#{$flex} {
+        flex: $flex;
+    }
+}
+
+@each $fd, $value in (col: column, row: row, rerow: row-reverse) {
+    .fd-#{$fd} {
+        flex-direction: $value;
+    }
+}
+
+@each $ai, $value in (start: flex-start, center: center, end: flex-end, baseline: baseline) {
+    .ai-#{$ai} {
+        align-items: $value;
+    }
+}
+
+@each $jc,
+    $value in (sa: space-around, sb: space-between, se: space-evenly, center: center, start: flex-start, end: flex-end)
+{
+    .jc-#{$jc} {
+        justify-content: $value;
+    }
+}
+
+@each $position in (fixed, relative, absolute, static) {
+    .#{$position} {
+        position: $position;
+    }
+}
+
+@each $text in (center, left, right, justify) {
+    .text-#{$text} {
+        text-align: $text;
+    }
+}
+
+@for $i from 0 through 50 {
+    @each $wrapper,
+        $box
+            in (
+                top: top,
+                bottom: bottom,
+                left: left,
+                right: right,
+                width: width,
+                height: height,
+                lh: line-height,
+                mt: margin-top,
+                mr: margin-right,
+                mb: margin-bottom,
+                ml: margin-left,
+                pt: padding-top,
+                pr: padding-right,
+                pb: padding-bottom,
+                pl: padding-left,
+                fs: font-size
+            )
+    {
+        .#{$wrapper}-#{$i * 2} {
+            #{$box}: #{$i * 2}rpx;
+        }
+    }
+
+    @if $i < 30 {
+        .br-#{$i * 2} {
+            border-radius: #{$i * 2}rpx;
+        }
+    }
+}
+
+@each $size in (auto, 20, 25, 30, 50, 70, 100) {
+    @if $size == 50 {
+        .br-circle {
+            border-radius: 50%;
+        }
+    }
+    @if $size == auto {
+        .width-#{$size} {
+            width: $size;
+        }
+        .height-#{$size} {
+            height: $size;
+        }
+    } @else {
+        .width-#{$size}vw {
+            width: #{$size}vw;
+        }
+        .width-#{$size}percent {
+            width: $size#{"%"};
+        }
+
+        .height-#{$size}vh {
+            height: #{$size}vh;
+        }
+        .height-#{$size}percent {
+            height: $size#{"%"};
+        }
+
+        .top-#{$size}percent {
+            top: $size#{"%"};
+        }
+        .left-#{$size}percent {
+            left: $size#{"%"};
+        }
+    }
+}
+
+@for $i from 1 to 10 {
+    .opacity-0#{$i} {
+        opacity: $i / 10;
+    }
+    .fw-#{$i * 100} {
+        font-weight: $i * 100;
+    }
+}

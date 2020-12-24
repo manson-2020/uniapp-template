@@ -1,0 +1,103 @@
+page,
+view,
+picker,
+button,
+label,
+swiper,
+swiper-item,
+scroll-view,
+cover-view,
+navigator,
+radio-group,
+radio,
+checkbox-group,
+checkbox {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+page {
+    background-color: #fff;
+}
+
+label,
+navigator {
+    flex-direction: row;
+    align-items: center;
+}
+
+scroll-view {
+    width: auto;
+}
+
+radio {
+    .wx-radio-input,
+    .uni-radio-input {
+        width: 13px;
+        height: 13px;
+    }
+
+    .wx-radio-input.wx-radio-input-checked,
+    .uni-radio-input.uni-radio-input-checked {
+        &::before {
+            font-size: 15px;
+        }
+    }
+}
+
+checkbox, switch {
+    .wx-checkbox-input,
+    .uni-checkbox-input {
+        width: 13px;
+        height: 13px;
+        background-color: transparent;
+        border-color: #79b5ee;
+    }
+
+    .wx-checkbox-input.wx-checkbox-input-checked,
+    .uni-checkbox-input.uni-checkbox-input-checked {
+        background-color: transparent;
+        &::before {
+            font-size: 30px;
+            top: 30%;
+        }
+    }
+
+    &:not([disabled]) {
+        .wx-checkbox-input:hover,
+        .uni-checkbox-input:hover {
+            border-color: #79b5ee;
+        }
+    }
+}
+
+picker[disabled],
+button[disabled] {
+    opacity: 0.5;
+}
+
+// restore
+.extend {
+    view,
+    picker,
+    button,
+    label,
+    swiper,
+    scroll-view,
+    cover-view,
+    navigator,
+    swiper,
+    swiper-item,
+    radio,
+    radio-group,
+    checkbox-group,
+    checkbox {
+        display: block;
+        box-sizing: content-box;
+    }
+}
