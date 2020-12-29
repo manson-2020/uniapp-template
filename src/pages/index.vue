@@ -15,7 +15,9 @@
     export default class Index extends Vue {
         readonly title: string = "Hello";
 
-        private onLoad() {}
+        private onLoad() {
+            
+        }
     }
 </script>
 

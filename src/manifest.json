@@ -4,7 +4,10 @@
     "description": "",
     "versionName": "1.0.0",
     "versionCode": "100",
-	"transformPx":false,
+    "transformPx":false,
+    "networkTimeout": {
+        "request": 18000
+    },
     "app-plus": { /* 5+App特有相关 */
         "modules": { /* 模块配置 */
 

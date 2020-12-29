@@ -1,6 +1,6 @@
 import { pageData, Storage, transformQueryString } from '@/libs/utils';
 import Vue from "vue";
-import request, { Options } from "../libs/request";
+import request, { RequestOptions } from "../libs/request";
 import { Response } from './type';
 import config, { local, online, path, page, authorizationValidPeriod } from "./config.json";
 
@@ -90,11 +90,9 @@ const pretreatment: AnyObject = {
     }
 }
 
-
-request.defaults.timeout = 9000;
 request.defaults.baseURL = $config.API_URL;
 
-request.interceptors.request.use<Options>(
+request.interceptors.request.use<RequestOptions>(
     params => {
         params.header.token = Storage.get("userInfo")?.token || "";
 
@@ -104,7 +102,6 @@ request.interceptors.request.use<Options>(
             }
         }
 
-        console.warn(`Request: ${params.baseURL + params.url}`, params);
         return params;
     }
 );
@@ -117,7 +114,7 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             if (Object.keys(pretreatment.codeHandler).includes(result.code.toString())) {
                 return pretreatment.codeHandler[result.code.toString()](result)
             }
-            
+
             uni.showToast({ title: "Server error, Please try again later.", icon: "none" });
             return Promise.reject(result);
 
@@ -125,7 +122,7 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             uni.showToast({ title, icon: "none" });
             return Promise.reject(title);
         } finally {
-            console.warn(`Response: ${res.header.Request_URL}`, res);
+            console.warn(`Response:`, res);
         }
     },
     err => {
