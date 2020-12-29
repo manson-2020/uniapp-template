@@ -1,5 +1,5 @@
 
-declare const WeixinJSBridge: any;
+declare const WeixinJSBridge: AnyObject;
 
 export const prefixZero = (n: number | string): string => String(+n > 9 ? n : `0${n}`)
 
@@ -102,8 +102,6 @@ export function transformQueryString(params: string | AnyObject): any {
 
     throw Error("Parameter error");
 }
-
-export const objectIsEmpty = (object: any): boolean => !!Object.keys(object).length
 
 export const isPhoneNumber = (str: string): boolean => /^1[0-9]{10}$/.test(str)
 
