@@ -1,29 +1,25 @@
 
+import { isAbsoluteURL, combineURLs, bind, extend } from "./utils";
 
-import {
-    merge,
-    deepMerge,
-    isAbsoluteURL,
-    combineURLs,
-    bind,
-    extend
-} from './utils';
-
-interface RequestMethodOptions {
+export interface RequestOptions {
+    /**
+     * 资源url
+     */
+    url?: string,
+    baseURL?: string;
     /**
      * 请求的参数
      */
-    data?: { [props: string]: any },
-    /**
-    * 基础地址
-    */
-    baseURL?: string,
-    transformRequest?: <T>(data: T) => T,
-    transformResponse?: <T>(data: T) => T,
+    data?: AnyObject;
     /**
      * 设置请求的 header，header 中不能设置 Referer。
      */
     header?: any;
+    /**
+     * 默认为 GET
+     * 可以是：OPTIONS，GET，HEAD，POST，PUT，DELETE，TRACE，CONNECT
+     */
+    method?: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT';
     /**
      * 超时时间
      */
@@ -49,8 +45,8 @@ interface RequestMethodOptions {
      */
     firstIpv4?: boolean;
     /**
-     * 成功返回的回调函数
-     */
+    * 成功返回的回调函数
+    */
     success?: (result: UniApp.RequestSuccessCallbackResult) => void;
     /**
      * 失败的回调函数
@@ -62,132 +58,69 @@ interface RequestMethodOptions {
     complete?: (result: UniApp.GeneralCallbackResult) => void;
 }
 
-type Methods = 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT';
+type Method = string & RequestOptions["method"];
 
-interface RequestOptions extends RequestMethodOptions {
-    /**
-    * 默认为 GET
-    * 可以是：OPTIONS，GET，HEAD，POST，PUT，DELETE，TRACE，CONNECT
-    */
-    method?: Methods;
-}
-
-export interface Options extends UniApp.RequestOptions {
-    data?: { [props: string]: any },
-    /**
-    * 基础地址
-    */
-    baseURL?: string,
-    transformRequest?: <T>(data: T) => T,
-    transformResponse?: <T>(data: T) => T,
-}
-
-
-const defaults: Options = {
-    url: '',
-    baseURL: '',
-    dataType: 'json',
-    responseType: 'text',
-    header: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    // timeout: 0,
-    transformRequest: data => data,
-
-    transformResponse: data => data,
-
-};
-const methods: Array<Methods> = ['OPTIONS', 'GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'TRACE', 'CONNECT']
-
-const dispatchRequest = (option: Options): Promise<any> => {
-
-    if (option.baseURL && !isAbsoluteURL(option.url)) {
-        option.url = combineURLs(option.baseURL, option.url);
-    }
-    option.data = option.transformRequest && option.transformRequest(option.data);
-
-    return new Promise((resolve, reject: (err: UniApp.GeneralCallbackResult) => void) => {
-        const requestTask = uni.request({
-            url: option.url,
-            data: option.data || {},
-            header: option.header,
-            method: option.method,
-            dataType: option.dataType,
-            success(res) {
-                res.header.Request_URL = option.url;
-                resolve(option.transformResponse && option.transformResponse(res))
-            },
-            fail(err) { reject(err) },
-            complete(res) { option.complete && option.complete(res) }
-        });
-
-        if (option.timeout && +option.timeout > 1000) {
-            setTimeout(() => {
-                requestTask.abort();
-                resolve('request timeout');
-            }, option.timeout)
-        }
-    });
-}
-
+const methods: Method[] = ["OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"];
 
 class InterceptorManager {
-    handlers: Array<{ fulfilled: (res: any) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void } | null>;
+    protected handlers: Array<{ fulfilled: (res: any) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void } | null>;
     constructor() {
         this.handlers = [];
     }
 
-    use<T>(fulfilled: (res: T) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void): number {
+    public use<T>(fulfilled: (res: T) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void): number {
         this.handlers.push({ fulfilled, rejected });
         return this.handlers.length - 1;
     }
 
-    eject(id: number): void {
+    public eject(id: number): void {
         if (this.handlers[id]) {
             this.handlers[id] = null;
         }
     }
 
-    forEach(fn: (e: { fulfilled: (res: any) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void }) => void): void {
+    public forEach(fn: (e: { fulfilled: (res: any) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void }) => void): void {
         this.handlers.forEach(e => e && fn(e))
     }
 }
 
 class Request {
-    defaults: Options;
-    interceptors: {
+
+    [method: string]: any;
+
+    protected interceptors: {
         request: InterceptorManager,
         response: InterceptorManager
     };
-    [method: string]: any;
-    constructor(option: Options) {
-        this.defaults = option;
+
+    constructor(public defaults: RequestOptions = {}) {
         this.interceptors = {
             request: new InterceptorManager(),
             response: new InterceptorManager()
         };
-
-        methods.forEach(method =>
-        (this[method.toLowerCase()] =
-            (url: string, data: { [key: string]: any }, options: RequestOptions = {}): Promise<any> =>
-                this.request(url, { method, data, ...options }))
-        );
+        methods.forEach((method: Method) => (
+            this[method.toLowerCase()] = (
+                url: string,
+                data: AnyObject,
+                options: RequestOptions = {}
+            ) => this.request({ ...options, url, data, method })
+        ));
     }
-    request(url: string, option: RequestOptions): Promise<any> {
 
-        const params = deepMerge(this.defaults, option, { url });
+    public request(options: RequestOptions) {
 
-        let chain: any[] = [dispatchRequest, null];
-        let promise = Promise.resolve(params);
+        let [chain, promise]: [any[], Promise<any>] = [
+            [this.dispatch.bind(this), null],
+            Promise.resolve(Object.assign(this.defaults, options))
+        ];
 
-
-        this.interceptors.request.forEach((interceptor: { fulfilled: (res: Options) => void }) => {
+        this.interceptors.request.forEach((interceptor: { fulfilled: (res: RequestOptions) => void }) => {
             chain.unshift(interceptor.fulfilled, null);
         });
 
         this.interceptors.response.forEach((interceptor: {
-            fulfilled: (res: UniApp.RequestSuccessCallbackResult) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void
+            fulfilled: (res: UniApp.RequestSuccessCallbackResult) => void,
+            rejected?: (err: UniApp.GeneralCallbackResult) => void
         }) => {
             chain.push(interceptor.fulfilled, interceptor.rejected);
         });
@@ -198,12 +131,50 @@ class Request {
 
         return promise;
     }
+
+    private dispatch(params: RequestOptions) {
+
+        (["success", "fail"] as ("success" | "fail")[]).forEach(item => {
+            params[item] && delete params[item];
+        });
+
+        if (this.defaults.baseURL && !isAbsoluteURL(params.url)) {
+            params.url = combineURLs(this.defaults.baseURL, params.url);
+        }
+
+        return new Promise((resolve, reject) => {
+            const requestTask = uni.request({
+                url: params.url as string,
+                ...params,
+                success: res => resolve(res),
+                fail: err => reject(err),
+                complete(res) { params.complete && params.complete(res) },
+            });
+
+            params.timeout && setTimeout(() => {
+                requestTask.abort();
+                resolve("request timeout");
+            }, +params.timeout)
+        })
+    }
 }
 
+type RequestMethod = 'options' | 'get' | 'head' | 'post' | 'put' | 'delete' | 'trace' | 'connect';
+type RequestReturn<T> = (url?: string, data?: AnyObject, options?: RequestOptions) => Promise<T>
 
-const createInstance = (option: Options): any => {
-    let context = new Request(option);
-    let instance = bind(Request.prototype.request, context);
+export interface RequestInstance<T> extends Record<RequestMethod, RequestReturn<T>> {
+    (options: RequestOptions): Promise<T>
+    defaults: RequestOptions,
+    interceptors: {
+        request: InterceptorManager,
+        response: InterceptorManager
+    },
+    [property: string]: any
+}
+
+const createInstance = (requestOptions: RequestOptions): any => {
+    let context = new Request(requestOptions),
+        instance = bind(Request.prototype.request, context);
 
     extend(instance, Request.prototype, context);
     extend(instance, context);
@@ -211,32 +182,20 @@ const createInstance = (option: Options): any => {
     return instance;
 }
 
-interface RequestReturn<T, T1 = AnyObject> {
-    (url?: string, data?: T1, option?: RequestOptions): Promise<T>
+const defaults = {
+    baseURL: "",
+    dataType: "json",
+    header: {},
+    responseType: "text",
+    // timeout: 1000
 }
-export interface RequestInstance<T> extends RequestReturn<T, RequestOptions> {
-    defaults: Options,
-    interceptors: {
-        request: InterceptorManager,
-        response: InterceptorManager
-    },
-    get: RequestReturn<T>,
-    post: RequestReturn<T>,
-    put: RequestReturn<T>,
-    delete: RequestReturn<T>,
-    options: RequestReturn<T>,
-    head: RequestReturn<T>,
-    trace: RequestReturn<T>,
-    connect: RequestReturn<T>,
-    [props: string]: any
-}
+
 const request: RequestInstance<any> = createInstance(defaults);
 
 // 用于创建多个实例
-request.create = (option: any) => createInstance(merge(defaults, option));
+request.create = (options: AnyObject) => createInstance(Object.assign(defaults, options));
 
 // 并发请求数据处理
-request.spread = (callback: any) => (...arg: AnyArray) => callback.apply(null, arg);
+request.spread = (callback: Function) => (...arg: AnyArray) => callback.apply(null, arg);
 
 export default request;
-
