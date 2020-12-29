@@ -1,0 +1,63 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Android模拟器",
+            "type": "shell",
+            "osx": {
+                "command": "~/Library/Android/sdk/emulator/emulator",
+                "args": [
+                    "-netdelay",
+                    "none",
+                    "-netspeed",
+                    "full",
+                    "-avd",
+                    "Pixel_3a_API_30_x86"
+                ]
+            },
+            "windows": {
+                "command": "echo ——————",
+            }
+        },
+        {
+            "label": "微信开发者工具dev",
+            "type": "shell",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "osx": {
+                "command": "/Applications/wechatwebdevtools.app/Contents/MacOS/cli"
+            },
+            "windows": {
+                "command": "D:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat"
+            },
+            "args": [
+                "open",
+                "--project",
+                "${workspaceFolder}/dist/dev/mp-weixin"
+            ],
+        },
+        {
+            "label": "微信开发者工具build",
+            "type": "shell",
+            "osx": {
+                "command": "/Applications/wechatwebdevtools.app/Contents/MacOS/cli"
+            },
+            "windows": {
+                "command": "D:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "args": [
+                "open",
+                "--project",
+                "${workspaceFolder}/dist/build/mp-weixin"
+            ]
+        }
+    ]
+}
