@@ -1,0 +1,279 @@
+view,
+picker,
+button,
+label,
+swiper-item,
+scroll-view,
+cover-view,
+navigator,
+radio-group,
+checkbox-group {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+label {
+    flex-direction: row;
+    align-items: center;
+}
+
+scroll-view {
+    width: auto;
+}
+
+picker[disabled],
+button[disabled] {
+    opacity: 0.5;
+}
+
+// restore
+@each $tag
+    in (
+        view,
+        picker,
+        button,
+        label,
+        swiper,
+        scroll-view,
+        cover-view,
+        navigator,
+        swiper,
+        swiper-item,
+        radio,
+        radio-group,
+        checkbox-group,
+        checkbox
+    )
+{
+    #{$tag}.block {
+        display: block;
+    }
+    #{$tag}.content-box {
+        box-sizing: content-box;
+    }
+}
+
+@each $color in (#e15a52, #acacac, #f33, #808080, #ccc, #ddd, #fff, #333, #222, #666, #aaa, #eee, #888, #999) {
+    .color-#{str-slice("#{$color}", 2)} {
+        color: $color;
+    }
+}
+
+@each $bgc
+    in (#20283e, #1aad19, #09bd62, #ee5460, #fe5a59, #f9f9f9, #dfdfdf, #f5f5f5, #1b1b1b, #eee, #fff, #ccc, transparent)
+{
+    .bgc-#{str-slice("#{$bgc}", 2)} {
+        background-color: $bgc;
+    }
+}
+
+.border-none {
+    border: none;
+}
+
+.tap-hover {
+    opacity: 0.6;
+}
+
+.input {
+    border: none;
+    outline: none;
+    background-color: transparent;
+}
+
+.safe-area-inset-top {
+    height: var(--status-bar-height);
+    padding-top: constant(safe-area-inset-top);
+    padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-inset-bottom {
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.shelter {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(51, 51, 51, 0.3);
+}
+
+.oh {
+    overflow: hidden;
+}
+
+.word-break-all {
+    word-break: break-all;
+}
+
+.ellipsis {
+    display: inline-block;
+    overflow: hidden;
+    min-width: 0;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.multi-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+// 公共类
+@for $flex from 1 through 5 {
+    .f#{$flex} {
+        flex: $flex;
+    }
+}
+
+@each $fd, $value in (col: column, row: row, rerow: row-reverse, recol: column-reverse) {
+    .fd-#{$fd} {
+        flex-direction: $value;
+    }
+}
+
+@each $align, $value in (start: flex-start, center: center, end: flex-end, baseline: baseline) {
+    .ai-#{$align} {
+        align-items: $value;
+    }
+    .as-#{$align} {
+        align-self: $value;
+    }
+    .ac-#{$align} {
+        align-content: $value;
+    }
+}
+
+@each $justify,
+    $value in (sa: space-around, sb: space-between, se: space-evenly, center: center, start: flex-start, end: flex-end)
+{
+    .jc-#{$justify} {
+        justify-content: $value;
+    }
+    .js-#{$justify} {
+        justify-self: $value;
+    }
+    .ji-#{$justify} {
+        justify-items: $value;
+    }
+}
+
+@each $position in (fixed, relative, absolute, static) {
+    .#{$position} {
+        position: $position;
+    }
+}
+
+@each $text in (center, left, right, justify) {
+    .text-#{$text} {
+        text-align: $text;
+    }
+}
+
+@for $i from 0 through 50 {
+    @each $wrapper,
+        $box
+            in (
+                top: top,
+                bottom: bottom,
+                left: left,
+                right: right,
+                width: width,
+                height: height,
+                mt: margin-top,
+                mr: margin-right,
+                mb: margin-bottom,
+                ml: margin-left,
+                pt: padding-top,
+                pr: padding-right,
+                pb: padding-bottom,
+                pl: padding-left,
+                fs: font-size
+            )
+    {
+        .#{$wrapper}-#{$i * 2} {
+            #{$box}: #{$i * 2}rpx;
+        }
+    }
+
+    @if $i < 30 {
+        .br-#{$i * 2} {
+            border-radius: #{$i * 2}rpx;
+        }
+    }
+
+    @if $i <= 5 {
+        .lh-#{$i} {
+            line-height: $i;
+        }
+    } @else {
+        .lh-#{$i * 2} {
+            line-height: #{$i * 2}rpx;
+        }
+    }
+}
+
+@each $size in (auto, 20, 25, 30, 50, 70, 100) {
+    @if $size == 50 {
+        .br-circle {
+            border-radius: 50%;
+        }
+    }
+    @if $size == auto {
+        .width-#{$size} {
+            width: $size;
+        }
+        .height-#{$size} {
+            height: $size;
+        }
+    } @else {
+        .width-#{$size}vw {
+            width: #{$size}vw;
+        }
+        .width-#{$size}percent {
+            width: #{$size}#{"%"};
+        }
+
+        .height-#{$size}vh {
+            height: #{$size}vh;
+        }
+        .height-#{$size}percent {
+            height: #{$size}#{"%"};
+        }
+
+        .top-#{$size}percent {
+            top: #{$size}#{"%"};
+        }
+        .left-#{$size}percent {
+            left: #{$size}#{"%"};
+        }
+        .bottom-#{$size}percent {
+            bottom: #{$size}#{"%"};
+        }
+        .right-#{$size}percent {
+            right: #{$size}#{"%"};
+        }
+    }
+}
+
+@for $i from 1 to 10 {
+    .opacity-0#{$i} {
+        opacity: $i / 10;
+    }
+    .fw-#{$i * 100} {
+        font-weight: $i * 100;
+    }
+}

@@ -1,0 +1,25 @@
+{
+	"pages": [
+		{
+			"path": "pages/index"
+		},
+		{
+			"path": "pages/common/webview"
+		},
+		{
+			"path": "pages/common/notFound",
+			"style": {
+				"navigationBarTitleText": "Oops!",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "black",
+				"disableScroll": true
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#fff",
+		"backgroundColor": "#f5f5f5"
+	}
+}

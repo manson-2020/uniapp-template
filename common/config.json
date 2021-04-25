@@ -1,0 +1,20 @@
+{
+    "beta": {
+        "http": "",
+        "socket": ""
+    },
+    "release": {
+        "http": "",
+        "socket": ""
+    },
+    "path": {
+        "api": "/api",
+        "socket": "/",
+        "login": "/user/miniLogin"
+    },
+    "page": {
+        "authorization": "",
+        "home": "/pages/index"
+    },
+    "authorizationValidPeriod": 2592000
+}
