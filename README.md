@@ -1,4 +1,4 @@
-# uni-app
+# uni-app template
 
 ## Project setup
 ```
