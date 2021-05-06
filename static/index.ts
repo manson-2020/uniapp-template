@@ -74,7 +74,7 @@ const pretreatment: AnyObject = {
 request.defaults.baseURL = API_URL;
 
 request.interceptors.request.use<RequestOptions>(
-    params => {
+    (params: AnyObject) => {
         params.data || (params.data = {});
         params.header.Authorization = Storage.get("authorization") || "";
 
@@ -88,7 +88,7 @@ request.interceptors.request.use<RequestOptions>(
 );
 
 request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
-    res => {
+    (res: AnyObject) => {
         const result = <Response | string>res.data;
 
         try {
@@ -122,7 +122,7 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             console.warn(`Response:`, res);
         }
     },
-    err => {
+    (err: AnyObject) => {
         uni.showToast({ title: err.errMsg, icon: "none" })
         return Promise.reject(err)
     }
