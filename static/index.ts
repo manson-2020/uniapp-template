@@ -1,18 +1,18 @@
-import { pageData, sleep, Storage, transformQueryString } from '@/libs/utils';
 import Vue from "vue";
-import request from "../libs/request";
+import { pageData, sleep, Storage, transformQueryString } from './libs/utils';
+import request from "./libs/request";
 import { Response, RequestOptions } from './type';
 import config from "./config.json";
 
 const { beta, release, path, page, authorizationValidPeriod } = config,
     env: AnyObject = process.env.NODE_ENV === 'development' ? beta : release,
-    [API_URL, SOCKET_URL]: [string, string] = [`${env.http}/${path.api || ""}`, `${env.socket}/${path.socket || ""}`];
+    [API_URL, SOCKET_URL]: [string, string] = [`${env.http}${path.api || ""}`, `${env.socket}${path.socket || ""}`];
 
 const pretreatment: AnyObject = {
     throttle: false,
     times: 0,
     codeHandler: {
-        "401": async ({ msg: title }: Response): Promise<string | void> => {
+        notAuth: async ({ msg: title }: Response): Promise<string | void> => {
             if (pretreatment.throttle) return;
             pretreatment.throttle = true;
 
@@ -32,18 +32,21 @@ const pretreatment: AnyObject = {
                 return Promise.reject(loginFail.errMsg);
             }
 
-            const [reqFail, result]: any = await uni.request({ url: `${API_URL}${path.login}?code=${loginRes.code}` });
+            const [reqFail, result]: any = await uni.request({
+                url: `${API_URL}${path.login}`,
+                data: { code: loginRes.code }
+            });
 
             if (reqFail) {
                 uni.showToast({ title: reqFail.errMsg, icon: "none" });
                 return;
             }
-            const { code, data, msg } = result.data;
-            if (!+code) {
+            const { error, data, msg } = result.data;
+            if (+error) {
                 uni.showToast({ title: msg, icon: "none" });
                 return;
             }
-            Storage.set("authorization", data?.token, authorizationValidPeriod);
+            Storage.set("authorization", data.token, authorizationValidPeriod);
 
             if (++pretreatment.times >= 3) {
                 const [, modal]: any = await uni.showModal({
@@ -52,19 +55,19 @@ const pretreatment: AnyObject = {
                 });
                 if (modal.cancel) return;
             }
+            pretreatment.times = 0;
             pretreatment.throttle = false;
             const { route, options }: any = pageData(-1);
             uni.reLaunch({ url: `/${route}?${transformQueryString(options)}` });
             return Promise.reject(title);
         },
-        "0": (res: Response) => {
+
+        fail: (res: Response) => {
             uni.showToast({ title: res.msg, icon: "none" });
             return Promise.reject(res)
         },
 
-        "1": (res: Response) => Promise.resolve(res),
-
-        "2": (res: Response) => Promise.reject(res)
+        success: (res: Response) => Promise.resolve(res),
     }
 }
 
@@ -73,7 +76,7 @@ request.defaults.baseURL = API_URL;
 request.interceptors.request.use<RequestOptions>(
     params => {
         params.data || (params.data = {});
-        params.header.token = Storage.get("authorization") || "";
+        params.header.Authorization = Storage.get("authorization") || "";
 
         for (const key in params.data) {
             if ([undefined, null, NaN].includes(params.data && params.data[key])) {
@@ -89,10 +92,17 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
         const result = <Response | string>res.data;
 
         try {
-            if (typeof (result) === "object" && Object.keys(pretreatment.codeHandler).includes(result.code.toString())) {
-                return pretreatment.codeHandler[result.code.toString()](result)
+            if (typeof (result) === "object") {
+                const { success, notAuth, fail } = pretreatment.codeHandler;
+                switch (+result.error) {
+                    case 0:
+                        return success(result);
+                    case -3:
+                        return notAuth(result);
+                    default:
+                        return fail(result);
+                }
             }
-
             uni.showModal({
                 title: "Error Message",
                 content: <string>result,

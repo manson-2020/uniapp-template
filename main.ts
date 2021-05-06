@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import "./common"
-import store from "./libs/store"
-import "./static/js/ican-H5Api.js";
+import store from "./static/libs/store"
+import "./static/libs/ican-H5Api.js";
 
 Vue.config.productionTip = false
 

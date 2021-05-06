@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Vue from "vue";
-	import { Storage } from "./libs/utils";
+	import { Storage } from "./static/libs/utils";
 	export default Vue.extend({
 		mpType: "app",
 		globalData: {},
