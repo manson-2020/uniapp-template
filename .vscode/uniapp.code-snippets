@@ -1,14 +1,17 @@
 {
 	"uniapp-template": {
-		"prefix": "uniapp",
+		"prefix": "uniapp:ts/scss",
 		"body": [
 			"<template>",
 			"\t<view class=\"root\">${0}$TM_FILENAME_BASE</view>",
 			"</template>",
 			"",
-			"<script>",
-			"\texport default {",
-			"\t\t",
+			"<script lang=\"ts\">",
+			"\timport { Vue, Component } from \"vue-property-decorator\";",
+			"",
+			"\t@Component",
+			"\texport default class ${0}$TM_FILENAME_BASE extends Vue {",
+			"\t\t// component property",
 			"\t}",
 			"</script>",
 			"",
