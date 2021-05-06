@@ -85,7 +85,7 @@ export interface Pager<T> {
 declare module "vue/types/vue" {
     interface Vue {
         $request: RequestInstance<Response>;
-        $config: object
+        $config: AnyObject
     }
 }
 
