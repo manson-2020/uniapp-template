@@ -41,8 +41,8 @@ const pretreatment: AnyObject = {
                 uni.showToast({ title: reqFail.errMsg, icon: "none" });
                 return;
             }
-            const { error, data, msg } = result.data;
-            if (+error) {
+            const { code, data, msg } = result.data;
+            if (+code) {
                 uni.showToast({ title: msg, icon: "none" });
                 return;
             }
@@ -94,7 +94,7 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
         try {
             if (typeof (result) === "object") {
                 const { success, notAuth, fail } = pretreatment.codeHandler;
-                switch (+result.error) {
+                switch (+result.code) {
                     case 0:
                         return success(result);
                     case -3:
