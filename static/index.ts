@@ -46,12 +46,14 @@ const pretreatment: AnyObject = {
                 uni.showToast({ title: msg, icon: "none" });
                 return;
             }
-            Storage.set("authorization", data.token, authorizationValidPeriod);
+            Storage.set("authorization", data, authorizationValidPeriod);
 
             if (++pretreatment.times >= 3) {
                 const [, modal]: any = await uni.showModal({
-                    title: "prompt",
-                    content: "Multiple redirects detected, Whether to continue?"
+                    title: "Prompt",
+                    content: "Multiple redirects detected, Whether to continue?",
+                    confirmText: "Continue",
+                    cancelText: "Cancel"
                 });
                 if (modal.cancel) return;
             }
@@ -106,7 +108,8 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             uni.showModal({
                 title: "Error Message",
                 content: <string>result,
-                confirmText: "Copy",
+                confirmText: "Copy", 
+                cancelText: "Cancel",
                 success: ({ confirm }) =>
                     confirm && uni.setClipboardData({
                         data: <string>result,
