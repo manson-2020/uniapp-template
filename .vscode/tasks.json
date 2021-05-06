@@ -1,0 +1,109 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Android Simulator",
+            "type": "shell",
+            "command": "emulator",
+            "args": [
+                "-avd",
+                "Pixel_3a_XL_API_28",
+                "-no-snapshot-load",
+                "-dns-server",
+                "114.114.114.114,8.8.8.8"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "HbuilderX",
+            "presentation": {
+                "clear": true
+            },
+            "type": "shell",
+            "osx": {
+                "command": "/Applications/HBuilderX.app/Contents/MacOS/cli ${input:HbuilderX cliArgs}"
+            },
+            "windows": {
+                "command": "C:\\Programs\\HBuilderX\\cli ${input:HbuilderX cliArgs}"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/.hbuilderx"
+            }
+        },
+        {
+            "label": "weChatDevTool",
+            "type": "shell",
+            "presentation": {
+                "clear": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/dist/${input:pickeMode}/mp-weixin/"
+            },
+            "osx": {
+                "command": "/Applications/wechatwebdevtools.app/Contents/MacOS/cli ${input:WeChatDevTool cliArgs}"
+            },
+            "windows": {
+                "command": "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat ${input:WeChatDevTool cliArgs}"
+            }
+        },
+        {
+            "label": "start HbuilderApp",
+            "type": "shell",
+            "command": "adb",
+            "args": [
+                "shell",
+                "monkey",
+                "-p",
+                "io.dcloud.HBuilder",
+                "-c",
+                "android.intent.category.LAUNCHER",
+                "1"
+            ]
+        },
+        {
+            "label": "stop HbuilderApp",
+            "type": "shell",
+            "command": "adb",
+            "args": [
+                "shell",
+                "am",
+                "force-stop",
+                "io.dcloud.HBuilder"
+            ]
+        },
+        {
+            "label": "restart HbuilderApp",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "stop hbuilder",
+                "start hbuilder"
+            ]
+        },
+    ],
+    "inputs": [
+        {
+            "id": "pickeMode",
+            "type": "pickString",
+            "default": "dev",
+            "description": "choose run mode",
+            "options": [
+                "dev",
+                "build"
+            ]
+        },
+        {
+            "id": "WeChatDevTool cliArgs",
+            "type": "promptString",
+            "default": "open --project $PWD",
+            "description": "input cli args"
+        },
+        {
+            "id": "HbuilderX cliArgs",
+            "type": "promptString",
+            "default": "pack --config $PWD/pack.json",
+            "description": "input cli args"
+        }
+    ]
+}
