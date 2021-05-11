@@ -5,8 +5,8 @@ import { Response, RequestOptions } from './type';
 import config from "./config.json";
 
 const { beta, release, path, page, authorizationValidPeriod } = config,
-    env: AnyObject = process.env.NODE_ENV === 'development' ? beta : release,
-    [API_URL, SOCKET_URL]: [string, string] = [`${env.http}${path.api || ""}`, `${env.socket}${path.socket || ""}`];
+    currentEnv: AnyObject = process.env.NODE_ENV === 'development' ? beta : release,
+    [API_URL, SOCKET_URL]: [string, string] = [`${currentEnv.http}${path.api || ""}`, `${currentEnv.socket}${path.socket || ""}`];
 
 const pretreatment: AnyObject = {
     throttle: false,
@@ -20,7 +20,7 @@ const pretreatment: AnyObject = {
                 await uni.showToast({ title, icon: "none", duration: 1200 });
                 pretreatment.throttle = true;
                 await sleep(1.2)
-                await uni.reLaunch({ url: page.authorization });
+                await uni.reLaunch({ url: page.authorization, success: Storage.clear });
                 pretreatment.throttle = false;
 
                 return Promise.reject(title);
@@ -60,6 +60,7 @@ const pretreatment: AnyObject = {
             pretreatment.times = 0;
             pretreatment.throttle = false;
             const { route, options }: any = pageData(-1);
+
             uni.reLaunch({ url: `/${route}?${transformQueryString(options)}` });
             return Promise.reject(title);
         },
@@ -78,7 +79,8 @@ request.defaults.baseURL = API_URL;
 request.interceptors.request.use<RequestOptions>(
     (params: AnyObject) => {
         params.data || (params.data = {});
-        params.header.Authorization = Storage.get("authorization") || "";
+        const authorization = Storage.get("authorization");
+        authorization && (params.header.token = authorization);
 
         for (const key in params.data) {
             if ([undefined, null, NaN].includes(params.data && params.data[key])) {
@@ -97,9 +99,9 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             if (typeof (result) === "object") {
                 const { success, notAuth, fail } = pretreatment.codeHandler;
                 switch (+result.code) {
-                    case 0:
+                    case 1:
                         return success(result);
-                    case -3:
+                    case -1:
                         return notAuth(result);
                     default:
                         return fail(result);
@@ -108,7 +110,7 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             uni.showModal({
                 title: "Error Message",
                 content: <string>result,
-                confirmText: "Copy", 
+                confirmText: "Copy",
                 cancelText: "Cancel",
                 success: ({ confirm }) =>
                     confirm && uni.setClipboardData({
@@ -131,5 +133,5 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
     }
 );
 
-Vue.prototype.$config = Object.assign(config, { API_URL, SOCKET_URL });
+Vue.prototype.$config = Object.assign(config, { currentEnv, API_URL, SOCKET_URL });
 Vue.prototype.$request = request;
