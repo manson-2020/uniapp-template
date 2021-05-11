@@ -96,7 +96,7 @@ export function transformQueryString(params: string | AnyObject): any {
     }
 
     if (typeof params === "object") {
-        return Object.keys(params).map(key => `${key}=${params[key]}`).join("&");
+        return Object.keys(params).filter(key => params[key]).map(key => `${key}=${params[key]}`).join("&");
     }
 
     throw Error("Parameter error");
@@ -181,7 +181,7 @@ export const Storage = {
                 createTime,
                 expireTime: (expireTime ? Date.now() + expireTime * 1000 : expireTime) || storageExpire
             });
-            
+
             return value;
         }
 
