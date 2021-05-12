@@ -4,3 +4,4 @@ unpackage/
 .DS_Store
 dev-script/
 .hbuilderx/
+dist/
