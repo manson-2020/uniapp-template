@@ -1,10 +1,10 @@
 import Vue from "vue";
-import { pageData, sleep, Storage, transformQueryString } from './libs/utils';
-import request from "./libs/request";
+import { pageData, sleep, Storage, transformQueryString } from '@/static/libs/utils';
+import request from "@/static/libs/request";
 import { Response, RequestOptions } from './type';
 import config from "./config.json";
 
-const { beta, release, path, page, authorizationValidPeriod } = config,
+const { beta, release, path, page, authorizationValidityDay } = config,
     currentEnv: AnyObject = process.env.NODE_ENV === 'development' ? beta : release,
     [API_URL, SOCKET_URL]: [string, string] = [`${currentEnv.http}${path.api || ""}`, `${currentEnv.socket}${path.socket || ""}`];
 
@@ -34,7 +34,7 @@ const pretreatment: AnyObject = {
 
             const [reqFail, result]: any = await uni.request({
                 url: `${API_URL}${path.login}`,
-                data: { code: loginRes.code }
+                data: { code: loginRes.code, ...uni.getAccountInfoSync().miniProgram }
             });
 
             if (reqFail) {
@@ -42,11 +42,11 @@ const pretreatment: AnyObject = {
                 return;
             }
             const { code, data, msg } = result.data;
-            if (+code) {
+            if (!+code) {
                 uni.showToast({ title: msg, icon: "none" });
                 return;
             }
-            Storage.set("authorization", data, authorizationValidPeriod);
+            Storage.set("authorization", data?.token, authorizationValidityDay);
 
             if (++pretreatment.times >= 3) {
                 const [, modal]: any = await uni.showModal({
@@ -60,7 +60,6 @@ const pretreatment: AnyObject = {
             pretreatment.times = 0;
             pretreatment.throttle = false;
             const { route, options }: any = pageData(-1);
-
             uni.reLaunch({ url: `/${route}?${transformQueryString(options)}` });
             return Promise.reject(title);
         },
@@ -79,6 +78,9 @@ request.defaults.baseURL = API_URL;
 request.interceptors.request.use<RequestOptions>(
     (params: AnyObject) => {
         params.data || (params.data = {});
+        // #ifdef MP-WEIXIN
+        Object.assign(params.data, uni.getAccountInfoSync().miniProgram);
+        // #endif
         const authorization = Storage.get("authorization");
         authorization && (params.header.token = authorization);
 
@@ -99,11 +101,11 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             if (typeof (result) === "object") {
                 const { success, notAuth, fail } = pretreatment.codeHandler;
                 switch (+result.code) {
-                    case 1:
+                    case 1: // 成功
                         return success(result);
-                    case -1:
+                    case 401: // 未授权
                         return notAuth(result);
-                    default:
+                    default: // 失败
                         return fail(result);
                 }
             }
