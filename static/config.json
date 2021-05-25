@@ -1,20 +1,20 @@
 {
     "beta": {
-        "http": "",
+        "http": "https://huisq.rlftkeji.cn",
         "socket": ""
     },
     "release": {
-        "http": "",
+        "http": "https://huisq.rlftkeji.cn",
         "socket": ""
     },
     "path": {
         "api": "/api",
-        "socket": "/",
+        "socket": "",
         "login": "/user/miniLogin"
     },
     "page": {
         "authorization": "",
-        "home": "/pages/index"
+        "home": "/pages/tabs/Home"
     },
-    "authorizationValidPeriod": 2592000
+    "authorizationValidityDay": 7
 }
