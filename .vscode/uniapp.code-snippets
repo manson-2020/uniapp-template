@@ -220,6 +220,13 @@
 		"prefix": "view",
 		"scope": "vue-html"
 	},
+	"uLabel": {
+		"body": [
+			"<label>$0</label>"
+		],
+		"prefix": "label",
+		"scope": "vue-html"
+	},
 	"uWebView": {
 		"body": [
 			"<web-view src=\"$1\"></web-view>"
