@@ -1,7 +1,7 @@
 
 declare const WeixinJSBridge: AnyObject;
 
-export function wxJsPay(payParams: any, callBack: AnyObject = {}) {
+export const wxJsPay = (payParams: any, callBack: AnyObject = {}): void => {
     WeixinJSBridge.invoke(
         "getBrandWCPayRequest",
         payParams,
@@ -16,7 +16,7 @@ export function wxJsPay(payParams: any, callBack: AnyObject = {}) {
 
 export const prefixZero = (n: number | string): string => String(+n > 9 ? n : `0${n}`)
 
-export function formatDate(timestamp = Date.now(), format = "Y-M-D h:m:s"): string {
+export const formatDate = (format = "Y-M-D h:m:s", timestamp = Date.now()): string => {
     /**
      * @method prefixZero
      * @param {timestamp} number
@@ -49,28 +49,28 @@ export function formatDate(timestamp = Date.now(), format = "Y-M-D h:m:s"): stri
 * @param { Date } end
 * @returns { Array<string> }
 */
-export function formatEveryDay(start: Date, end: Date, format: undefined | string = undefined): Array<string> {
+export const formatEveryDay = (start: Date, end: Date, format: undefined | string = undefined): Array<string> => {
     let dateList = [];
     while ((end.getTime() - start.getTime()) >= 0) {
-        dateList.push(formatDate(start.getTime(), format));
+        dateList.push(formatDate(format, start.getTime()));
         start.setDate(start.getDate() + 1);
     }
     return dateList;
 }
 
-export function transformURL(url: string, params: { [key: string]: any }, hash: string | void) {
+export const transformURL = (url: string, params: { [key: string]: any }, hash: string | void) => {
     let paramsArr = Object.keys(params).map(key => `${key}=${params[key]}`);
 
     return encodeURIComponent(`${url}?${paramsArr.join("&")}${hash ? "#" + hash : ""}`);
 }
 
-export function formatPhoneNumber(phoneNumber: string): string {
+export const formatPhoneNumber = (phoneNumber: string): string => {
     return phoneNumber.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
 }
 
 export const rand = (min: number, max: number): number => ~~(Math.random() * (max - min + 1) + min);
 
-export function curEnv(): string {
+export const curEnv = (): string => {
     let curEnv;
     // #ifdef H5
     curEnv =
@@ -86,7 +86,7 @@ export function curEnv(): string {
     return curEnv;
 }
 
-export function transformQueryString(params: string | AnyObject): any {
+export const transformQueryString = (params: string | AnyObject): string | AnyObject | void => {
     if (typeof params === "string") {
         const queryStrings: RegExpMatchArray | null = decodeURIComponent(params).match(/[^?&]+=[^?&]+/g);
 
@@ -104,101 +104,90 @@ export function transformQueryString(params: string | AnyObject): any {
 
 export const isPhoneNumber = (str: string): boolean => /^1[0-9]{10}$/.test(str)
 
-export const isEmail = (str: string): boolean =>
-    /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(str)
+export const isEmail = (str: string): boolean => /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(str);
 
-export const isIdCard = (str: string): boolean =>
-    /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/.test(str)
+export const isIdCard = (str: string): boolean => /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/.test(str);
 
+export const sleep = (second: number) => (new Promise(resolve => setTimeout(resolve, second * 1000)));
 
-// 防抖  
-export function debounce(fn: Function, wait = 500, isImmediate = false) {
-
-    let [timerId, flag]: [number, boolean] = [0, true];
-    return () => {
-        timerId && clearTimeout(timerId);
-        if (flag) {
-            isImmediate && fn.apply(fn, arguments);
-            flag = false;
-        }
-        timerId = setTimeout(() => {
-            isImmediate ? (flag = true) : fn.apply(fn, arguments);
-        }, wait)
-    }
-}
-
-// 节流  
-export function throttle(fn: Function, wait = 500, isImmediate = false) {
-
-    let flag = true;
-    return () => {
-        if (flag) {
-            isImmediate && fn.apply(fn, arguments);
-            flag = false;
-            setTimeout(() => {
-                !isImmediate && fn.apply(fn, arguments);
-                flag = true;
-            }, wait)
-        }
-    }
-}
-
-export function sleep(second: number) {
-    return new Promise(resolve => setTimeout(resolve, second * 1000))
-}
-
-export function pageData(page: number = -2) {
+export const pageData = (page: number = -2) => {
     const pages = getCurrentPages();
     return pages[pages.length + page];
 }
 
 /**
- * 缓存 增删查改
+ * @var {object} Storage 设置 获取 删除 清空
+ * @property {function} set 
+ * @property {function} remove 
+ * @property {function} get 
+ * @property {function} clear 
  */
 export const Storage = {
-    set(key: string, value: any, time: null | number = null): any {
-        const timestamp: number = Date.now();
-        uni.setStorageSync(key, {
-            value,
-            createTime: timestamp,
-            expireTime: time ? timestamp + time * 1000 : time
-        });
+    set(key: string, value: any, validityDay: null | number = null): { value: any, createTime: number, expireTime: number } {
+        const { value: oldValue, createTime: storageCreate, expireTime: storageExpire } = uni.getStorageSync(key) || {},
+            createTime: number = storageCreate || Date.now();
+
+        uni.setStorageSync(key,
+            Object.prototype.toString.call(oldValue) === "[object Object]" ?
+                {
+                    value: Object.assign(oldValue, value),
+                    createTime,
+                    expireTime: validityDay ? createTime + validityDay * 86_400_000 : storageExpire
+                } : {
+                    value,
+                    createTime,
+                    expireTime: validityDay && createTime + validityDay * 86_400_000
+                }
+        );
+
         return value;
+    },
+    get(key: string): any {
+        const { expireTime, value } = uni.getStorageSync(key);
+        return (expireTime && Date.now() >= expireTime) ? this.remove(key) : value;
     },
     remove(...args: string[]): void {
         args.forEach((key: string): void => uni.removeStorageSync(key));
-    },
-    get(key: string): any {
-        const [timestamp, { expireTime, value }]: [number, AnyObject] = [Date.now(), uni.getStorageSync(key)];
-        return (expireTime && timestamp >= expireTime) ? this.remove(key) : value;
-    },
-    update(key: string, prototypes: any, expireTime: null | number = null): any {
-        const { value, createTime, expireTime: storageExpire } = uni.getStorageSync(key) || {};
-
-        if (Object.prototype.toString.call(value) === "[object Object]") {
-            uni.setStorageSync(key, {
-                value: Object.assign(value, prototypes),
-                createTime,
-                expireTime: (expireTime ? Date.now() + expireTime * 1000 : expireTime) || storageExpire
-            });
-
-            return value;
-        }
-
-        return this.set(key, prototypes, expireTime);
     },
     clear(): void {
         uni.clearStorageSync()
     }
 }
 
-export function bind(fn: Function, thisArg: any) {
-    return function warp() {
-        return fn.apply(thisArg, Array.from(arguments))
+// 防抖  
+export const debounce = (fn: AnyFunction, delay: number = 500, isImmediate: boolean = false): AnyObject => {
+    let [timer, flag]: [number, boolean] = [0, true];
+
+    return {
+        exec: (...args: any[]) => {
+            timer && clearTimeout(timer);
+            if (flag) {
+                isImmediate && fn(args);
+                flag = false;
+            }
+            timer = setTimeout(() => (isImmediate ? (flag = true) : fn(args)), delay)
+        }
     }
 }
 
-export function extend(a: AnyObject, b: AnyObject, thisArg?: {}) {
+// 节流  
+export const throttle = (fn: AnyFunction, delay = 500, isImmediate = false) => {
+    let flag = true;
+    return (...args: any[]) => {
+        if (flag) {
+            isImmediate && fn(args);
+            flag = false;
+            setTimeout(() => {
+                !isImmediate && fn(args);
+                flag = true;
+            }, delay)
+        }
+    }
+}
+
+export const bind = (fn: AnyFunction, thisArg: any): AnyFunction => (...arg: any[]) => fn.apply(thisArg, arg);
+
+export const extend = (a: AnyObject, b: AnyObject, thisArg?: {}): AnyObject => {
     let o: string[] = Object.getOwnPropertyNames(b);
     o.forEach(attr => {
         if (thisArg && typeof b[attr] === "function") {
@@ -210,7 +199,7 @@ export function extend(a: AnyObject, b: AnyObject, thisArg?: {}) {
     return a;
 }
 
-export function merge(...arg: AnyObject[]) {
+export const merge = (...arg: AnyObject[]): AnyObject => {
     var result: AnyObject = {};
     arg.forEach((e: AnyObject) => {
         for (let key in e) {
@@ -223,7 +212,7 @@ export function merge(...arg: AnyObject[]) {
     return result;
 }
 
-export function deepMerge(...arg: AnyObject[]) {
+export const deepMerge = (...arg: AnyObject[]): AnyObject => {
     let result: AnyObject = {};
     arg.forEach((e: AnyObject) => {
         if (e && typeof e === "object" && !isEmptyObject(e)) {
@@ -238,26 +227,9 @@ export function deepMerge(...arg: AnyObject[]) {
     return result;
 }
 
-export function isEmptyObject(obj: AnyObject) {
-    return obj === null || Object.getOwnPropertyNames(obj).length === 0
-}
+export const isEmptyObject = (obj: AnyObject): boolean => (obj === null || Object.getOwnPropertyNames(obj).length === 0);
 
-export function combineURLs(baseURL: string, relativeURL: string) {
-    return relativeURL
-        ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "")
-        : baseURL;
-};
-
-export function encode(val: string) {
-    return encodeURIComponent(val).
-        replace(/%40/gi, "@").
-        replace(/%3A/gi, ":").
-        replace(/%24/g, "$").
-        replace(/%2C/gi, ",").
-        replace(/%20/g, "+").
-        replace(/%5B/gi, "[").
-        replace(/%5D/gi, "]");
-}
+export const combineURLs = (baseURL: string, relativeURL: string): string => relativeURL ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
 
 /**
  * Determines whether the specified URL is absolute
@@ -265,10 +237,5 @@ export function encode(val: string) {
  * @param {string} url The URL to test
  * @returns {boolean} True if the specified URL is absolute, otherwise false
  */
+export const isAbsoluteURL = (url: string): boolean => /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 
-export function isAbsoluteURL(url: string) {
-    // A URL is considered absolute if it begins with "<scheme>://" or "//" (protocol-relative URL).
-    // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
-    // by any combination of letters, digits, plus, period, or hyphen.
-    return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-};
