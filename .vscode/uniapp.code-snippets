@@ -1,6 +1,6 @@
 {
-	"uniapp-template": {
-		"prefix": "uniapp:ts/scss",
+	"uniapp-vue": {
+		"prefix": "uniapp:vue",
 		"body": [
 			"<template>",
 			"\t<view class=\"root\">${0}$TM_FILENAME_BASE</view>",
@@ -20,6 +20,26 @@
 			"</style>"
 		],
 		"scope": "vue",
+		"description": "uniapp of xml, ts-class and scss template"
+	},
+	"uniapp-nvue": {
+		"prefix": "uniapp:nvue",
+		"body": [
+			"<template>",
+			"\t<view class=\"root\">${0}$TM_FILENAME_BASE</view>",
+			"</template>",
+			"",
+			"<script>",
+			"\texport default {",
+			"\t\tdata: () => ({}),",
+			"\t\tmethods: {}",
+			"\t}",
+			"<\/script>",
+			"",
+			"<style scoped>",
+			"</style>"
+		],
+		"scope": "html",
 		"description": "uniapp of xml, ts-class and scss template"
 	},
 	"#ifdef": {
@@ -45,14 +65,14 @@
 			"<image src=\"$1\" mode=\"$2\" />"
 		],
 		"prefix": "image",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uIcon": {
 		"body": [
 			"<icon type=\"$1\" />"
 		],
 		"prefix": "icon",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uPicker": {
 		"body": [
@@ -61,7 +81,7 @@
 			"</picker>"
 		],
 		"prefix": "picker",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uPickerView": {
 		"body": [
@@ -78,14 +98,14 @@
 			"</picker-view>"
 		],
 		"prefix": "picker-view",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uCheckbox": {
 		"body": [
 			"<checkbox value=\"$0\" />"
 		],
 		"prefix": "checkbox",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uCheckboxGroup": {
 		"body": [
@@ -94,14 +114,14 @@
 			"</checkbox-group>",
 		],
 		"prefix": "checkbox-group",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uRadio": {
 		"body": [
 			"<radio value=\"$1\" />$0"
 		],
 		"prefix": "radio",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uRadioGroup": {
 		"body": [
@@ -110,42 +130,42 @@
 			"</radio-group>",
 		],
 		"prefix": "radio-group",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uEditor": {
 		"body": [
 			"<editor placeholder=\"$1\" />"
 		],
 		"prefix": "editor",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uNavigator": {
 		"body": [
 			"<navigator url=\"$1\">$0</navigator>"
 		],
 		"prefix": "navigator",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uMap": {
 		"body": [
 			"<map :latitude=\"$1\" :longitude=\"$0\" />"
 		],
 		"prefix": "map",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uRichText": {
 		"body": [
 			"<rich-text :nodes=\"$1\" />"
 		],
 		"prefix": "rich-text",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uProgress": {
 		"body": [
 			" <progress percent=\"$1\" show-info$0 />"
 		],
 		"prefix": "progress",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uScrollView": {
 		"body": [
@@ -157,14 +177,14 @@
 			"</scroll-view>"
 		],
 		"prefix": "scroll-view",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uSlider": {
 		"body": [
 			"<slider @change=\"$1\" show-value$0/>"
 		],
 		"prefix": "slider",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uSwiper": {
 		"body": [
@@ -181,14 +201,14 @@
 			"</swiper>"
 		],
 		"prefix": "swiper",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uSwitch": {
 		"body": [
 			"<switch checked @change=\"$1\" />"
 		],
 		"prefix": "switch",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uTemplate": {
 		"body": [
@@ -197,41 +217,34 @@
 			"</template>"
 		],
 		"prefix": "template",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uBlock": {
 		"body": [
 			"<block>$0</block>"
 		],
 		"prefix": "block",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uText": {
 		"body": [
 			"<text>$0</text>"
 		],
 		"prefix": "text",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uView": {
 		"body": [
 			"<view>$0</view>"
 		],
 		"prefix": "view",
-		"scope": "vue-html"
-	},
-	"uLabel": {
-		"body": [
-			"<label>$0</label>"
-		],
-		"prefix": "label",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 	"uWebView": {
 		"body": [
 			"<web-view src=\"$1\"></web-view>"
 		],
 		"prefix": "webview",
-		"scope": "vue-html"
+		"scope": "vue-html,html"
 	},
 }
