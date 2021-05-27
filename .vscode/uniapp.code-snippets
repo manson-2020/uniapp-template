@@ -34,7 +34,7 @@
 			"\t\tdata: () => ({}),",
 			"\t\tmethods: {}",
 			"\t}",
-			"<\/script>",
+			"</script>",
 			"",
 			"<style scoped>",
 			"</style>"
@@ -111,7 +111,7 @@
 		"body": [
 			"<checkbox-group name=\"checkbox\">",
 			"\t$0",
-			"</checkbox-group>",
+			"</checkbox-group>"
 		],
 		"prefix": "checkbox-group",
 		"scope": "vue-html,html"
@@ -127,7 +127,7 @@
 		"body": [
 			"<radio-group name=\"radio\">",
 			"\t$0",
-			"</radio-group>",
+			"</radio-group>"
 		],
 		"prefix": "radio-group",
 		"scope": "vue-html,html"
@@ -240,11 +240,18 @@
 		"prefix": "view",
 		"scope": "vue-html,html"
 	},
+	"uLabel": {
+		"body": [
+			"<label>$0</label>"
+		],
+		"prefix": "label",
+		"scope": "vue-html,html"
+	},
 	"uWebView": {
 		"body": [
 			"<web-view src=\"$1\"></web-view>"
 		],
 		"prefix": "webview",
 		"scope": "vue-html,html"
-	},
+	}
 }
