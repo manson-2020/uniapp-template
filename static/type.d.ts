@@ -2,9 +2,9 @@ import { InterceptorManager } from "@/libs/request";
 
 export type RequestOptions = Partial<UniApp.RequestOptions> & { baseURL?: string };
 export type RequestMethod = 'options' | 'get' | 'head' | 'post' | 'put' | 'delete' | 'trace' | 'connect';
-export type RequestReturn<T> = (url?: string, data?: AnyObject, options?: RequestOptions) => Promise<T>;
+export type RequestFunction<T> = (url?: string, data?: AnyObject, options?: RequestOptions) => Promise<T>;
 
-export interface RequestInstance<T> extends Record<RequestMethod, RequestReturn<T>> {
+export interface RequestInstance<T> extends Record<RequestMethod, RequestFunction<T>> {
     (options: RequestOptions): Promise<T>
     defaults: RequestOptions,
     interceptors: {
@@ -33,4 +33,3 @@ declare module "vue/types/vue" {
         $config: AnyObject
     }
 }
-
