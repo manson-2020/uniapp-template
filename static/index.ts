@@ -68,6 +68,8 @@ const pretreatment: AnyObject = {
             uni.showToast({ title: res.msg, icon: "none" });
             return Promise.reject(res)
         },
+        
+        error: (res: Response) => Promise.reject(res),
 
         success: (res: Response) => Promise.resolve(res),
     }
@@ -98,15 +100,17 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
         const result = <Response | string>res.data;
 
         try {
-            if (typeof (result) === "object") {
-                const { success, notAuth, fail } = pretreatment.codeHandler;
+          if (typeof (result) === "object") {
+                const { success, notAuth, fail, error } = pretreatment.codeHandler;
                 switch (+result.code) {
+                    case 0: // 失败
+                        return fail(result);
                     case 1: // 成功
                         return success(result);
                     case 401: // 未授权
                         return notAuth(result);
-                    default: // 失败
-                        return fail(result);
+                    default: // 错误
+                        return error(result);
                 }
             }
             uni.showModal({
