@@ -1,6 +1,6 @@
 
 import { isAbsoluteURL, combineURLs, bind, extend, merge } from "./utils";
-import { RequestOptions, RequestInstance } from "../type";
+import { RequestOptions, RequestInstance, Response } from "../type";
 
 type Method = string & RequestOptions["method"];
 
@@ -113,14 +113,13 @@ const createInstance = (requestOptions: RequestOptions): any => {
     return instance;
 }
 
-const defaults = {
+const defaults: RequestOptions = {
     baseURL: "",
     dataType: "json",
     responseType: "text",
     header: {
         "Content-type": "application/x-www-form-urlencoded"
-    },
-    // timeout: 1000
+    }
 }
 
 const request: RequestInstance<Response> = createInstance(defaults);
