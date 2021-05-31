@@ -34,7 +34,7 @@ const pretreatment: AnyObject = {
 
             const [reqFail, result]: any = await uni.request({
                 url: `${API_URL}${path.login}`,
-                data: { code: loginRes.code, ...uni.getAccountInfoSync().miniProgram }
+                data: { code: loginRes.code }
             });
 
             if (reqFail) {
@@ -46,7 +46,7 @@ const pretreatment: AnyObject = {
                 uni.showToast({ title: msg, icon: "none" });
                 return;
             }
-            Storage.set("authorization", data?.token, authorizationValidityDay);
+            Storage.set("authorizationInfo", data, authorizationValidityDay);
 
             if (++pretreatment.times >= 3) {
                 const [, modal]: any = await uni.showModal({
@@ -68,7 +68,7 @@ const pretreatment: AnyObject = {
             uni.showToast({ title: res.msg, icon: "none" });
             return Promise.reject(res)
         },
-        
+
         error: (res: Response) => Promise.reject(res),
 
         success: (res: Response) => Promise.resolve(res),
@@ -78,29 +78,30 @@ const pretreatment: AnyObject = {
 request.defaults.baseURL = API_URL;
 
 request.interceptors.request.use<RequestOptions>(
-    (params: AnyObject) => {
-        params.data || (params.data = {});
-        // #ifdef MP-WEIXIN
-        Object.assign(params.data, uni.getAccountInfoSync().miniProgram);
-        // #endif
-        const authorization = Storage.get("authorization");
-        authorization && (params.header.token = authorization);
+    params => {
+        params.data ?? (params.data = {});
 
-        for (const key in params.data) {
-            if ([undefined, null, NaN].includes(params.data && params.data[key])) {
-                delete params?.data[key];
+        const authorizationInfo = Storage.get("authorizationInfo");
+        authorizationInfo && (params.header.token = authorizationInfo.token);
+
+        if (typeof params.data === "object") {
+            for (const key in params.data) {
+                if ([undefined, null, NaN].includes(params.data && params.data[key])) {
+                    delete params?.data[key];
+                }
             }
         }
+
         return params;
     }
 );
 
 request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
-    (res: AnyObject) => {
+    res => {
         const result = <Response | string>res.data;
 
         try {
-          if (typeof (result) === "object") {
+            if (typeof (result) === "object") {
                 const { success, notAuth, fail, error } = pretreatment.codeHandler;
                 switch (+result.code) {
                     case 0: // 失败
@@ -125,7 +126,6 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
                     })
             });
             return Promise.reject(result);
-
         } catch ({ message: title }) {
             uni.showToast({ title, icon: "none" });
             return Promise.reject(title);
