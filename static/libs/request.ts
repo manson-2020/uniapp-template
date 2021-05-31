@@ -28,7 +28,7 @@ export class InterceptorManager {
 
 class Request {
 
-    [method: string]: any;
+    [method: string]: AnyObject;
 
     protected interceptors: {
         request: InterceptorManager,
