@@ -133,7 +133,7 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             console.warn(`Response:`, res);
         }
     },
-    (err: AnyObject) => {
+    err => {
         uni.showToast({ title: err.errMsg, icon: "none" })
         return Promise.reject(err)
     }
