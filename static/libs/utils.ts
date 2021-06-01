@@ -227,7 +227,7 @@ export const deepMerge = (...arg: AnyObject[]): AnyObject => {
     return result;
 }
 
-export const isEmptyObject = (obj: AnyObject): boolean => (obj === null || Object.getOwnPropertyNames(obj).length === 0);
+export const isEmptyObject = (obj: AnyObject): obj is {} => (Object.getOwnPropertyNames(obj).length === 0);
 
 export const combineURLs = (baseURL: string, relativeURL: string): string => relativeURL ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
 
