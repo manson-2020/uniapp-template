@@ -18,7 +18,6 @@ export class InterceptorManager {
 
     public eject(id: number): void {
         this.handlers[id] && (this.handlers[id] = null);
-
     }
 
     public forEach(fn: (e: { fulfilled: (res: any) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void }) => void): void {
