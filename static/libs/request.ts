@@ -80,13 +80,13 @@ class Request {
             params[item] && delete params[item];
         });
 
-        if (this.defaults.baseURL && !isAbsoluteURL(params.url as string)) {
-            params.url = combineURLs(this.defaults.baseURL, params.url as string);
+        if (this.defaults.baseURL && !isAbsoluteURL(params.url!)) {
+            params.url = combineURLs(this.defaults.baseURL, params.url!);
         }
 
         return new Promise((resolve, reject) => {
             const requestTask = uni.request({
-                url: params.url as string,
+                url: params.url!,
                 ...params,
                 success: res => resolve(res),
                 fail: err => reject(err),
