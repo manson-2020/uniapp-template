@@ -40,7 +40,7 @@
 			"</style>"
 		],
 		"scope": "html",
-		"description": "uniapp of xml, ts-class and scss template"
+		"description": "uniapp of xml, js and css template"
 	},
 	"#ifdef": {
 		"prefix": "ifdef",
