@@ -1,6 +1,6 @@
 
 import { isAbsoluteURL, combineURLs, bind, extend, merge } from "./utils";
-import { RequestOptions, RequestInstance, Response } from "../type";
+import { RequestOptions, } from "@/common/type";
 
 type Method = string & RequestOptions["method"];
 
@@ -18,7 +18,9 @@ export class InterceptorManager {
     }
 
     public eject(id: number): void {
-        this.handlers[id] && (this.handlers[id] = null);
+        if (this.handlers[id]) {
+            this.handlers[id] = null;
+        }
     }
 
     public forEach(fn: (e: { fulfilled: (res: any) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void }) => void): void {
@@ -28,7 +30,7 @@ export class InterceptorManager {
 
 class Request {
 
-    [method: string]: AnyObject;
+    [method: string]: any;
 
     protected interceptors: {
         request: InterceptorManager,
@@ -101,7 +103,7 @@ class Request {
 }
 
 
-const createInstance = (requestOptions: RequestOptions): any => {
+export const createInstance = (requestOptions: RequestOptions): any => {
     const context = new Request(requestOptions),
         instance = bind(Request.prototype.request, context);
 
@@ -110,19 +112,3 @@ const createInstance = (requestOptions: RequestOptions): any => {
 
     return instance;
 }
-
-const defaults: RequestOptions = {
-    baseURL: "",
-    dataType: "json",
-    responseType: "text",
-    header: {
-        "Content-type": "application/x-www-form-urlencoded"
-    }
-}
-
-const request: RequestInstance<Response> = createInstance(defaults);
-
-// 用于创建多个实例
-request.create = (options: AnyObject) => createInstance(Object.assign(defaults, options));
-
-export default request;
