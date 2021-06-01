@@ -108,9 +108,9 @@ export const isEmail = (str: string): boolean => /\w+([-+.]\w+)*@\w+([-.]\w+)*\.
 
 export const isIdCard = (str: string): boolean => /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/.test(str);
 
-export const sleep = (second: number) => (new Promise(resolve => setTimeout(resolve, second * 1000)));
+export const sleep = (second: number): Promise<number> => (new Promise(resolve => setTimeout(resolve, second * 1000)));
 
-export const pageData = (page: number = -2) => {
+export const pageData = (page: number = -2): Page.PageInstance => {
     const pages = getCurrentPages();
     return pages[pages.length + page];
 }
@@ -155,7 +155,7 @@ export const Storage = {
 }
 
 // 防抖  
-export const debounce = (fn: AnyFunction, delay: number = 500, isImmediate: boolean = false): AnyObject => {
+export const debounce = (fn: AnyFunction, delay: number = 500, isImmediate: boolean = false): { exec: AnyFunction } => {
     let [timer, flag]: [number, boolean] = [0, true];
 
     return {
@@ -171,16 +171,19 @@ export const debounce = (fn: AnyFunction, delay: number = 500, isImmediate: bool
 }
 
 // 节流  
-export const throttle = (fn: AnyFunction, delay = 500, isImmediate = false) => {
+export const throttle = (fn: AnyFunction, delay = 500, isImmediate = false): { exec: AnyFunction } => {
     let flag = true;
-    return (...args: any[]) => {
-        if (flag) {
-            isImmediate && fn(args);
-            flag = false;
-            setTimeout(() => {
-                !isImmediate && fn(args);
-                flag = true;
-            }, delay)
+    return {
+        exec: (...args: any[]) => {
+            if (flag) {
+                isImmediate && fn(args);
+                flag = false;
+                setTimeout(() => {
+                    !isImmediate && fn(args);
+                    flag = true;
+                }, delay)
+            }
+
         }
     }
 }
