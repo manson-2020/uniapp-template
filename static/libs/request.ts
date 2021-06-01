@@ -1,6 +1,5 @@
-
 import { isAbsoluteURL, combineURLs, bind, extend, merge } from "./utils";
-import { RequestOptions } from "@/common/type";
+import { RequestOptions } from "../type";
 
 type Method = string & RequestOptions["method"];
 
