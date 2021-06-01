@@ -232,8 +232,13 @@ export const deepMerge = (...arg: AnyObject[]): AnyObject => {
 
 export const isEmptyObject = (obj: AnyObject): obj is {} => (Object.getOwnPropertyNames(obj).length === 0);
 
-export const combineURLs = (baseURL: string, relativeURL: string): string => relativeURL ? baseURL.replace(/\/+$/, "") + "/" + relativeURL.replace(/^\/+/, "") : baseURL;
-
+export const combineURLs = (baseURL: string, relativeURL: string, identifier: string = "/"): string => {
+    return relativeURL
+        ? baseURL.replace(new RegExp(`${identifier}+$`), "")
+        + identifier
+        + relativeURL.replace(new RegExp(`^${identifier}`), "")
+        : baseURL
+};
 /**
  * Determines whether the specified URL is absolute
  *
