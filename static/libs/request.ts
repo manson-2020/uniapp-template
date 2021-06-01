@@ -1,6 +1,6 @@
 
 import { isAbsoluteURL, combineURLs, bind, extend, merge } from "./utils";
-import { RequestOptions, } from "@/common/type";
+import { RequestOptions } from "@/common/type";
 
 type Method = string & RequestOptions["method"];
 
@@ -18,9 +18,8 @@ export class InterceptorManager {
     }
 
     public eject(id: number): void {
-        if (this.handlers[id]) {
-            this.handlers[id] = null;
-        }
+        this.handlers[id] && (this.handlers[id] = null);
+
     }
 
     public forEach(fn: (e: { fulfilled: (res: any) => void, rejected?: (err: UniApp.GeneralCallbackResult) => void }) => void): void {
@@ -103,8 +102,8 @@ class Request {
 }
 
 
-export const createInstance = (requestOptions: RequestOptions): any => {
-    const context = new Request(requestOptions),
+export const createInstance = (defaults: RequestOptions): any => {
+    const context = new Request(defaults),
         instance = bind(Request.prototype.request, context);
 
     extend(instance, Request.prototype, context);
