@@ -1,12 +1,21 @@
 import Vue from "vue";
 import { pageData, sleep, Storage, transformQueryString } from '@/static/libs/utils';
 import request from "@/static/libs/request";
-import { Response, RequestOptions } from './type';
+import { Response, RequestOptions, RequestInstance } from './type';
 import config from "./config.json";
 
 const { beta, release, path, page, authorizationValidityDay } = config,
     currentEnv: AnyObject = process.env.NODE_ENV === 'development' ? beta : release,
     [API_URL, SOCKET_URL]: [string, string] = [`${currentEnv.http}${path.api || ""}`, `${currentEnv.socket}${path.socket || ""}`];
+
+const request: RequestInstance<Response> = createInstance({
+    baseURL: API_URL,
+    dataType: "json",
+    header: {
+        "Content-type": "application/x-www-form-urlencoded"
+    },
+    responseType: "text"
+});
 
 const pretreatment: AnyObject = {
     throttle: false,
@@ -74,8 +83,6 @@ const pretreatment: AnyObject = {
         success: (res: Response) => Promise.resolve(res),
     }
 }
-
-request.defaults.baseURL = API_URL;
 
 request.interceptors.request.use<RequestOptions>(
     params => {
