@@ -8,7 +8,7 @@ const { beta, release, path, page, authorizationValidityDay } = config,
     currentEnv: AnyObject = process.env.NODE_ENV === 'development' ? beta : release,
     [API_URL, SOCKET_URL]: [string, string] = [`${currentEnv.http}${path.api || ""}`, `${currentEnv.socket}${path.socket || ""}`];
 
-const request: RequestInstance<Response> = createInstance({
+export const request: RequestInstance<Response> = createInstance({
     baseURL: API_URL,
     dataType: "json",
     header: {
