@@ -8,7 +8,9 @@ const { beta, release, path, page, authorizationValidityDay } = config,
     currentEnv: AnyObject = process.env.NODE_ENV === 'development' ? beta : release,
     [API_URL, SOCKET_URL]: [string, string] = [`${currentEnv.http}${path.api || ""}`, `${currentEnv.socket}${path.socket || ""}`];
 
-export const request: RequestInstance<Response> = createInstance({
+export const $config = Object.assign(config, { currentEnv, API_URL, SOCKET_URL });
+
+export const $request: RequestInstance<Response> = createInstance({
     baseURL: API_URL,
     dataType: "json",
     header: {
@@ -84,7 +86,7 @@ const pretreatment: AnyObject = {
     }
 }
 
-request.interceptors.request.use<RequestOptions>(
+$request.interceptors.request.use<RequestOptions>(
     params => {
         params.data ?? (params.data = {});
 
@@ -103,7 +105,7 @@ request.interceptors.request.use<RequestOptions>(
     }
 );
 
-request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
+$request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
     res => {
         const result = <Response | string>res.data;
 
@@ -146,5 +148,5 @@ request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
     }
 );
 
-Vue.prototype.$config = Object.assign(config, { currentEnv, API_URL, SOCKET_URL });
-Vue.prototype.$request = request;
+Vue.prototype.$config = $config;
+Vue.prototype.$request = $request;
