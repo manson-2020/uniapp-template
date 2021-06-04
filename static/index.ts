@@ -1,6 +1,6 @@
 import Vue from "vue";
-import { pageData, sleep, Storage, transformQueryString } from '@/static/libs/utils';
-import request from "@/static/libs/request";
+import { pageData, sleep, Storage, transformQueryString } from './libs/utils';
+import { createInstance } from "./libs/request";
 import { Response, RequestOptions, RequestInstance } from './type';
 import config from "./config.json";
 
@@ -87,7 +87,7 @@ const pretreatment: AnyObject = {
 }
 
 $request.interceptors.request.use<RequestOptions>(
-    params => {
+    (params: AnyObject) => {
         params.data ?? (params.data = {});
 
         const authorizationInfo = Storage.get("authorizationInfo");
@@ -106,7 +106,7 @@ $request.interceptors.request.use<RequestOptions>(
 );
 
 $request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
-    res => {
+    (res: AnyObject) => {
         const result = <Response | string>res.data;
 
         try {
@@ -142,7 +142,7 @@ $request.interceptors.response.use<UniApp.RequestSuccessCallbackResult>(
             console.warn(`Response:`, res);
         }
     },
-    err => {
+    (err: AnyObject) => {
         uni.showToast({ title: err.errMsg, icon: "none" })
         return Promise.reject(err)
     }
