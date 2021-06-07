@@ -1,4 +1,4 @@
-import { InterceptorManager } from "@/libs/request";
+import { InterceptorManager } from "./libs/request";
 
 export type RequestOptions = Partial<UniApp.RequestOptions> & { baseURL?: string };
 export type RequestMethod = 'options' | 'get' | 'head' | 'post' | 'put' | 'delete' | 'trace' | 'connect';
