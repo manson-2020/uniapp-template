@@ -1,4 +1,3 @@
-
 declare const WeixinJSBridge: AnyObject;
 
 export const wxJsPay = (payParams: any, callBack: AnyObject = {}): void => {
@@ -88,11 +87,11 @@ export const curEnv = (): string => {
 
 export const transformQueryString = (params: string | AnyObject): string | AnyObject | void => {
     if (typeof params === "string") {
-        const queryStrings: RegExpMatchArray | null = decodeURIComponent(params).match(/[^?&]+=[^?&]+/g);
+        const queryStrings: RegExpMatchArray | null = params.match(/[^?&]+=[^?&]+/g);
 
         return queryStrings ? Object.fromEntries(
             queryStrings.map(item => item.split(/^([^=]*)=*/).filter(item => item))
-        ) : Object();
+        ) : {};
     }
 
     if (typeof params === "object") {
@@ -239,6 +238,7 @@ export const combineURLs = (baseURL: string, relativeURL: string, identifier: st
         + relativeURL.replace(new RegExp(`^${identifier}`), "")
         : baseURL
 };
+
 /**
  * Determines whether the specified URL is absolute
  *
@@ -246,4 +246,3 @@ export const combineURLs = (baseURL: string, relativeURL: string, identifier: st
  * @returns {boolean} True if the specified URL is absolute, otherwise false
  */
 export const isAbsoluteURL = (url: string): boolean => /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
-
