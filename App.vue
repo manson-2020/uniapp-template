@@ -111,16 +111,33 @@
 	});
 </script>
 
-<style>
-	page {
+<style lang="scss">
+	page,
+	view,
+	picker,
+	button,
+	label,
+	swiper-item,
+	scroll-view,
+	cover-view,
+	navigator,
+	radio-group,
+	checkbox-group {
+		// #ifndef APP-PLUS-NVUE
 		display: flex;
 		flex-direction: column;
+		// #endif
 		box-sizing: border-box;
 		background-repeat: no-repeat;
 		background-size: cover;
 		background-position: center;
+	}
+
+	page {
 		font-weight: 500;
 		height: 100%;
 		background-color: #f7f7f7;
 	}
+
+	@import "./static/reset.scss";
 </style>
