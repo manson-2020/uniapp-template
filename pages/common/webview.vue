@@ -1,5 +1,5 @@
 <template>
-	<web-view :webview-styles="webviewStyles" :src="url" />
+	<web-view class="f1" :webview-styles="webviewStyles" :src="url" />
 </template>
 
 <script lang="ts">
