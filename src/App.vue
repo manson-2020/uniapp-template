@@ -112,7 +112,7 @@
   });
 
   onPageNotFound(() => {
-    uni.redirectTo({ url: "/pages/common/notFound" });
+    uni.redirectTo({ url: $config.page.error });
   });
 </script>
 

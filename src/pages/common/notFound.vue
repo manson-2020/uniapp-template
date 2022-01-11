@@ -21,15 +21,7 @@
 </template>
 
 <script setup lang="ts">
-  import { reactive } from "vue";
   import { $config } from "../../static";
-  import { onLoad } from "@dcloudio/uni-app";
-
-  reactive($config);
-
-  onLoad(() => {
-    console.log($config);
-  })
 </script>
 
 <style lang="scss" scoped>

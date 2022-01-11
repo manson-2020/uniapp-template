@@ -15,7 +15,8 @@
     },
     "page": {
         "auth": "/pages/auth/login",
-        "home": "/pages/tabs/home"
+        "home": "/pages/tabs/home",
+        "error": "/pages/common/notFound"
     },
     "authValidityDay": 7
 }
