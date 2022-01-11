@@ -1,0 +1,21 @@
+{
+    "beta": {
+        "http": "http://localhost",
+        "socket": "ws://localhost"
+    },
+    "release": {
+        "http": "https://localhost",
+        "socket": "wss://localhost"
+    },
+    "path": {
+        "api": "/api",
+        "socket": "/ws",
+        "login": "/login",
+        "checkVersion": "/check_version"
+    },
+    "page": {
+        "auth": "/pages/auth/login",
+        "home": "/pages/tabs/home"
+    },
+    "authValidityDay": 7
+}

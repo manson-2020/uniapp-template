@@ -1,0 +1,37 @@
+Keystore type: PKCS12
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+Password: uniapp
+Alias name: io.dcloud.app
+Creation date: 2021-5-12
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: CN=manson, OU=Unknown, O=Unknown, L=chengdu, ST=sichuan, C=Unknown
+Issuer: CN=manson, OU=Unknown, O=Unknown, L=chengdu, ST=sichuan, C=Unknown
+Serial number: 4f67505d
+Valid from: Wed May 12 17:12:54 CST 2021 until: Fri Apr 18 17:12:54 CST 2121
+Certificate fingerprints:
+         MD5:  81:72:33:8D:B7:DE:94:FB:77:59:CB:BB:7E:72:06:53
+         SHA1: 31:A9:A6:BD:9F:E8:FB:6C:EF:F4:DE:2F:74:D3:58:9A:75:AB:66:C7
+         SHA256: F5:CD:68:D7:03:30:A2:99:9F:FF:D9:3F:C5:42:51:9A:40:6D:DD:56:D9:E3:FF:C8:27:07:2F:E5:5D:FC:65:0D
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 7B 1C A2 7B A0 C8 DC BC   B9 29 AC 8D 3B 36 C6 56  .........)..;6.V
+0010: 02 7A 7B DC                                        .z..
+]
+]
+
+
+
+*******************************************
+*******************************************
