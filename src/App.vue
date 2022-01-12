@@ -148,10 +148,7 @@
   // 公共颜色类
   @each $color
     in (
-      #1b1b1b,
-      #1c9dff,
-      #2e54fd,
-      #4052e4,
+      #007aff,
       #f21919,
       #f33,
       #808080,
@@ -174,9 +171,8 @@
 
   @each $bgc
     in (
-      #4672ff,
+      #409eff,
       #f0f0f0,
-      #2e54fd,
       #f9f9f9,
       #dfdfdf,
       #f5f5f5,
@@ -190,5 +186,47 @@
       background-color: $bgc;
     }
   }
+
+  page,
+  view,
+  picker,
+  button,
+  label,
+  swiper-item,
+  scroll-view,
+  cover-view,
+  navigator,
+  radio-group,
+  checkbox-group {
+    // #ifndef APP-PLUS-NVUE
+    display: flex;
+    flex-direction: column;
+    // #endif
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+
+  page {
+    font-weight: 500;
+    height: 100%;
+    background-color: #f7f7f7;
+  }
+
+  label {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  scroll-view {
+    width: auto;
+  }
+
+  picker[disabled],
+  button[disabled] {
+    opacity: 0.5;
+  }
+
   @import "./static/common.scss";
 </style>

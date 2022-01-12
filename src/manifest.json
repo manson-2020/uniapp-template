@@ -83,7 +83,7 @@
             }
         },
         "devServer": {
-            "https": true,
+            "https": false,
             "port": 8080, // 本地端口号  
             "disableHostCheck": true, // 禁用 Host 检查，默认false  
             "proxy": { // 代理配置  
