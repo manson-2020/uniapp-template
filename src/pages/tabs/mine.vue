@@ -2,7 +2,7 @@
   <view class="root">{{ title }}</view>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { onLoad } from "@dcloudio/uni-app";
   import { ref } from "vue";
 

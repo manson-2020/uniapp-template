@@ -1,0 +1,23 @@
+<template></template>
+
+<script lang="ts">
+  import $config from "../static/libs/config";
+
+  export default {
+    async onLoad() {
+      uni.showLoading({ title: "Loading...", mask: true });
+
+      let authInfo;
+      try {
+        authInfo = await uni.getStorage({ key: "authInfo" });
+      } catch (error) {
+        authInfo = {};
+      }
+
+      uni.reLaunch({
+        url: $config.page[authInfo?.token ? "home" : "auth"],
+        complete: uni.hideLoading,
+      });
+    },
+  };
+</script>

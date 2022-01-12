@@ -1,16 +1,33 @@
 <script setup lang="ts">
   import { onLaunch, onShow, onHide, onPageNotFound } from "@dcloudio/uni-app";
-  import { Storage } from "./static/libs/utils";
-  import { $config, $request } from "./static";
+  import $config from "./static/libs/config";
 
-  const checkVersion = async () => {
+  onLaunch(() => {
+    // uni.setStorage({ key: "authInfo", data: { token: "asd" } });
+    checkVersion();
+    if ($config.SOCKET_URL) openWebsocket();
+  });
+
+  onShow(() => {
+    console.log("App Show");
+  });
+
+  onHide(() => {
+    console.log("App Hide");
+  });
+
+  onPageNotFound(() => {
+    uni.redirectTo({ url: $config.page.error });
+  });
+
+  async function checkVersion() {
     // #ifdef MP
     const { onCheckForUpdate, onUpdateReady, onUpdateFailed, applyUpdate } =
       uni.getUpdateManager();
 
     onCheckForUpdate(({ hasUpdate }) => {
       /* 请求完新版本信息的回调 */
-      hasUpdate && Storage.clear();
+      hasUpdate && uni.clearStorage();
     });
 
     onUpdateReady((res) => {
@@ -34,9 +51,12 @@
     // #ifdef APP-PLUS
     const { checkVersion: checkVersionURL } = $config.path;
     if (!checkVersionURL) return;
-    const { data, msg: title } = await $request.get(checkVersionURL, {
-      platform: uni.getSystemInfoSync().platform,
-      version: plus.runtime.version,
+    const { data, msg: title }: any = await uni.request({
+      url: checkVersionURL,
+      data: {
+        platform: uni.getSystemInfoSync().platform,
+        version: plus.runtime.version,
+      },
     });
 
     if (!data.upgradeUrl) return;
@@ -95,25 +115,33 @@
         )
     );
     // #endif
-  };
+  }
 
-  onLaunch(() => {
-    checkVersion();
+  function openWebsocket() {
+    let [socketOpen, socketMsgQueue]: [boolean, string[]] = [false, []];
 
-    Storage.set("authInfo", { token: "asdasdsad" }, 15);
-  });
-
-  onShow(() => {
-    console.log("App Show");
-  });
-
-  onHide(() => {
-    console.log("App Hide");
-  });
-
-  onPageNotFound(() => {
-    uni.redirectTo({ url: $config.page.error });
-  });
+    uni.connectSocket({ url: $config.SOCKET_URL });
+    uni.onSocketOpen((res) => {
+      socketOpen = true;
+      for (let i = 0; i < socketMsgQueue.length; i++) {
+        socketOpen
+          ? uni.sendSocketMessage({ data: socketMsgQueue[i] })
+          : socketMsgQueue.push(socketMsgQueue[i]);
+      }
+      socketMsgQueue = [];
+      // uni.closeSocket({});
+    });
+    uni.onSocketMessage((res) => {
+      console.log("Received server content:" + res.data);
+    });
+    uni.onSocketClose((res) => {
+      socketOpen = false;
+      console.log("Websocket closed!");
+    });
+    uni.onSocketError((res) => {
+      console.log("Websocket connection opening failed, please check!");
+    });
+  }
 </script>
 
 <style lang="scss">

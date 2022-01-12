@@ -1,15 +1,15 @@
 <template>
-    <view class="root">{{ title }}</view>
+  <view class="root">{{ title }}</view>
 </template>
 
-<script setup lang="ts">
-    import { onLoad } from "@dcloudio/uni-app";
-    import { ref } from "vue";
+<script lang="ts" setup>
+  import { onLoad } from "@dcloudio/uni-app";
+  import { ref } from "vue";
 
-    const title = ref("login");
-    onLoad(() => {});
+  const title = ref("login");
+  onLoad(() => {});
 </script>
 
 <style lang="scss" scoped>
-    // scss
+  // scss
 </style>

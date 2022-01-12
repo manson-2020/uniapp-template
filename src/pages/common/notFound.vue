@@ -20,8 +20,8 @@
   </view>
 </template>
 
-<script setup lang="ts">
-  import { $config } from "../../static";
+<script lang="ts" setup>
+  import $config from "../../static/libs/config";
 </script>
 
 <style lang="scss" scoped>

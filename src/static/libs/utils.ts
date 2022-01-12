@@ -114,52 +114,13 @@ export const pageData = (page: number = -2): Page.PageInstance => {
     return pages[pages.length + page];
 }
 
-/**
- * @var {object} Storage 设置 获取 删除 清空
- * @property {function} set 
- * @property {function} remove 
- * @property {function} get 
- * @property {function} clear 
- */
-export const Storage = {
-    set(key: string, value: any, validityDay: null | number = null): { value: any, createTime: number, expireTime: number } {
-        const { value: oldValue, createTime: storageCreate, expireTime: storageExpire } = uni.getStorageSync(key) || {},
-            createTime: number = storageCreate || Date.now();
-
-        uni.setStorageSync(key,
-            Object.prototype.toString.call(oldValue) === "[object Object]" ?
-                {
-                    value: Object.assign(oldValue, value),
-                    createTime,
-                    expireTime: validityDay ? createTime + validityDay * 86_400_000 : storageExpire
-                } : {
-                    value,
-                    createTime,
-                    expireTime: validityDay && createTime + validityDay * 86_400_000
-                }
-        );
-
-        return value;
-    },
-    get(key: string): any {
-        const { expireTime, value } = uni.getStorageSync(key);
-        return (expireTime && Date.now() >= expireTime) ? this.remove(key) : value;
-    },
-    remove(...args: string[]): void {
-        args.forEach((key: string): void => uni.removeStorageSync(key));
-    },
-    clear(): void {
-        uni.clearStorageSync()
-    }
-}
-
 // 防抖  
-export const debounce = (fn: AnyFunction, delay: number = 500, isImmediate: boolean = false): { exec: AnyFunction } => {
-    let [timer, flag]: [number, boolean] = [0, true];
+export const debounce = (fn: Function, delay: number = 500, isImmediate: boolean = false): { exec: Function } => {
+    let [timer, flag]: [number | NodeJS.Timeout, boolean] = [0, true];
 
     return {
         exec: (...args: any[]) => {
-            timer && clearTimeout(timer);
+            timer && clearTimeout(timer as number);
             if (flag) {
                 isImmediate && fn(args);
                 flag = false;
@@ -170,7 +131,7 @@ export const debounce = (fn: AnyFunction, delay: number = 500, isImmediate: bool
 }
 
 // 节流  
-export const throttle = (fn: AnyFunction, delay = 500, isImmediate = false): { exec: AnyFunction } => {
+export const throttle = (fn: Function, delay = 500, isImmediate = false): { exec: Function } => {
     let flag = true;
     return {
         exec: (...args: any[]) => {
@@ -187,7 +148,7 @@ export const throttle = (fn: AnyFunction, delay = 500, isImmediate = false): { e
     }
 }
 
-export const bind = (fn: AnyFunction, thisArg: any): AnyFunction => (...arg: any[]) => fn.apply(thisArg, arg);
+export const bind = (fn: Function, thisArg: any): Function => (...arg: any[]) => fn.apply(thisArg, arg);
 
 export const extend = (a: AnyObject, b: AnyObject, thisArg?: {}): AnyObject => {
     let o: string[] = Object.getOwnPropertyNames(b);
