@@ -6,7 +6,7 @@
   import { onLoad } from "@dcloudio/uni-app";
   import { ref } from "vue";
 
-  const title = ref("mine");
+  const title = ref("index");
   onLoad(() => {});
 </script>
 

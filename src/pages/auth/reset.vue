@@ -6,7 +6,7 @@
       mode="aspectFit"
     />
 
-    <text class="mt-60 color-333 fs-32 fw-500 lh-100">系统注册</text>
+    <text class="mt-60 color-333 fs-32 fw-500 lh-100">找回密码</text>
 
     <view :style="{ padding: `30rpx`, borderTop: `2rpx #ececec solid` }">
       <label>
@@ -25,7 +25,8 @@
           size="18"
           color="#606266"
         />
-        <uni-easyinput maxlength="6" type="number" placeholder="验证码" />
+        <uni-easyinput type="number" placeholder="验证码" />
+
         <button
           hover-class="tap-hover"
           hover-start-time="50"
@@ -44,7 +45,7 @@
           size="18"
           color="#606266"
         />
-        <uni-easyinput type="password" placeholder="密码" />
+        <uni-easyinput type="password" placeholder="新密码" />
       </label>
       <label class="mt-44">
         <uni-icons
@@ -61,7 +62,7 @@
           class="f1 bgc-409eff mt-90 lh-60 fs-28 color-fff"
           hover-class="tap-hover"
         >
-          注册
+          重置
         </button>
         <button
           class="ml-20 f1 mt-90 lh-60 fs-28"

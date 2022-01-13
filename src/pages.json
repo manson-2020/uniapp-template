@@ -16,18 +16,6 @@
 			}
 		},
 		{
-			"path": "pages/tabs/home",
-			"style": {
-				"navigationBarTitleText": "Home"
-			}
-		},
-		{
-			"path": "pages/tabs/mine",
-			"style": {
-				"navigationBarTitleText": "Mine"
-			}
-		},
-		{
 			"path": "pages/auth/login",
 			"style": {
 				"navigationBarTitleText": "Login",
@@ -39,11 +27,100 @@
 		{
 			"path": "pages/auth/register",
 			"style": {
-				"navigationBarTitleText": "Login",
+				"navigationBarTitleText": "Register",
 				"navigationStyle": "custom",
 				"topWindow": false,
 				"leftWindow": false
 			}
+		},
+		{
+			"path": "pages/auth/reset",
+			"style": {
+				"navigationBarTitleText": "Reset",
+				"navigationStyle": "custom",
+				"topWindow": false,
+				"leftWindow": false
+			}
+		}
+	],
+	"subPackages": [
+		{
+			"root": "pages/admin",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "Index",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "index1",
+					"style": {
+						"navigationBarTitleText": "Index1",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "index2",
+					"style": {
+						"navigationBarTitleText": "Index2",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "index3",
+					"style": {
+						"navigationBarTitleText": "Index3",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "index4",
+					"style": {
+						"navigationBarTitleText": "Index4",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "index5",
+					"style": {
+						"navigationBarTitleText": "Index5",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "index6",
+					"style": {
+						"navigationBarTitleText": "Index6",
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/user",
+			"pages": [
+				{
+					"path": "tabs/home",
+					"style": {
+						"navigationBarTitleText": "Home",
+						"leftWindow": false,
+						"topWindow": false
+					}
+				},
+				{
+					"path": "tabs/mine",
+					"style": {
+						"navigationBarTitleText": "Mine",
+						"leftWindow": false,
+						"topWindow": false
+					}
+				},
+				{
+					"path": "index"
+				}
+			]
 		}
 	],
 	"topWindow": {
@@ -68,13 +145,13 @@
 		"backgroundColor": "#ffffff",
 		"list": [
 			{
-				"pagePath": "pages/tabs/home",
+				"pagePath": "pages/user/tabs/home",
 				"iconPath": "static/img/tab-home.png",
 				"selectedIconPath": "static/img/tab-home_.png",
 				"text": "Home"
 			},
 			{
-				"pagePath": "pages/tabs/mine",
+				"pagePath": "pages/user/tabs/mine",
 				"iconPath": "static/img/tab-mine.png",
 				"selectedIconPath": "static/img/tab-mine_.png",
 				"text": "Mine"

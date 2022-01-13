@@ -15,7 +15,8 @@ const config = {
     },
     page: {
         auth: "/pages/auth/login",
-        home: "/pages/tabs/home",
+        userHome: "/pages/user/tabs/home",
+        adminHome: "/pages/admin/index",
         error: "/pages/common/notFound"
     },
     authValidityDay: 7

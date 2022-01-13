@@ -6,6 +6,13 @@
     // uni.setStorage({ key: "authInfo", data: { token: "asd" } });
     checkVersion();
     if ($config.SOCKET_URL) openWebsocket();
+
+    console.log(
+      `%c uni Admin %c 当前版本号 v${0.1} %c`,
+      "background: #35495e; padding: 1px; border-radius: 3px 0 0 3px; color: #fff",
+      "background: #007aff; padding: 1px; margin: 1px; border-radius: 0 3px 3px 0; color: #fff; font-weight: bold;",
+      "background: transparent"
+    );
   });
 
   onShow(() => {
@@ -146,47 +153,6 @@
 
 <style lang="scss">
   // 公共颜色类
-  @each $color
-    in (
-      #007aff,
-      #f21919,
-      #f33,
-      #808080,
-      #ccc,
-      #ddd,
-      #fff,
-      #333,
-      #222,
-      #666,
-      #aaa,
-      #eee,
-      #888,
-      #999
-    )
-  {
-    .color-#{str-slice("#{$color}", 2)} {
-      color: $color;
-    }
-  }
-
-  @each $bgc
-    in (
-      #409eff,
-      #f0f0f0,
-      #f9f9f9,
-      #dfdfdf,
-      #f5f5f5,
-      #eee,
-      #fff,
-      #ccc,
-      transparent
-    )
-  {
-    .bgc-#{str-slice("#{$bgc}", 2)} {
-      background-color: $bgc;
-    }
-  }
-
   page,
   view,
   picker,
@@ -208,10 +174,34 @@
     background-position: center;
   }
 
+  .uni-app--showleftwindow uni-main {
+    position: relative;
+  }
+
+  .uni-app--showleftwindow uni-page-wrapper {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    padding: 15px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+  }
+
+  .uni-app--showleftwindow uni-page-body {
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: -1px -1px 5px 0 rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+  }
+
   page {
     font-weight: 500;
     height: 100%;
-    background-color: #f7f7f7;
+    background-color: #fcfcfc;
   }
 
   label {
@@ -226,6 +216,29 @@
   picker[disabled],
   button[disabled] {
     opacity: 0.5;
+  }
+
+  ::selection {
+    background: #26a69a;
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 32px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 9px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgb(204, 204, 204, 0.6);
+    background-color: rgb(204, 204, 204, 0.6);
+  }
+
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px rgb(204, 204, 204, 0.6);
+    border-radius: 0;
+    background-color: rgb(204, 204, 204, 0.1);
   }
 
   @import "./static/common.scss";
