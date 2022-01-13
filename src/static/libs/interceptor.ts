@@ -120,7 +120,7 @@ uni.addInterceptor("setStorage", {
         const createTime: number = Date.now();
         args.data = {
             key: args.key,
-            value: args.data,
+            value: args.data?.value || args.data,
             createTime,
             expireTime: args.data.validityDay ? createTime + args.data.validityDay * 86_400_000 : null
         }
