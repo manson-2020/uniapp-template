@@ -241,5 +241,54 @@
     background-color: rgb(204, 204, 204, 0.1);
   }
 
+  @each $color
+    in (
+      #606266,
+      #007aff,
+      #f21919,
+      #f33,
+      #808080,
+      #ccc,
+      #ddd,
+      #fff,
+      #333,
+      #222,
+      #666,
+      #aaa,
+      #eee,
+      #888,
+      #999
+    )
+  {
+    .color-#{str-slice("#{$color}", 2)} {
+      color: $color !important;
+    }
+  }
+
+  @each $bgc
+    in (
+      #f56c6c,
+      #409eff,
+      #f0f0f0,
+      #f9f9f9,
+      #dfdfdf,
+      #f5f5f5,
+      #eee,
+      #fff,
+      #ccc,
+      transparent
+    )
+  {
+    @if $bgc == transparent {
+      .bgc-#{$bgc} {
+        background-color: $bgc !important;
+      }
+    } @else {
+      .bgc-#{str-slice("#{$bgc}", 2)} {
+        background-color: $bgc !important;
+      }
+    }
+  }
+
   @import "./static/common.scss";
 </style>

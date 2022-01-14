@@ -6,7 +6,7 @@
       mode="aspectFit"
     />
 
-    <text class="mt-60 color-333 fs-32 fw-500 lh-100">找回密码</text>
+    <text class="mt-60 color-333 fs-32 fw-500 lh-100">重置密码</text>
 
     <view :style="{ padding: `30rpx`, borderTop: `2rpx #ececec solid` }">
       <label>

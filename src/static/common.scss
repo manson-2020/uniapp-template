@@ -3,25 +3,25 @@
 // 公共样式类
 @for $flex from 1 through 5 {
     .f#{$flex} {
-        flex: $flex;
+        flex: $flex !important;
     }
 }
 
 @each $fd, $value in (col: column, row: row, rerow: row-reverse, recol: column-reverse) {
     .fd-#{$fd} {
-        flex-direction: $value;
+        flex-direction: $value !important;
     }
 }
 
 @each $align, $value in (start: flex-start, center: center, end: flex-end, baseline: baseline) {
     .ai-#{$align} {
-        align-items: $value;
+        align-items: $value !important;
     }
     .as-#{$align} {
-        align-self: $value;
+        align-self: $value !important;
     }
     .ac-#{$align} {
-        align-content: $value;
+        align-content: $value !important;
     }
 }
 
@@ -29,25 +29,25 @@
     $value in (sa: space-around, sb: space-between, se: space-evenly, center: center, start: flex-start, end: flex-end)
 {
     .jc-#{$justify} {
-        justify-content: $value;
+        justify-content: $value !important;
     }
     .js-#{$justify} {
-        justify-self: $value;
+        justify-self: $value !important;
     }
     .ji-#{$justify} {
-        justify-items: $value;
+        justify-items: $value !important;
     }
 }
 
 @each $position in (fixed, relative, absolute, static) {
     .#{$position} {
-        position: $position;
+        position: $position !important;
     }
 }
 
 @each $text in (center, left, right, justify) {
     .text-#{$text} {
-        text-align: $text;
+        text-align: $text !important;
     }
 }
 
@@ -73,23 +73,23 @@
             )
     {
         .#{$wrapper}-#{$i * 2} {
-            #{$box}: #{$i * 2}rpx;
+            #{$box}: #{$i * 2}rpx !important;
         }
     }
 
     @if $i < 30 {
         .br-#{$i * 2} {
-            border-radius: #{$i * 2}rpx;
+            border-radius: #{$i * 2}rpx !important;
         }
     }
 
     @if $i <= 5 {
         .lh-#{$i} {
-            line-height: $i;
+            line-height: $i !important;
         }
     } @else {
         .lh-#{$i * 2} {
-            line-height: #{$i * 2}rpx;
+            line-height: #{$i * 2}rpx !important;
         }
     }
 }
@@ -97,51 +97,51 @@
 @each $size in (auto, 20, 25, 30, 50, 70, 100) {
     @if $size == 50 {
         .br-circle {
-            border-radius: 50%;
+            border-radius: 50% !important;
         }
     }
     @if $size == auto {
         .width-#{$size} {
-            width: $size;
+            width: $size !important;
         }
         .height-#{$size} {
-            height: $size;
+            height: $size !important;
         }
     } @else {
         .width-#{$size}vw {
-            width: #{$size}vw;
+            width: #{$size}vw !important;
         }
         .width-#{$size}percent {
-            width: #{$size}#{"%"};
+            width: #{$size}#{"%"} !important;
         }
 
         .height-#{$size}vh {
-            height: #{$size}vh;
+            height: #{$size}vh !important;
         }
         .height-#{$size}percent {
-            height: #{$size}#{"%"};
+            height: #{$size}#{"%"} !important;
         }
 
         .top-#{$size}percent {
-            top: #{$size}#{"%"};
+            top: #{$size}#{"%"} !important;
         }
         .left-#{$size}percent {
-            left: #{$size}#{"%"};
+            left: #{$size}#{"%"} !important;
         }
         .bottom-#{$size}percent {
-            bottom: #{$size}#{"%"};
+            bottom: #{$size}#{"%"} !important;
         }
         .right-#{$size}percent {
-            right: #{$size}#{"%"};
+            right: #{$size}#{"%"} !important;
         }
     }
 }
 
 @for $i from 1 to 10 {
     .opacity-dot#{$i} {
-        opacity: math.div($i, 10);
+        opacity: math.div($i, 10) !important;
     }
     .fw-#{$i * 100} {
-        font-weight: $i * 100;
+        font-weight: $i * 100 !important;
     }
 }

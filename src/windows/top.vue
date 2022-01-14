@@ -1,9 +1,9 @@
 <template>
   <view
-    class="root fd-row bgc-fff height-100percent ai-center pl-50 pr-50"
+    class="root fd-row jc-sb bgc-fff height-100percent ai-center pl-50 pr-50"
     :style="{ borderBottom: `1px solid #ebebeb` }"
   >
-    <label v-if="showLeftWindow">
+    <label v-if="showLeftWindow" @click="toHome">
       <image
         class="width-60 height-60"
         src="/static/img/logo.png"
@@ -20,14 +20,19 @@
       @click="toggleLeftWindow"
     />
 
-    <text class="f1">{{ navigationBarTitleText }}</text>
+    <text
+      v-if="!showLeftWindow"
+      class="f1 text-center fs-28 lh-2 color-999 ml-30 mr-30"
+    >
+      {{ $route.meta.navigationBar?.titleText }}
+    </text>
     <label
       @click="showActionItems"
       :style="{ padding: `16rpx` }"
-      class="ai-baseline"
+      class="ai-center"
     >
-      <uni-icons type="person-filled" size="13" color="#666" />
-      <text class="ml-4 mr-4 color-999 fs-28">admin</text>
+      <uni-icons type="person-filled" size="16" color="#666" />
+      <text class="ml-8 mr-8 color-999 fs-28">admin</text>
       <uni-icons type="arrowdown" size="14" color="#999" />
     </label>
   </view>
@@ -72,12 +77,17 @@
                 uni.clearStorage();
                 uni.reLaunch({ url: $config.page.auth });
                 break;
-
+              case 0:
+                uni.navigateTo({ url: "/pages/auth/reset" });
+                break;
               default:
                 break;
             }
           },
         });
+      },
+      toHome() {
+        uni.reLaunch({ url: $config.page.adminHome });
       },
     },
   };

@@ -45,6 +45,30 @@
 	],
 	"subPackages": [
 		{
+			"root": "pages/user",
+			"pages": [
+				{
+					"path": "tabs/home",
+					"style": {
+						"navigationBarTitleText": "Home",
+						"leftWindow": false,
+						"topWindow": false
+					}
+				},
+				{
+					"path": "tabs/mine",
+					"style": {
+						"navigationBarTitleText": "Mine",
+						"leftWindow": false,
+						"topWindow": false
+					}
+				},
+				{
+					"path": "index"
+				}
+			]
+		},
+		{
 			"root": "pages/admin",
 			"pages": [
 				{
@@ -95,30 +119,6 @@
 						"navigationBarTitleText": "Index6",
 						"navigationStyle": "custom"
 					}
-				}
-			]
-		},
-		{
-			"root": "pages/user",
-			"pages": [
-				{
-					"path": "tabs/home",
-					"style": {
-						"navigationBarTitleText": "Home",
-						"leftWindow": false,
-						"topWindow": false
-					}
-				},
-				{
-					"path": "tabs/mine",
-					"style": {
-						"navigationBarTitleText": "Mine",
-						"leftWindow": false,
-						"topWindow": false
-					}
-				},
-				{
-					"path": "index"
 				}
 			]
 		}
