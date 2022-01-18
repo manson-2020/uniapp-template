@@ -360,7 +360,7 @@
 	.uni-pagination--disabled {
 		opacity: 0.5;
 		/* #ifdef H5 */
-		cursor: default;
+		cursor: not-allowed;
 		/* #endif */
 	}
 

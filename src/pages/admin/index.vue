@@ -5,12 +5,10 @@
       :style="{ borderBottom: `1px #f5f5f5 solid` }"
     >
       <view class="fd-row ai-center">
-        <input
-          class="fs-24 height-60 br-6"
+        <uni-easyinput
           type="text"
-          :style="{ border: `1px #dcdfe6 solid`, padding: `0 20rpx` }"
           v-model="searchVal"
-          @confirm="search"
+          @confirm="getData(1)"
           placeholder="请输入搜索内容"
           placeholder-class="color-999"
         />
@@ -18,24 +16,19 @@
           class="fs-24 ml-20 bgc-transparent color-606266 lh-60 br-6"
           :style="{ border: `1px solid #dcdfe6` }"
           :plain="true"
-          @click="search"
+          @click="getData(1)"
         >
           搜索
         </button>
-        <button
-          class="fs-24 ml-20 bgc-transparent color-606266 lh-60 br-6"
-          :style="{ border: `1px solid #dcdfe6` }"
-          :plain="true"
-        >
+        <button class="fs-24 ml-20 bgc-409eff color-fff lh-60 br-6">
           新增
         </button>
         <button
-          class="fs-24 ml-20 bgc-transparent color-606266 lh-60 br-6"
-          :style="{ border: `1px solid #dcdfe6` }"
-          :plain="true"
+          class="fs-24 ml-20 bgc-f56c6c color-fff lh-60 br-6"
           @click="delTable"
+          disabled
         >
-          删除
+          批量删除
         </button>
       </view>
     </view>
@@ -84,8 +77,7 @@
   </view>
 </template>
 
-<script>
-  import tableData from "../../static/tableData";
+<script lang="ts">
   export default {
     data() {
       return {
@@ -98,84 +90,57 @@
         // 数据总量
         total: 0,
         loading: false,
+        selectedIndexes: [],
       };
     },
     onLoad() {
-      this.selectedIndexs = [];
-      this.getData(1);
+      this.selectedIndexes = [];
+      this.getData();
     },
     methods: {
       // 多选处理
       selectedItems() {
-        return this.selectedIndexs.map((i) => this.tableData[i]);
+        return this.selectedIndexes.map((i) => this.tableData[i]);
       },
       // 多选
-      selectionChange(e) {
-        console.log(e.detail.index);
-        this.selectedIndexs = e.detail.index;
+      selectionChange(e: any) {
+        this.selectedIndexes = e.detail.index;
       },
       //批量删除
       delTable() {
         console.log(this.selectedItems());
       },
       // 分页触发
-      change(e) {
+      change(e: any) {
         this.getData(e.current);
       },
-      // 搜索
-      search() {
-        this.getData(1, this.searchVal);
-      },
       // 获取数据
-      getData(pageCurrent, value = "") {
+      async getData(pageCurrent = 1) {
         this.loading = true;
         this.pageCurrent = pageCurrent;
-        this.request({
-          pageSize: this.pageSize,
-          pageCurrent: pageCurrent,
-          value: value,
-          success: (res) => {
-            // console.log('data', res);
-            this.tableData = res.data;
-            this.total = res.total;
-            this.loading = false;
-          },
-        });
-      },
-      // 伪request请求
-      request(options) {
-        const { pageSize, pageCurrent, success, value } = options;
-        let total = tableData.length;
-        let data = tableData.filter((item, index) => {
-          const idx = index - (pageCurrent - 1) * pageSize;
-          return idx < pageSize && idx >= 0;
-        });
-        if (value) {
-          data = [];
-          tableData.forEach((item) => {
-            if (item.name.indexOf(value) !== -1) {
-              data.push(item);
-            }
+        try {
+          const {
+            data: { list, total },
+          }: any = await uni.request({
+            url: "/data",
+            data: {
+              pageCurrent,
+              pageSize: this.pageSize,
+              keywords: this.searchVal,
+            },
           });
-          total = data.length;
-        }
 
-        setTimeout(() => {
-          typeof success === "function" &&
-            success({
-              data: data,
-              total: total,
-            });
-        }, 500);
+          this.tableData = list;
+          this.total = total;
+          this.loading = false;
+        } catch (error) {}
       },
     },
   };
 </script>
 
-<style>
-  /* #ifndef H5 */
+<style lang="scss">
   page {
-    padding-top: 85px;
+    padding-top: 15px;
   }
-  /* #endif */
 </style>

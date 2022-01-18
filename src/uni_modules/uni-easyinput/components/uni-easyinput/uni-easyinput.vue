@@ -336,7 +336,7 @@
 		width: 100%;
 		display: flex;
 		box-sizing: border-box;
-		min-height: 36px;
+		min-height: 32px;
 		/* #endif */
 		flex-direction: row;
 		align-items: center;

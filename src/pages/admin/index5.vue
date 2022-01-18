@@ -7,5 +7,7 @@
 </script>
 
 <style lang="scss" scoped>
-  // scss
+  page {
+    padding: 15px;
+  }
 </style>

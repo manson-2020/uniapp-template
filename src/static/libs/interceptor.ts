@@ -1,4 +1,4 @@
-import { pageData, sleep, transformQueryString } from "./utils";
+import { pageData, sleep, transformQueryString, isAbsoluteURL } from "./utils";
 import $config from "./config";
 import { Response } from "../type";
 
@@ -71,13 +71,15 @@ const pretreatment = {
 
 uni.addInterceptor("request", {
     async invoke(args) {
-        args.url = $config.API_URL + args.url;
+        args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
         args.data ?? (args.data = {});
         args.header ?? (args.header = {});
         args.header["Content-type"] = "application/x-www-form-urlencoded";
-        // const authInfo = await uni.getStorage({ key: "authInfo" });
-        // authInfo && (args.header.token: authInfo.token });
-        
+        try {
+            const authInfo: any = await uni.getStorage({ key: "authInfo" });
+            authInfo && (args.header.token = authInfo.token);
+        } catch (error) { }
+
         return args;
     },
     success({ data: res }: { data: Response | string }) {
@@ -97,12 +99,12 @@ uni.addInterceptor("request", {
         }
         const { success, notAuth, fail, error } = pretreatment.codeHandler;
         switch (+res.code) {
-            case 400: // 失败
-                return fail(res);
             case 200: // 成功
                 return success(res);
             case 401: // 未授权
                 return notAuth(res);
+            case 501: // 失败
+                return fail(res);
             default: // 错误
                 return error(res);
         }

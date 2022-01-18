@@ -1,6 +1,6 @@
 const config = {
     development: {
-        http: "https://api.muxiaoguo.cn",
+        http: "http://localhost:8000",
         socket: null
     },
     production: {

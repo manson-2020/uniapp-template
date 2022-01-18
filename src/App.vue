@@ -219,7 +219,7 @@
   }
 
   ::selection {
-    background: #26a69a;
+    background: #409eff;
     color: #ffffff;
     font-weight: 900;
     font-size: 32px;
@@ -280,7 +280,7 @@
     )
   {
     @if $bgc == transparent {
-      .bgc-#{$bgc} {
+      .bgc-transparent {
         background-color: $bgc !important;
       }
     } @else {
