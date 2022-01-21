@@ -69,7 +69,8 @@
     url: string
   ) => uni[method]({ url });
 
-  const login = () => {
+  const login = (keyboard?: KeyboardEvent) => {
+    if (keyboard && keyboard.key && keyboard.key !== "Enter") return;
     uni.showActionSheet({
       itemList: ["user", "admin"],
       itemColor: "#666",
@@ -79,18 +80,15 @@
     });
   };
 
-  function keydownLogin({ key }: KeyboardEvent) {
-    if (key === "Enter") login();
-  }
   onLoad(() => {
     // #ifdef H5
-    document.addEventListener("keydown", keydownLogin);
+    document.addEventListener("keydown", login);
     // #endif
   });
 
   onUnload(() => {
     // #ifdef H5
-    document.removeEventListener("keydown", keydownLogin);
+    document.removeEventListener("keydown", login);
     // #endif
   });
 </script>

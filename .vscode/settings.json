@@ -1,14 +1,42 @@
 {
-    "cSpell.ignoreWords": [
-        "autoplay",
-        "concat",
-        "dcloudio",
-        "getuserinfo",
-        "ifdef",
-        "ifndef",
-        "nvue",
-        "readonly",
-        "scrolltolower",
-        "swiper"
-    ]
+  "editor.tabSize": 2,
+  "editor.formatOnType": true,
+  "files.associations": {
+    "*.nvue": "html",
+    "*.json": "jsonc"
+  },
+  "vetur.format.options.tabSize": 2,
+  "vetur.format.scriptInitialIndent": true,
+  "vetur.format.styleInitialIndent": true,
+  "vetur.format.options.useTabs": false,
+  "path-autocomplete.pathMappings": {
+    "/": "${folder}/src/"
+  },
+  "cSpell.ignoreWords": [
+    "autoplay",
+    "concat",
+    "dcloudio",
+    "getuserinfo",
+    "ifdef",
+    "ifndef",
+    "nvue",
+    "readonly",
+    "scrolltolower",
+    "swiper"
+  ],
+  "cSpell.enableFiletypes": [
+    "vue"
+  ],
+  "better-comments.multilineComments": true,
+  "better-comments.tags": [
+    {
+      "tag": "#",
+      "color": "#aaf",
+      "strikethrough": false,
+      "underline": false,
+      "backgroundColor": "transparent",
+      "bold": false,
+      "italic": false
+    }
+  ],
 }
