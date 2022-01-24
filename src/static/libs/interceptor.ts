@@ -113,7 +113,7 @@ uni.addInterceptor("request", {
     uni.showToast({ title, icon: "none" });
   },
   complete(res) {
-    console.warn(`Response:`, res);
+    console.warn(`%c Response `, "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;", res);
   }
 });
 
