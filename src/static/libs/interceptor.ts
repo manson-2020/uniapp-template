@@ -155,13 +155,14 @@ uni.addInterceptor("setStorage", {
         return;
       }
       default: {
-        const createTime = Date.now();
+        const createTime = Date.now(),
+          validityDay = args.data?.validityDay;
         args.data = {
           value: args.data?.value || args.data,
           key: args.key,
           createTime,
         };
-        args.data.validityDay && (args.data.expireTime = createTime + args.data.validityDay * 86_400_000);
+        validityDay && (args.data.expireTime = createTime + validityDay * 86_400_000);
         return;
       }
     }
