@@ -84,6 +84,9 @@ uni.addInterceptor("request", {
       authInfo && (args.header.token = authInfo.token);
     } catch (error) { }
 
+    for (let key in args.data) {
+      if ([null, undefined, NaN].includes(key)) delete args.data[key];
+    }
     return args;
   },
   success({ data: res }: { data: Response | string }) {
