@@ -1,4 +1,4 @@
-import { pageData, sleep, transformQueryString, isAbsoluteURL } from "./utils";
+import { pageData, transformQueryString, isAbsoluteURL } from "./utils";
 import $config from "./config";
 import { Response } from "../type";
 
@@ -6,20 +6,24 @@ const pretreatment = {
   throttle: false,
   times: 0,
   codeHandler: {
-    notAuth: async ({ msg: title }: Response): Promise<string | void> => {
+    notAuth: async ({ msg: content }: Response): Promise<string | void> => {
       if (pretreatment.throttle) return;
       pretreatment.throttle = true;
 
       if ($config.page.auth) {
-        await uni.showToast({ title, icon: "none", duration: 1200 });
         pretreatment.throttle = true;
-        await sleep(1.2)
-        await uni.reLaunch({ url: $config.page.auth, success: uni.clearStorage });
-        pretreatment.throttle = false;
+        uni.showModal({
+          content,
+          showCancel: false,
+          confirmText: "login again",
+          success() {
+            uni.reLaunch({ url: $config.page.auth, success: uni.clearStorage });
+            pretreatment.throttle = false;
+          }
+        });
 
-        return Promise.reject(title);
+        return Promise.reject(content);
       }
-
       const [loginFail, loginRes]: any = await uni.login({});
       if (loginFail) {
         uni.showToast({ title: loginFail.errMsg, icon: "none" });
@@ -55,7 +59,7 @@ const pretreatment = {
       pretreatment.throttle = false;
       const { route, options }: any = pageData(-1);
       uni.reLaunch({ url: `/${route}?${transformQueryString(options)}` });
-      return Promise.reject(title);
+      return Promise.reject(content);
     },
 
     fail: (res: Response) => {
@@ -119,12 +123,38 @@ uni.addInterceptor("request", {
 
 uni.addInterceptor("setStorage", {
   invoke(args) {
-    const createTime: number = Date.now();
-    args.data = {
-      key: args.key,
-      value: args.data?.value || args.data,
-      createTime,
-      expireTime: args.data.validityDay ? createTime + args.data.validityDay * 86_400_000 : null
+    switch (args.data?.$type) {
+      case "update": {
+        const { value, key, createTime, expireTime } = uni.getStorageSync(args.key);
+        args.data = {
+          value: { ...value, ...args.data.value },
+          key,
+          createTime,
+          expireTime
+        };
+        return;
+      }
+      case "delete": {
+        const { value, key, createTime, expireTime } = uni.getStorageSync(args.key);
+        delete value[args.data.value];
+        args.data = {
+          value,
+          key,
+          createTime,
+          expireTime
+        };
+        return;
+      }
+      default: {
+        const createTime = Date.now();
+        args.data = {
+          value: args.data?.value || args.data,
+          key: args.key,
+          createTime,
+        };
+        args.data.validityDay && (args.data.expireTime = createTime + args.data.validityDay * 86_400_000);
+        return;
+      }
     }
   }
 });
