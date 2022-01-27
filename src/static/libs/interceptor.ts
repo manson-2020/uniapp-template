@@ -127,8 +127,11 @@ uni.addInterceptor("request", {
 uni.addInterceptor("setStorage", {
   invoke(args) {
     switch (args.data?.$type) {
-      case "update": {
-        const { value, key, createTime, expireTime } = uni.getStorageSync(args.key);
+       case "update": {
+        if (typeof (args.data.value) !== "object") throw Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got String.`);
+        const originalData = uni.getStorageSync(args.key);
+        if (!originalData) throw Error(`No data found to update.`);
+        const { value, key, createTime, expireTime } = originalData;
         args.data = {
           value: { ...value, ...args.data.value },
           key,
@@ -138,7 +141,10 @@ uni.addInterceptor("setStorage", {
         return;
       }
       case "delete": {
-        const { value, key, createTime, expireTime } = uni.getStorageSync(args.key);
+        if (typeof (args.data.value) !== "string") throw Error(`Invalid prop: type check failed for prop "value". Expected String with value, got Object.`);
+        const originalData = uni.getStorageSync(args.key);
+        if (!originalData) throw Error(`No data found to delete.`);
+        const { value, key, createTime, expireTime } = originalData;
         delete value[args.data.value];
         args.data = {
           value,
