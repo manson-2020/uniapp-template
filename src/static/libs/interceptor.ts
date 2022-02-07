@@ -14,6 +14,9 @@ uni.addInterceptor("request", {
       authInfo && (args.header.token = authInfo.token);
     } catch (error) { }
 
+    for (let key in args.data) {
+      if ([null, undefined, NaN].includes(args.data[key])) delete args.data[key];
+    }
     return args;
   },
   success({ data: res }: { data: Response | string }) {
@@ -98,7 +101,12 @@ uni.addInterceptor("setStorage", {
           key: args.key,
           createTime,
         };
-        validityDay && (args.data.expireTime = createTime + validityDay * 86_400_000);
+        if (validityDay) {
+          if (typeof (validityDay) !== "number") {
+            throw Error(`Invalid prop: type check failed for prop "validityDay". Expected Number with value, got "${String(validityDay)}".`);
+          }
+          args.data.expireTime = createTime + validityDay * 86_400_000;
+        }
         return;
       }
       default:
