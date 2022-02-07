@@ -74,7 +74,8 @@
     uni.showActionSheet({
       itemList: ["user", "admin"],
       itemColor: "#666",
-      success: ({ tapIndex }) => {
+      success: async ({ tapIndex }) => {
+        await uni.setStorage({ key: "authInfo", data: { $type: "delete" } });
         to(`reLaunch`, [$config.page.userHome, $config.page.adminHome][tapIndex]);
       },
     });

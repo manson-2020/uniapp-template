@@ -8,10 +8,10 @@ const config = {
     socket: null
   },
   path: {
-    api: "/api",
+    api: null,
     socket: null,
-    login: "/login",
-    checkVersion: "/check_version"
+    login: null,
+    checkVersion: null
   },
   page: {
     auth: "/pages/auth/login",

@@ -1,73 +1,7 @@
-import { pageData, sleep, transformQueryString, isAbsoluteURL } from "./utils";
+import { isAbsoluteURL } from "./utils";
 import $config from "./config";
 import { Response } from "../type";
-
-const pretreatment = {
-  throttle: false,
-  times: 0,
-  codeHandler: {
-    notAuth: async ({ msg: title }: Response): Promise<string | void> => {
-      if (pretreatment.throttle) return;
-      pretreatment.throttle = true;
-
-      if ($config.page.auth) {
-        await uni.showToast({ title, icon: "none", duration: 1200 });
-        pretreatment.throttle = true;
-        await sleep(1.2)
-        await uni.reLaunch({ url: $config.page.auth, success: uni.clearStorage });
-        pretreatment.throttle = false;
-
-        return Promise.reject(title);
-      }
-
-      const [loginFail, loginRes]: any = await uni.login({});
-      if (loginFail) {
-        uni.showToast({ title: loginFail.errMsg, icon: "none" });
-        return Promise.reject(loginFail.errMsg);
-      }
-
-      const [reqFail, result]: any = await uni.request({
-        url: `${$config.API_URL}${$config.path.login}`,
-        data: { code: loginRes.code }
-      });
-
-      if (reqFail) {
-        uni.showToast({ title: reqFail.errMsg, icon: "none" });
-        return;
-      }
-      const { code, data, msg } = result.data;
-      if (!+code) {
-        uni.showToast({ title: msg, icon: "none" });
-        return;
-      }
-      await uni.setStorage({ key: "authInfo", data: { value: data, validityDay: $config.authValidityDay } })
-
-      if (++pretreatment.times >= 3) {
-        const [, modal]: any = await uni.showModal({
-          title: "Prompt",
-          content: "Multiple redirects detected, Whether to continue?",
-          confirmText: "Continue",
-          cancelText: "Cancel"
-        });
-        if (modal.cancel) return;
-      }
-      pretreatment.times = 0;
-      pretreatment.throttle = false;
-      const { route, options }: any = pageData(-1);
-      uni.reLaunch({ url: `/${route}?${transformQueryString(options)}` });
-      return Promise.reject(title);
-    },
-
-    fail: (res: Response) => {
-      uni.showToast({ title: res.msg, icon: "none" });
-      return Promise.reject(res)
-    },
-
-    error: (res: Response) => Promise.reject(res),
-
-    success: (res: Response) => Promise.resolve(res),
-  }
-}
+import { pretreatment } from "./dependency"
 
 uni.addInterceptor("request", {
   async invoke(args) {
@@ -113,18 +47,62 @@ uni.addInterceptor("request", {
     uni.showToast({ title, icon: "none" });
   },
   complete(res) {
-    console.warn(`Response:`, res);
+    console.warn(
+      `%c Response `,
+      "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
+      res
+    );
   }
 });
 
 uni.addInterceptor("setStorage", {
   invoke(args) {
-    const createTime: number = Date.now();
-    args.data = {
-      key: args.key,
-      value: args.data?.value || args.data,
-      createTime,
-      expireTime: args.data.validityDay ? createTime + args.data.validityDay * 86_400_000 : null
+    switch (args.data?.$type) {
+      case "update": {
+        if (typeof (args.data.value) !== "object") {
+          throw Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data.value)}".`);
+        }
+        const originalData = uni.getStorageSync(args.key);
+        if (!originalData) throw Error(`No data found to update.`);
+        const { value, key, createTime, expireTime } = originalData;
+        args.data = {
+          value: { ...value, ...args.data.value },
+          key,
+          createTime,
+          expireTime
+        };
+        return;
+      }
+      case "delete": {
+        if (typeof (args.data.value) !== "string") {
+          throw Error(`Invalid prop: type check failed for prop "value". Expected String with value, got "${String(args.data.value)}".`);
+        }
+        const originalData = uni.getStorageSync(args.key);
+        if (!originalData) throw Error(`No data found to delete.`);
+        const { value, key, createTime, expireTime } = originalData;
+        delete value[args.data.value];
+        args.data = {
+          value,
+          key,
+          createTime,
+          expireTime
+        };
+        return;
+      }
+      case "add":
+      case undefined: {
+        const createTime = Date.now(),
+          validityDay = args.data?.validityDay;
+        args.data = {
+          value: args.data?.value || args.data,
+          key: args.key,
+          createTime,
+        };
+        validityDay && (args.data.expireTime = createTime + validityDay * 86_400_000);
+        return;
+      }
+      default:
+        throw Error(`Invalid prop: type check failed for prop "$type". Expected "update, delete, add or void", got "${String(args.data.$type)}".`);
     }
   }
 });
