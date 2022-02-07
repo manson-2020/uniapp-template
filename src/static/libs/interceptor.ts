@@ -92,24 +92,26 @@ uni.addInterceptor("setStorage", {
         };
         return;
       }
+      case undefined:
       case "add":
-        if (!args.data?.value) throw Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data?.value)}".`);
-      case undefined: {
-        const createTime = Date.now(),
-          validityDay = args.data?.validityDay;
-        args.data = {
-          value: args.data?.value || args.data,
-          key: args.key,
-          createTime,
-        };
-        if (validityDay) {
-          if (typeof (validityDay) !== "number") {
-            throw Error(`Invalid prop: type check failed for prop "validityDay". Expected Number with value, got "${String(validityDay)}".`);
+        if (!args.data?.value) {
+          throw Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data?.value)}".`);
+        } else {
+          const createTime = Date.now(),
+            validityDay = args.data?.validityDay;
+          args.data = {
+            value: args.data?.value || args.data,
+            key: args.key,
+            createTime,
+          };
+          if (validityDay) {
+            if (typeof (validityDay) !== "number") {
+              throw Error(`Invalid prop: type check failed for prop "validityDay". Expected Number with value, got "${String(validityDay)}".`);
+            }
+            args.data.expireTime = createTime + validityDay * 86_400_000;
           }
-          args.data.expireTime = createTime + validityDay * 86_400_000;
+          return;
         }
-        return;
-      }
       default:
         throw Error(`Invalid prop: type check failed for prop "$type". Expected "update, delete, add or void", got "${String(args.data.$type)}".`);
     }
