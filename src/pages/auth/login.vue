@@ -75,7 +75,7 @@
       itemList: ["user", "admin"],
       itemColor: "#666",
       success: async ({ tapIndex }) => {
-        await uni.setStorage({ key: "authInfo", data: { $type: "delete" } });
+        await uni.setStorage({ key: "authInfo", data: "asd" });
         to(`reLaunch`, [$config.page.userHome, $config.page.adminHome][tapIndex]);
       },
     });

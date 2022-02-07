@@ -93,6 +93,7 @@ uni.addInterceptor("setStorage", {
         return;
       }
       case "add":
+        if (!args.data?.value) throw Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data?.value)}".`);
       case undefined: {
         const createTime = Date.now(),
           validityDay = args.data?.validityDay;
