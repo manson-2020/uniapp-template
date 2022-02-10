@@ -7,9 +7,9 @@
 			"path": "pages/common/webview"
 		},
 		{
-			"path": "pages/common/notFound",
+			"path": "pages/common/error",
 			"style": {
-				"navigationBarTitleText": "Oops!",
+				"navigationBarTitleText": "Oops, An error has occurred!",
 				"navigationStyle": "custom",
 				"navigationBarTextStyle": "black",
 				"disableScroll": true
@@ -45,7 +45,7 @@
 	],
 	"subPackages": [
 		{
-			"root": "pages/user",
+			"root": "pages/client",
 			"pages": [
 				{
 					"path": "tabs/home",
@@ -145,13 +145,13 @@
 		"backgroundColor": "#ffffff",
 		"list": [
 			{
-				"pagePath": "pages/user/tabs/home",
+				"pagePath": "pages/client/tabs/home",
 				"iconPath": "static/img/tab-home.png",
 				"selectedIconPath": "static/img/tab-home_.png",
 				"text": "Home"
 			},
 			{
-				"pagePath": "pages/user/tabs/mine",
+				"pagePath": "pages/client/tabs/mine",
 				"iconPath": "static/img/tab-mine.png",
 				"selectedIconPath": "static/img/tab-mine_.png",
 				"text": "Mine"

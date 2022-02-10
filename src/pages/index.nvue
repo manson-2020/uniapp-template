@@ -7,7 +7,7 @@
     async onLoad() {
       uni.showLoading({ title: "Loading...", mask: true });
       await uni.getStorage({ key: $config.authInfoStorageKey, complete: uni.hideLoading });
-      uni.reLaunch({ url: $config.page.userHome });
+      uni.reLaunch({ url: $config.page.clientHome });
     },
   };
 </script>

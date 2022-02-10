@@ -22,9 +22,9 @@
 
     <text
       v-if="!showLeftWindow"
-      class="f1 text-center fs-28 lh-2 color-999 ml-30 mr-30"
+      class="ellipsis f1 text-center fs-28 lh-2 color-999 ml-30 mr-30"
     >
-      {{ $route.meta.navigationBar?.titleText }}
+      {{ navigationBarTitleText || $route.meta.navigationBar?.titleText }}
     </text>
     <label
       @click="showActionItems"

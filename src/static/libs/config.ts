@@ -14,9 +14,9 @@ const config = {
   },
   page: {
     auth: "/pages/auth/login",
-    userHome: "/pages/user/tabs/home",
+    clientHome: "/pages/client/tabs/home",
     adminHome: "/pages/admin/index",
-    error: "/pages/common/notFound"
+    error: "/pages/common/error"
   },
   authInfoStorageKey: "userInfo",
   authField: "token",

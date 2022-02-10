@@ -10,12 +10,12 @@
     </text>
     <navigator
       open-type="reLaunch"
-      :url="$config.page.userHome"
+      :url="$config.page.clientHome"
       hover-class="hover"
       hover-stay-time="50"
       class="return-home"
     >
-      return homepage
+      Return to homepage...
     </navigator>
   </view>
 </template>
