@@ -1,4 +1,4 @@
-import { pageData, sleep, transformQueryString } from "./utils";
+import { pageData, transformQueryString } from "./utils";
 import $config from "./config";
 import { Response } from "../type";
 
@@ -6,18 +6,23 @@ export const pretreatment = {
   throttle: false,
   times: 0,
   codeHandler: {
-    notAuth: async ({ msg: title }: Response): Promise<string | void> => {
+    notAuth: async ({ msg: content }: Response): Promise<string | void> => {
       if (pretreatment.throttle) return;
       pretreatment.throttle = true;
 
       if ($config.page.auth) {
-        await uni.showToast({ title, icon: "none", duration: 1200 });
         pretreatment.throttle = true;
-        await sleep(1.2)
-        await uni.reLaunch({ url: $config.page.auth, success: uni.clearStorage });
-        pretreatment.throttle = false;
+        uni.showModal({
+          content,
+          showCancel: false,
+          confirmText: "login again",
+          success() {
+            uni.reLaunch({ url: $config.page.auth, success: uni.clearStorage });
+            pretreatment.throttle = false;
+          }
+        });
 
-        return Promise.reject(title);
+        return Promise.reject(content);
       }
 
       const [loginFail, loginRes]: any = await uni.login({});
@@ -26,21 +31,16 @@ export const pretreatment = {
         return Promise.reject(loginFail.errMsg);
       }
 
-      const [reqFail, result]: any = await uni.request({
+      const result: any = await uni.request({
         url: `${$config.API_URL}${$config.path.auth}`,
         data: { code: loginRes.code }
       });
 
-      if (reqFail) {
-        uni.showToast({ title: reqFail.errMsg, icon: "none" });
-        return;
-      }
-      const { code, data, msg } = result.data;
-      if (!+code) {
-        uni.showToast({ title: msg, icon: "none" });
-        return;
-      }
-      await uni.setStorage({ key: $config.authInfoStorageKey, data: { value: data, validityDay: $config.authValidityDay } })
+      const { data } = result.data;
+      await uni.setStorage({
+        key: $config.authInfoStorageKey,
+        data: { value: data, validityDay: $config.authValidityDay }
+      })
 
       if (++pretreatment.times >= 3) {
         const [, modal]: any = await uni.showModal({
@@ -55,7 +55,7 @@ export const pretreatment = {
       pretreatment.throttle = false;
       const { route, options }: any = pageData(-1);
       uni.reLaunch({ url: `/${route}?${transformQueryString(options)}` });
-      return Promise.reject(title);
+      return Promise.reject(content);
     },
 
     fail: (res: Response) => {

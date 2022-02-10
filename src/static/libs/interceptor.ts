@@ -6,10 +6,13 @@ import { pretreatment } from "./dependency"
 uni.addInterceptor("request", {
   async invoke(args) {
     let userInfo: any = {};
-    if (!$config.ignoreAuthApis.includes(args.url)) userInfo = await uni.getStorage({ key: $config.authInfoStorageKey });
+    if (!$config.ignoreAuthApis.includes(args.url)) {
+      userInfo = await uni.getStorage({ key: $config.authInfoStorageKey });
+    }
     args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
     args.data ?? (args.data = {});
     args.header ?? (args.header = {});
+    args.header.lang = uni.getLocale();
     args.header["Content-type"] = "application/x-www-form-urlencoded";
     userInfo[$config.authField] && (args.header.token = userInfo[$config.authField]);
     for (let key in args.data) {
@@ -115,13 +118,16 @@ uni.addInterceptor("setStorage", {
 });
 
 uni.addInterceptor("getStorage", {
-  success(res) {
-    const { key, value, expireTime } = res.data,
-      { authInfoStorageKey, authField, page: { auth: url } } = $config;
+  invoke({ key }) {
+    const { authInfoStorageKey, authField, page: { auth: url } } = $config;
+
     if (key === authInfoStorageKey && !uni.getStorageSync(key)?.value?.[authField]) {
       uni.reLaunch({ url });
       return Promise.reject(`${authField} verification failed, Please Reauthorization!`);
     }
+  },
+  success(res) {
+    const { key, value, expireTime } = res.data;
     return Promise.resolve((expireTime && Date.now() >= expireTime) ? uni.removeStorageSync(key) : value);
   }
 });
