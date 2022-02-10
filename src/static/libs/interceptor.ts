@@ -5,15 +5,13 @@ import { pretreatment } from "./dependency"
 
 uni.addInterceptor("request", {
   async invoke(args) {
+    let userInfo: any = {};
+    if (!$config.ignoreAuthApis.includes(args.url)) userInfo = await uni.getStorage({ key: $config.authInfoStorageKey });
     args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
     args.data ?? (args.data = {});
     args.header ?? (args.header = {});
     args.header["Content-type"] = "application/x-www-form-urlencoded";
-    try {
-      const authInfo: any = await uni.getStorage({ key: "authInfo" });
-      authInfo && (args.header.token = authInfo.token);
-    } catch (error) { }
-
+    userInfo[$config.authField] && (args.header.token = userInfo[$config.authField]);
     for (let key in args.data) {
       if ([null, undefined, NaN].includes(args.data[key])) delete args.data[key];
     }
@@ -92,7 +90,7 @@ uni.addInterceptor("setStorage", {
         };
         return;
       }
-      case "add":
+      case "create":
         if (!args.data?.value) throw Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data?.value)}".`);
       case undefined: {
         const createTime = Date.now(),
@@ -111,14 +109,19 @@ uni.addInterceptor("setStorage", {
         return;
       }
       default:
-        throw Error(`Invalid prop: type check failed for prop "$type". Expected "update, delete, add or void", got "${String(args.data.$type)}".`);
+        throw Error(`Invalid prop: type check failed for prop "$type". Expected "update, delete, create or void", got "${String(args.data.$type)}".`);
     }
   }
 });
 
 uni.addInterceptor("getStorage", {
   success(res) {
-    const { key, value, expireTime } = res.data;
+    const { key, value, expireTime } = res.data,
+      { authInfoStorageKey, authField, page: { auth: url } } = $config;
+    if (key === authInfoStorageKey && !uni.getStorageSync(key)?.value?.[authField]) {
+      uni.reLaunch({ url });
+      return Promise.reject(`${authField} verification failed, Please Reauthorization!`);
+    }
     return Promise.resolve((expireTime && Date.now() >= expireTime) ? uni.removeStorageSync(key) : value);
   }
 });

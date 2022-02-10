@@ -27,7 +27,7 @@ export const pretreatment = {
       }
 
       const [reqFail, result]: any = await uni.request({
-        url: `${$config.API_URL}${$config.path.login}`,
+        url: `${$config.API_URL}${$config.path.auth}`,
         data: { code: loginRes.code }
       });
 
@@ -40,7 +40,7 @@ export const pretreatment = {
         uni.showToast({ title: msg, icon: "none" });
         return;
       }
-      await uni.setStorage({ key: "authInfo", data: { value: data, validityDay: $config.authValidityDay } })
+      await uni.setStorage({ key: $config.authInfoStorageKey, data: { value: data, validityDay: $config.authValidityDay } })
 
       if (++pretreatment.times >= 3) {
         const [, modal]: any = await uni.showModal({
