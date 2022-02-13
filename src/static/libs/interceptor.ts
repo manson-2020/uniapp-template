@@ -64,10 +64,10 @@ uni.addInterceptor("setStorage", {
     switch (args.data?.$type) {
       case "update": {
         if (typeof (args.data.value) !== "object") {
-          throw Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data.value)}".`);
+          return Promise.reject(Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data.value)}".`));
         }
         const originalData = uni.getStorageSync(args.key);
-        if (!originalData) throw Error(`No data found to update.`);
+        if (!originalData) return Promise.reject(Error(`No data found to update.`));
         const { value, key, createTime, expireTime } = originalData;
         args.data = {
           value: { ...value, ...args.data.value },
@@ -79,10 +79,10 @@ uni.addInterceptor("setStorage", {
       }
       case "delete": {
         if (typeof (args.data.value) !== "string") {
-          throw Error(`Invalid prop: type check failed for prop "value". Expected String with value, got "${String(args.data.value)}".`);
+          return Promise.reject(Error(`Invalid prop: type check failed for prop "value". Expected String with value, got "${String(args.data.value)}".`));
         }
         const originalData = uni.getStorageSync(args.key);
-        if (!originalData) throw Error(`No data found to delete.`);
+        if (!originalData) return Promise.reject(Error(`No data found to delete.`));
         const { value, key, createTime, expireTime } = originalData;
         delete value[args.data.value];
         args.data = {
@@ -94,7 +94,9 @@ uni.addInterceptor("setStorage", {
         return;
       }
       case "create":
-        if (!args.data?.value) throw Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data?.value)}".`);
+        if (!args.data?.value) {
+          return Promise.reject(Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data?.value)}".`));
+        }
       case undefined: {
         const createTime = Date.now(),
           validityDay = args.data?.validityDay;
@@ -105,14 +107,14 @@ uni.addInterceptor("setStorage", {
         };
         if (validityDay) {
           if (typeof (validityDay) !== "number") {
-            throw Error(`Invalid prop: type check failed for prop "validityDay". Expected Number with value, got "${String(validityDay)}".`);
+            return Promise.reject(Error(`Invalid prop: type check failed for prop "validityDay". Expected Number with value, got "${String(validityDay)}".`));
           }
           args.data.expireTime = createTime + validityDay * 86_400_000;
         }
         return;
       }
       default:
-        throw Error(`Invalid prop: type check failed for prop "$type". Expected "update, delete, create or void", got "${String(args.data.$type)}".`);
+        return Promise.reject(Error(`Invalid prop: type check failed for prop "$type". Expected "update, delete, create or void", got "${String(args.data.$type)}".`));
     }
   }
 });
@@ -123,11 +125,15 @@ uni.addInterceptor("getStorage", {
 
     if (key === authInfoStorageKey && !uni.getStorageSync(key)?.value?.[authField]) {
       uni.reLaunch({ url });
-      return Promise.reject(`${authField} verification failed, Please Reauthorization!`);
+      return Promise.reject(Error(`${authField} verification failed, Please Reauthorization!`));
     }
   },
   success(res) {
-    const { key, value, expireTime } = res.data;
-    return Promise.resolve((expireTime && Date.now() >= expireTime) ? uni.removeStorageSync(key) : value);
+    const { key, value, expireTime } = res.data || {};
+    if (expireTime && Date.now() >= expireTime) {
+      uni.removeStorageSync(key);
+      return Promise.reject(Error(`Cache expired.`));
+    }
+    return Promise.resolve(value || res.data);
   }
 });

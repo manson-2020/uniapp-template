@@ -61,7 +61,6 @@
 </template>
 
 <script lang="ts" setup>
-  import { onLoad, onUnload } from "@dcloudio/uni-app";
   import $config from "../../static/libs/config";
 
   const to = (
@@ -69,8 +68,7 @@
     url: string
   ) => uni[method]({ url });
 
-  const login = (keyboard?: KeyboardEvent) => {
-    if (keyboard && keyboard.key && keyboard.key !== "Enter") return;
+  function login() {
     uni.showActionSheet({
       itemList: ["user", "admin"],
       itemColor: "#666",
@@ -79,22 +77,13 @@
           key: $config.authInfoStorageKey,
           data: { [$config.authField]: 1 },
         });
-        to(`reLaunch`, [$config.page.userHome, $config.page.adminHome][tapIndex]);
+        to(
+          `reLaunch`,
+          [$config.page.clientHome, $config.page.adminHome][tapIndex]
+        );
       },
     });
-  };
-
-  onLoad(() => {
-    // #ifdef H5
-    document.addEventListener("keydown", login);
-    // #endif
-  });
-
-  onUnload(() => {
-    // #ifdef H5
-    document.removeEventListener("keydown", login);
-    // #endif
-  });
+  }
 </script>
 
 <style lang="scss" scoped>
