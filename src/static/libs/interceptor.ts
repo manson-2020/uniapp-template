@@ -96,7 +96,7 @@ uni.addInterceptor("setStorage", {
       case "create":
         if (!args.data?.value) {
           return Promise.reject(Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data?.value)}".`));
-        }
+        };
       case undefined: {
         const createTime = Date.now(),
           validityDay = args.data?.validityDay;
@@ -124,7 +124,14 @@ uni.addInterceptor("getStorage", {
     const { authInfoStorageKey, authField, page: { auth: url } } = $config;
 
     if (key === authInfoStorageKey && !uni.getStorageSync(key)?.value?.[authField]) {
-      uni.reLaunch({ url });
+      uni.showModal({
+        title: "Error",
+        content: `${authField} abnormal`,
+        showCancel: false,
+        confirmText: "go to login",
+        confirmColor: "#ea3323",
+        success: ({ confirm }) => confirm && uni.reLaunch({ url })
+      });
       return Promise.reject(Error(`${authField} verification failed, Please Reauthorization!`));
     }
   },
