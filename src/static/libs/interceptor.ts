@@ -122,25 +122,12 @@ uni.addInterceptor("setStorage", {
 uni.addInterceptor("getStorage", {
   invoke({ key }) {
     const { authInfoStorageKey, authField, page: { auth: url } } = $config;
-
-    if (key === authInfoStorageKey && !uni.getStorageSync(key)?.value?.[authField]) {
-      uni.showModal({
-        title: "Error",
-        content: `${authField} abnormal`,
-        showCancel: false,
-        confirmText: "go to login",
-        confirmColor: "#ea3323",
-        success: ({ confirm }) => confirm && uni.reLaunch({ url })
-      });
-      return Promise.reject(Error(`${authField} verification failed, Please Reauthorization!`));
-    }
+    key === authInfoStorageKey &&
+      !uni.getStorageSync(key)?.value?.[authField] &&
+      uni.reLaunch({ url });
   },
   success(res) {
-    const { key, value, expireTime } = res.data || {};
-    if (expireTime && Date.now() >= expireTime) {
-      uni.removeStorageSync(key);
-      return Promise.reject(Error(`Cache expired.`));
-    }
-    return Promise.resolve(value || res.data);
+    const { key, value, expireTime } = res.data;
+    return Promise.resolve((expireTime && Date.now() >= expireTime) ? uni.removeStorageSync(key) : value);
   }
 });
