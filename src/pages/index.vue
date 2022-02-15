@@ -6,8 +6,11 @@
   export default {
     async onLoad() {
       uni.showLoading({ title: "Loading...", mask: true });
-      await uni.getStorage({ key: $config.authInfoStorageKey, complete: uni.hideLoading });
-      uni.reLaunch({ url: $config.page.clientHome });
+      uni.getStorage({
+        key: $config.authInfoStorageKey,
+        success: () => uni.reLaunch({ url: $config.page.clientHome }),
+        complete: uni.hideLoading,
+      });
     },
   };
 </script>

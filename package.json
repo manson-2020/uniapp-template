@@ -58,7 +58,6 @@
     "autoprefixer": "^10.4.2",
     "sass": "^1.47.0",
     "typescript": "^4.5.2",
-    "vite": "^2.7.10",
-    "vconsole": "^3.11.2"
+    "vite": "^2.7.10"
   }
 }
