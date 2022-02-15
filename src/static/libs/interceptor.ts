@@ -1,5 +1,5 @@
 import { isAbsoluteURL } from "./utils";
-import $config from "./config";
+import $config from "../config";
 import { Response } from "../type";
 import { pretreatment } from "./dependency"
 

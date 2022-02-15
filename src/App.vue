@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onLaunch, onPageNotFound } from "@dcloudio/uni-app";
-  import $config from "./static/libs/config";
+  import $config from "./static/config";
   import { checkVersion, openWebsocket } from "./static/libs/dependency";
 
   onLaunch(() => {

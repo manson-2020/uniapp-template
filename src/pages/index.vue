@@ -1,7 +1,7 @@
 <template></template>
 
 <script>
-  import $config from "../static/libs/config";
+  import $config from "../static/config";
 
   export default {
     async onLoad() {

@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-  import $config from "../static/libs/config";
+  import $config from "../static/config";
   export default {
     props: {
       navigationBarTitleText: {

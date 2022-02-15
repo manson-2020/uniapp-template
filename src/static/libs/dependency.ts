@@ -1,5 +1,5 @@
 import { pageData, transformQueryString } from "./utils";
-import $config from "./config";
+import $config from "../config";
 import { Response } from "../type";
 
 export const pretreatment = {

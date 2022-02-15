@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-  import $config from "../../static/libs/config";
+  import $config from "../../static/config";
 </script>
 
 <style lang="scss" scoped>
