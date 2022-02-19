@@ -1,0 +1,13 @@
+<template></template>
+
+<script>
+  export default {
+   onLoad() {
+      uni.showLoading({ title: "Loading..." });
+      uni.reLaunch({
+        url: getApp().globalData.page.home,
+        complete: uni.hideLoading
+      });
+    },
+  };
+</script>

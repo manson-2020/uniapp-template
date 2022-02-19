@@ -30,6 +30,5 @@ const urls = config[process.env.NODE_ENV as "development" | "production"],
 export default Object.assign(config, {
   urls,
   API_URL,
-  SOCKET_URL,
-  ignoreAuthApis: [config.path.auth],
+  SOCKET_URL
 });

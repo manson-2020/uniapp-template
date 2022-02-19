@@ -1,16 +1,24 @@
-<script setup lang="ts">
-  import { onLaunch, onPageNotFound } from "@dcloudio/uni-app";
+<script lang="ts">
   import $config from "./static/config";
   import { checkVersion, openWebsocket } from "./static/libs/dependency";
 
-  onLaunch(() => {
-    checkVersion();
-    if ($config.SOCKET_URL) openWebsocket();
-  });
-
-  onPageNotFound(() => {
-    uni.redirectTo({ url: $config.page.error });
-  });
+  export default {
+    globalData: { page: $config.page },
+    onLaunch() {
+      console.log(
+        `%c APP %c 当前版本号 v${0.1} %c`,
+        "background-color: #35495e; padding: 1px; border-radius: 3px 0 0 3px; color: #fff",
+        "background-color: #007aff; padding: 1px; margin: 1px; border-radius: 0 3px 3px 0; color: #fff; font-weight: bold;",
+        "background-color: transparent"
+      );
+      // uni.setLocale("en");
+      $config.path.checkVersion && checkVersion();
+      $config.SOCKET_URL && openWebsocket();
+    },
+    onPageNotFound() {
+      uni.redirectTo({ url: $config.page.error });
+    },
+  };
 </script>
 
 <style lang="scss">

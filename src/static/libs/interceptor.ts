@@ -5,10 +5,10 @@ import { pretreatment } from "./dependency"
 
 uni.addInterceptor("request", {
   async invoke(args) {
-    let userInfo: any = {};
-    if (!$config.ignoreAuthApis.includes(args.url)) {
+    let userInfo = {}
+    try {
       userInfo = await uni.getStorage({ key: $config.authInfoStorageKey });
-    }
+    } catch (error) { };
     args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
     args.data ?? (args.data = {});
     args.header ?? (args.header = {});
@@ -120,12 +120,6 @@ uni.addInterceptor("setStorage", {
 });
 
 uni.addInterceptor("getStorage", {
-  invoke({ key }) {
-    const { authInfoStorageKey, authField, page: { auth: url } } = $config;
-    key === authInfoStorageKey &&
-      !uni.getStorageSync(key)?.value?.[authField] &&
-      uni.reLaunch({ url });
-  },
   success(res) {
     const { key, value, expireTime } = res.data;
     return Promise.resolve((expireTime && Date.now() >= expireTime) ? uni.removeStorageSync(key) : value);
