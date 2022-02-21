@@ -59,6 +59,26 @@ uni.addInterceptor("request", {
   }
 });
 
+uni.addInterceptor("uploadFile", {
+  async invoke(args) {
+    let userInfo = {}
+    try {
+      userInfo = await uni.getStorage({ key: $config.authInfoStorageKey });
+    } catch (error) { };
+    args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
+    args.formData ?? (args.formData = {});
+    userInfo[$config.authField] && (args.formData[$config.authField] = userInfo[$config.authField]);
+    return args;
+  },
+  success(res) {
+    try {
+      return Promise.resolve(JSON.parse(res.data))
+    } catch (error) {
+      return Promise.resolve(res.data)
+    }
+  }
+});
+
 uni.addInterceptor("setStorage", {
   invoke(args) {
     switch (args.data?.$type) {
@@ -75,7 +95,7 @@ uni.addInterceptor("setStorage", {
           createTime,
           expireTime
         };
-        return;
+        break;
       }
       case "delete": {
         if (typeof (args.data.value) !== "string") {
@@ -91,7 +111,7 @@ uni.addInterceptor("setStorage", {
           createTime,
           expireTime
         };
-        return;
+        break;
       }
       case "create":
         if (!args.data?.value) {
@@ -111,11 +131,12 @@ uni.addInterceptor("setStorage", {
           }
           args.data.expireTime = createTime + validityDay * 86_400_000;
         }
-        return;
+        break;
       }
       default:
         return Promise.reject(Error(`Invalid prop: type check failed for prop "$type". Expected "update, delete, create or void", got "${String(args.data.$type)}".`));
-    }
+    };
+    return args;
   }
 });
 
