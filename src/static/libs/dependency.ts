@@ -1,4 +1,4 @@
-import { pageData, transformQueryString } from "./utils";
+import { isAbsoluteURL, pageData, transformQueryString } from "./utils";
 import $config from "../config";
 import { Response } from "../type";
 
@@ -66,6 +66,50 @@ export const pretreatment = {
     error: (res: Response) => Promise.reject(res),
 
     success: (res: Response) => Promise.resolve(res),
+  }
+}
+
+export function requestInvoke(args, paramsKey) {
+  args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
+  args[paramsKey] ?? (args[paramsKey] = {});
+  args.header ?? (args.header = {});
+  args.header["Content-type"] = "application/x-www-form-urlencoded";
+  args.data.lang = uni.getLocale();
+  args.data[$config.authField] = uni.getStorageSync($config.authInfoStorageKey)?.value?.[$config.authField];
+  for (let key in args.data) {
+    if ([null, undefined, NaN].includes(args.data[key])) delete args.data[key];
+  }
+  return args;
+}
+
+export function requestSuccess({ data, statusCode }) {
+  try {
+    const res = typeof (data) === "string" ? JSON.parse(data) : data,
+      { success, notAuth, fail, error } = pretreatment.codeHandler;
+    switch (+res.status) {
+      case 400: // 失败
+        return fail(res);
+      case 200: // 成功
+        return success(res);
+      case 401: // 未授权
+        return notAuth(res);
+      default: // 错误
+        return error(res);
+    };
+  } catch (error) {
+    const content = data || `Response Status Code: ${statusCode}`
+    uni.showModal({
+      title: "Error Message",
+      content,
+      confirmText: "Copy",
+      cancelText: "Cancel",
+      success: ({ confirm }) =>
+        confirm && uni.setClipboardData({
+          data: content,
+          success: () => uni.showToast({ title: "Copied" })
+        })
+    });
+    return Promise.reject(content);
   }
 }
 
