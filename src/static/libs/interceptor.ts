@@ -22,18 +22,19 @@ uni.addInterceptor("request", {
   },
   success({ data: res }: { data: Response | string }) {
     if (typeof (res) === "string") {
-      uni.showModal({
+     const content = res || `Response Status Code: ${statusCode}`
+     uni.showModal({
         title: "Error Message",
-        content: res,
+        content,
         confirmText: "Copy",
         cancelText: "Cancel",
         success: ({ confirm }) =>
           confirm && uni.setClipboardData({
-            data: res,
+            data: content,
             success: () => uni.showToast({ title: "Copied" })
           })
       });
-      return Promise.reject(res);
+      return Promise.reject(content);
     }
     const { success, notAuth, fail, error } = pretreatment.codeHandler;
     switch (+res.code) {
@@ -72,9 +73,32 @@ uni.addInterceptor("uploadFile", {
   },
   success(res) {
     try {
-      return Promise.resolve(JSON.parse(res.data))
+      const res = JSON.parse(data),
+        { success, notAuth, fail, error } = pretreatment.codeHandler;
+      switch (+res.status) {
+        case 400: // 失败
+          return fail(res);
+        case 200: // 成功
+          return success(res);
+        case 401: // 未授权
+          return notAuth(res);
+        default: // 错误
+          return error(res);
+      };
     } catch (error) {
-      return Promise.resolve(res.data)
+      const content = res || `Response Status Code: ${statusCode}`
+      uni.showModal({
+        title: "Error Message",
+        content,
+        confirmText: "Copy",
+        cancelText: "Cancel",
+        success: ({ confirm }) =>
+          confirm && uni.setClipboardData({
+            data: content,
+            success: () => uni.showToast({ title: "Copied" })
+          })
+      });
+      return Promise.reject(content);
     }
   }
 });
