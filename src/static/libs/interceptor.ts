@@ -5,6 +5,7 @@ uni.addInterceptor("request", {
   invoke: (args) => requestInvoke(args, "data"),
   success: (res) => requestSuccess(res),
   fail({ errMsg }) {
+    if (errMsg.includes("abort")) return;
     uni.showToast({ title: String(errMsg), icon: "none" });
   },
   complete(res) {
