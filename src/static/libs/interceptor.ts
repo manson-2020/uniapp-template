@@ -1,58 +1,14 @@
-import { isAbsoluteURL } from "./utils";
-import $config from "../config";
-import { Response } from "../type";
-import { pretreatment } from "./dependency"
+
+import { requestInvoke, requestSuccess } from "./dependency"
 
 uni.addInterceptor("request", {
-  async invoke(args) {
-    let userInfo = {}
-    try {
-      userInfo = await uni.getStorage({ key: $config.authInfoStorageKey });
-    } catch (error) { };
-    args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
-    args.data ?? (args.data = {});
-    args.header ?? (args.header = {});
-    args.header.lang = uni.getLocale();
-    args.header["Content-type"] = "application/x-www-form-urlencoded";
-    userInfo[$config.authField] && (args.header.token = userInfo[$config.authField]);
-    for (let key in args.data) {
-      if ([null, undefined, NaN].includes(args.data[key])) delete args.data[key];
-    }
-    return args;
-  },
-  success({ data: res }: { data: Response | string }) {
-    if (typeof (res) === "string") {
-     const content = res || `Response Status Code: ${statusCode}`
-     uni.showModal({
-        title: "Error Message",
-        content,
-        confirmText: "Copy",
-        cancelText: "Cancel",
-        success: ({ confirm }) =>
-          confirm && uni.setClipboardData({
-            data: content,
-            success: () => uni.showToast({ title: "Copied" })
-          })
-      });
-      return Promise.reject(content);
-    }
-    const { success, notAuth, fail, error } = pretreatment.codeHandler;
-    switch (+res.code) {
-      case 200: // 成功
-        return success(res);
-      case 401: // 未授权
-        return notAuth(res);
-      case 501: // 失败
-        return fail(res);
-      default: // 错误
-        return error(res);
-    }
-  },
-  fail({ errMsg: title }) {
-    uni.showToast({ title, icon: "none" });
+  invoke: (args) => requestInvoke(args, "data"),
+  success: (res) => requestSuccess(res),
+  fail({ errMsg }) {
+    uni.showToast({ title: String(errMsg), icon: "none" });
   },
   complete(res) {
-    console.warn(
+    console.log(
       `%c Response `,
       "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
       res
@@ -61,45 +17,14 @@ uni.addInterceptor("request", {
 });
 
 uni.addInterceptor("uploadFile", {
-  async invoke(args) {
-    let userInfo = {}
-    try {
-      userInfo = await uni.getStorage({ key: $config.authInfoStorageKey });
-    } catch (error) { };
-    args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
-    args.formData ?? (args.formData = {});
-    userInfo[$config.authField] && (args.formData[$config.authField] = userInfo[$config.authField]);
-    return args;
-  },
-  success(res) {
-    try {
-      const res = JSON.parse(data),
-        { success, notAuth, fail, error } = pretreatment.codeHandler;
-      switch (+res.status) {
-        case 400: // 失败
-          return fail(res);
-        case 200: // 成功
-          return success(res);
-        case 401: // 未授权
-          return notAuth(res);
-        default: // 错误
-          return error(res);
-      };
-    } catch (error) {
-      const content = res || `Response Status Code: ${statusCode}`
-      uni.showModal({
-        title: "Error Message",
-        content,
-        confirmText: "Copy",
-        cancelText: "Cancel",
-        success: ({ confirm }) =>
-          confirm && uni.setClipboardData({
-            data: content,
-            success: () => uni.showToast({ title: "Copied" })
-          })
-      });
-      return Promise.reject(content);
-    }
+  invoke: (args) => requestInvoke(args, "formData"),
+  success: (res) => requestSuccess(res),
+  complete(res) {
+    console.log(
+      `%c Response `,
+      "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
+      res
+    );
   }
 });
 
