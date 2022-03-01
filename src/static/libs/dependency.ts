@@ -71,13 +71,15 @@ export const pretreatment = {
 
 export function requestInvoke(args, paramsKey) {
   args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
-  args[paramsKey] ?? (args[paramsKey] = {});
   args.header ?? (args.header = {});
-  args.header["Content-type"] = "application/x-www-form-urlencoded";
-  args.data.lang = uni.getLocale();
-  args.data[$config.authField] = uni.getStorageSync($config.authInfoStorageKey)?.value?.[$config.authField];
-  for (let key in args.data) {
-    if ([null, undefined, NaN].includes(args.data[key])) delete args.data[key];
+  paramsKey === "data" && (args.header["Content-type"] = "application/x-www-form-urlencoded");
+  args.header["lang"] = uni.getLocale();
+
+  args[paramsKey] ?? (args[paramsKey] = {});
+  args[paramsKey][$config.authField] = uni.getStorageSync($config.authInfoStorageKey)?.value?.[$config.authField];
+
+  for (let key in args[paramsKey]) {
+    if ([null, undefined, NaN].includes(args[paramsKey][key])) delete args[paramsKey][key];
   }
   return args;
 }
@@ -97,15 +99,16 @@ export function requestSuccess({ data, statusCode }) {
         return error(res);
     };
   } catch (error) {
-    const content = data || `Response Status Code: ${statusCode}`
+    const content = data || "No Response!";
     uni.showModal({
-      title: "Error Message",
+      title: `StatusCode ${statusCode}`,
       content,
       confirmText: "Copy",
       cancelText: "Cancel",
+      showConfirm: Boolean(data),
       success: ({ confirm }) =>
         confirm && uni.setClipboardData({
-          data: content,
+          data,
           success: () => uni.showToast({ title: "Copied" })
         })
     });
