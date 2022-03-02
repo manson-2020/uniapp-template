@@ -1,33 +1,9 @@
 
-import { requestInvoke, requestSuccess } from "./dependency"
+import { requestInterceptorOptions } from "./dependency";
 
-uni.addInterceptor("request", {
-  invoke: (args) => requestInvoke(args, "data"),
-  success: (res) => requestSuccess(res),
-  fail({ errMsg }) {
-    if (errMsg.includes("abort")) return;
-    uni.showToast({ title: String(errMsg), icon: "none" });
-  },
-  complete(res) {
-    console.log(
-      `%c Response `,
-      "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
-      res
-    );
-  }
-});
+uni.addInterceptor("request", requestInterceptorOptions("data"));
 
-uni.addInterceptor("uploadFile", {
-  invoke: (args) => requestInvoke(args, "formData"),
-  success: (res) => requestSuccess(res),
-  complete(res) {
-    console.log(
-      `%c Response `,
-      "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
-      res
-    );
-  }
-});
+uni.addInterceptor("uploadFile", requestInterceptorOptions("formData"));
 
 uni.addInterceptor("setStorage", {
   invoke(args) {

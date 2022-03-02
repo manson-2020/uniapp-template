@@ -2,6 +2,22 @@ import { isAbsoluteURL, pageData, transformQueryString } from "./utils";
 import $config from "../config";
 import { Response } from "../type";
 
+export const requestInterceptorOptions = (paramsKey: "data" | "formData"): UniApp.InterceptorOptions => ({
+  invoke: (args: UniApp.RequestOptions): UniApp.RequestOptions => requestInvoke(args, paramsKey),
+  success: (res: UniApp.RequestSuccessCallbackResult): Promise<any> => requestSuccess(res),
+  fail({ errMsg }: UniApp.GeneralCallbackResult): void {
+    if (errMsg.includes("abort")) return;
+    uni.showToast({ title: String(errMsg), icon: "none" });
+  },
+  complete(res: UniApp.GeneralCallbackResult): void {
+    console.log(
+      `%c Response `,
+      "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
+      res
+    );
+  }
+});
+
 export const pretreatment = {
   throttle: false,
   times: 0,
@@ -25,31 +41,25 @@ export const pretreatment = {
         return Promise.reject(content);
       }
 
-      const [loginFail, loginRes]: any = await uni.login({});
-      if (loginFail) {
-        uni.showToast({ title: loginFail.errMsg, icon: "none" });
-        return Promise.reject(loginFail.errMsg);
-      }
+      const { code }: UniApp.LoginRes = await uni.login({}),
+        { data }: Response = await uni.request({
+          url: $config.path.auth,
+          data: { code }
+        });
 
-      const result: any = await uni.request({
-        url: `${$config.API_URL}${$config.path.auth}`,
-        data: { code: loginRes.code }
-      });
-
-      const { data } = result.data;
-      await uni.setStorage({
+      uni.setStorage({
         key: $config.authInfoStorageKey,
         data: { value: data, validityDay: $config.authValidityDay }
       })
 
       if (++pretreatment.times >= 3) {
-        const [, modal]: any = await uni.showModal({
+        const { cancel }: UniApp.ShowModalRes = await uni.showModal({
           title: "Prompt",
           content: "Multiple redirects detected, Whether to continue?",
           confirmText: "Continue",
           cancelText: "Cancel"
         });
-        if (modal.cancel) return;
+        if (cancel) return;
       }
       pretreatment.times = 0;
       pretreatment.throttle = false;
@@ -69,7 +79,7 @@ export const pretreatment = {
   }
 }
 
-export function requestInvoke(args, paramsKey) {
+export function requestInvoke(args: UniApp.RequestOptions, paramsKey: "data" | "formData"): UniApp.RequestOptions {
   args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
   args.header ?? (args.header = {});
   paramsKey === "data" && (args.header["Content-type"] = "application/x-www-form-urlencoded");
@@ -84,7 +94,7 @@ export function requestInvoke(args, paramsKey) {
   return args;
 }
 
-export function requestSuccess({ data, statusCode }) {
+export function requestSuccess({ data, statusCode }: UniApp.RequestSuccessCallbackResult) {
   try {
     const res = typeof (data) === "string" ? JSON.parse(data) : data,
       { success, notAuth, fail, error } = pretreatment.codeHandler;
@@ -107,10 +117,7 @@ export function requestSuccess({ data, statusCode }) {
       cancelText: "Cancel",
       showConfirm: Boolean(data),
       success: ({ confirm }) =>
-        confirm && uni.setClipboardData({
-          data,
-          success: () => uni.showToast({ title: "Copied" })
-        })
+        confirm && uni.setClipboardData({ data })
     });
     return Promise.reject(content);
   }
