@@ -2,22 +2,6 @@ import { isAbsoluteURL, pageData, transformQueryString } from "./utils";
 import $config from "../config";
 import { Response } from "../type";
 
-export const requestInterceptorOptions = (paramsKey: "data" | "formData"): UniApp.InterceptorOptions => ({
-  invoke: (args: UniApp.RequestOptions): UniApp.RequestOptions => requestInvoke(args, paramsKey),
-  success: (res: UniApp.RequestSuccessCallbackResult): Promise<any> => requestSuccess(res),
-  fail({ errMsg }: UniApp.GeneralCallbackResult): void {
-    if (errMsg.includes("abort")) return;
-    uni.showToast({ title: String(errMsg), icon: "none" });
-  },
-  complete(res: UniApp.GeneralCallbackResult): void {
-    console.log(
-      `%c Response `,
-      "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
-      res
-    );
-  }
-});
-
 export const pretreatment = {
   throttle: false,
   times: 0,
@@ -40,12 +24,13 @@ export const pretreatment = {
 
         return Promise.reject(content);
       }
+      if (!$config.path.auth) return Promise.reject("The authorization server address is not configured.");
 
-      const { code }: UniApp.LoginRes = await uni.login({}),
+      const { code } = await uni.login({}) as unknown as UniApp.LoginRes,
         { data }: Response = await uni.request({
-          url: $config.path.auth,
+          url: $config.path.auth as string,
           data: { code }
-        });
+        }) as unknown as Response;
 
       uni.setStorage({
         key: $config.authInfoStorageKey,
@@ -53,12 +38,12 @@ export const pretreatment = {
       })
 
       if (++pretreatment.times >= 3) {
-        const { cancel }: UniApp.ShowModalRes = await uni.showModal({
+        const { cancel } = await uni.showModal({
           title: "Prompt",
           content: "Multiple redirects detected, Whether to continue?",
           confirmText: "Continue",
           cancelText: "Cancel"
-        });
+        }) as unknown as UniApp.ShowModalRes;
         if (cancel) return;
       }
       pretreatment.times = 0;
@@ -68,18 +53,21 @@ export const pretreatment = {
       return Promise.reject(content);
     },
 
-    fail: (res: Response) => {
+    fail: (res: Response): Promise<Response> => {
       uni.showToast({ title: res.msg, icon: "none" });
       return Promise.reject(res)
     },
 
-    error: (res: Response) => Promise.reject(res),
+    error: (res: Response): Promise<Response> => Promise.reject(res),
 
-    success: (res: Response) => Promise.resolve(res),
+    success: (res: Response): Promise<Response> => Promise.resolve(res),
   }
 }
 
-export function requestInvoke(args: UniApp.RequestOptions, paramsKey: "data" | "formData"): UniApp.RequestOptions {
+export function requestInvoke(
+  args: UniApp.RequestOptions & UniApp.UploadFileOption,
+  paramsKey: "data" | "formData"
+): UniApp.RequestOptions | UniApp.UploadFileOption {
   args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
   args.header ?? (args.header = {});
   paramsKey === "data" && (args.header["Content-type"] = "application/x-www-form-urlencoded");
@@ -99,29 +87,45 @@ export function requestSuccess({ data, statusCode }: UniApp.RequestSuccessCallba
     const res = typeof (data) === "string" ? JSON.parse(data) : data,
       { success, notAuth, fail, error } = pretreatment.codeHandler;
     switch (+res.status) {
-      case 400: // 失败
+      case 400:
         return fail(res);
-      case 200: // 成功
+      case 200:
         return success(res);
-      case 401: // 未授权
+      case 401:
         return notAuth(res);
-      default: // 错误
+      default:
         return error(res);
     };
   } catch (error) {
-    const content = data || "No Response!";
+    const content = String(data) || "No Response!";
     uni.showModal({
       title: `StatusCode ${statusCode}`,
       content,
       confirmText: "Copy",
       cancelText: "Cancel",
-      showConfirm: Boolean(data),
       success: ({ confirm }) =>
-        confirm && uni.setClipboardData({ data })
+        confirm && uni.setClipboardData({ data: content })
     });
     return Promise.reject(content);
   }
 }
+
+export const requestInterceptorOptions = (paramsKey: "data" | "formData"): UniApp.InterceptorOptions => ({
+  invoke: (args: UniApp.RequestOptions & UniApp.UploadFileOption):
+    UniApp.RequestOptions | UniApp.UploadFileOption => requestInvoke(args, paramsKey),
+  success: (res: UniApp.RequestSuccessCallbackResult): Promise<any> => requestSuccess(res),
+  fail({ errMsg }: UniApp.GeneralCallbackResult): void {
+    if (errMsg.includes("abort")) return;
+    uni.showToast({ title: String(errMsg), icon: "none" });
+  },
+  complete(res: UniApp.GeneralCallbackResult): void {
+    console.log(
+      `%c Response `,
+      "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
+      res
+    );
+  }
+});
 
 export function openWebsocket() {
   let [socketOpen, socketMsgQueue]: [boolean, string[]] = [false, []];
