@@ -3,7 +3,7 @@
   import { checkVersion, openWebsocket } from "./static/libs/dependency";
 
   export default {
-    globalData: { page: $config.page },
+    globalData: { $config },
     onLaunch() {
       console.log(
         `%c APP %c 当前版本号 v${0.1} %c`,

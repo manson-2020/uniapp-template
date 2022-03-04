@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-  import $config from "../../../static/config";
+  const { $config } = getApp().globalData;
 
   export default {
     methods: {

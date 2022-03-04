@@ -5,7 +5,7 @@
    onLoad() {
       uni.showLoading({ title: "Loading..." });
       uni.reLaunch({
-        url: getApp().globalData.page.home,
+        url: getApp().globalData.$config.page.home,
         complete: uni.hideLoading
       });
     },

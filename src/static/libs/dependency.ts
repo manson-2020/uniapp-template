@@ -58,8 +58,6 @@ export const pretreatment = {
       return Promise.reject(res)
     },
 
-    error: (res: Response): Promise<Response> => Promise.reject(res),
-
     success: (res: Response): Promise<Response> => Promise.resolve(res),
   }
 }
@@ -85,16 +83,14 @@ export function requestInvoke(
 export function requestSuccess({ data, statusCode }: UniApp.RequestSuccessCallbackResult) {
   try {
     const res = typeof (data) === "string" ? JSON.parse(data) : data,
-      { success, notAuth, fail, error } = pretreatment.codeHandler;
+      { success, notAuth, fail } = pretreatment.codeHandler;
     switch (+res.status) {
       case 400:
         return fail(res);
-      case 200:
-        return success(res);
       case 401:
         return notAuth(res);
       default:
-        return error(res);
+        return success(res);
     };
   } catch (error) {
     const content = String(data) || "No Response!";
