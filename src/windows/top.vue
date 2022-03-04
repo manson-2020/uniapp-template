@@ -26,11 +26,7 @@
     >
       {{ navigationBarTitleText || $route.meta.navigationBar?.titleText }}
     </text>
-    <label
-      @click="showActionItems"
-      :style="{ padding: `16rpx` }"
-      class="ai-center"
-    >
+    <label @click="showActionItems" :style="{ padding: `16rpx` }">
       <uni-icons type="person-filled" size="16" color="#666" />
       <text class="ml-8 mr-8 color-999 fs-28">admin</text>
       <uni-icons type="arrowdown" size="14" color="#999" />
@@ -39,7 +35,7 @@
 </template>
 
 <script lang="ts">
-  const { $config } = getApp().globalData;
+  import $config from "../static/config";
   export default {
     props: {
       navigationBarTitleText: {

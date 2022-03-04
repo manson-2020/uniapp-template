@@ -22,7 +22,7 @@
 </script>
 
 <style lang="scss">
-  // 公共颜色类
+  // #ifndef APP-PLUS-NVUE
   page,
   view,
   picker,
@@ -34,10 +34,9 @@
   navigator,
   radio-group,
   checkbox-group {
-    // #ifndef APP-PLUS-NVUE
     display: flex;
     flex-direction: column;
-    // #endif
+
     box-sizing: border-box;
     background-repeat: no-repeat;
     background-size: cover;
@@ -74,7 +73,8 @@
     background-color: #fcfcfc;
   }
 
-  label {
+  label,
+  [nvue] label {
     flex-direction: row;
     align-items: center;
   }
@@ -110,6 +110,7 @@
     border-radius: 0;
     background-color: rgb(204, 204, 204, 0.1);
   }
+  // #endif
 
   @each $color
     in (

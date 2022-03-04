@@ -61,9 +61,9 @@
 </template>
 
 <script lang="ts" setup>
+  import $config from "../../static/config";
 
-  const { $config } = getApp().globalData,
-   to = (
+  const to = (
     method: "reLaunch" | "navigateTo" | "switchTab" | "redirectTo",
     url: string
   ) => uni[method]({ url });

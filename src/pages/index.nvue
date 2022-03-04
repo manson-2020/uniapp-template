@@ -2,7 +2,7 @@
 
 <script>
   export default {
-   onLoad() {
+    onLoad() {
       uni.showLoading({ title: "Loading..." });
       uni.reLaunch({
         url: getApp().globalData.$config.page.home,
