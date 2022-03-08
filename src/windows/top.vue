@@ -71,7 +71,7 @@
             switch (tapIndex) {
               case 1:
                 uni.clearStorage();
-                uni.reLaunch({ url: $config.page.auth });
+                uni.reLaunch({ url: $config.page.login });
                 break;
               case 0:
                 uni.navigateTo({ url: "/pages/auth/reset" });
@@ -83,7 +83,7 @@
         });
       },
       toHome() {
-        uni.reLaunch({ url: $config.page.adminHome });
+        uni.reLaunch({ url: $config.page.home[1] });
       },
     },
   };

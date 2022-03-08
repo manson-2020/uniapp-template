@@ -9,17 +9,21 @@ const config = {
   },
   path: {
     prefix: null,
-    auth: null,
-    checkVersion: null
+    login: null,
+    checkVersion: null,
+    setUserInfo: "",
   },
   page: {
-    auth: "/pages/auth/login",
-    clientHome: "/pages/client/tabs/home",
-    adminHome: "/pages/admin/index",
-    error: "/pages/common/error"
+    login: "/pages/auth/login",
+    home: [
+      "/pages/client/tabs/home",
+      "/pages/admin/index"
+    ],
+    error: "/pages/common/error",
+    getUserInfo: "/pages/auth/applets"
   },
-  authInfoStorageKey: "userInfo",
-  authField: "token",
+  userInfoStorageKey: "userInfo",
+  tokenField: "token",
   authValidityDay: 7
 }
 

@@ -74,13 +74,10 @@
       itemColor: "#666",
       success: async ({ tapIndex }) => {
         await uni.setStorage({
-          key: $config.authInfoStorageKey,
-          data: { [$config.authField]: 1 },
+          key: $config.userInfoStorageKey,
+          data: { [$config.tokenField]: 1 },
         });
-        to(
-          `reLaunch`,
-          [$config.page.clientHome, $config.page.adminHome][tapIndex]
-        );
+        to(`reLaunch`, [$config.page.home[0], $config.page.home[1]][tapIndex]);
       },
     });
   }

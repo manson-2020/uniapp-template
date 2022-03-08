@@ -10,30 +10,30 @@ export const pretreatment = {
       if (pretreatment.throttle) return;
       pretreatment.throttle = true;
 
-      if ($config.page.auth) {
+      if ($config.page.login) {
         pretreatment.throttle = true;
         uni.showModal({
           content,
           showCancel: false,
           confirmText: "login again",
           success() {
-            uni.reLaunch({ url: $config.page.auth, success: uni.clearStorage });
+            uni.reLaunch({ url: $config.page.login, success: uni.clearStorage });
             pretreatment.throttle = false;
           }
         });
 
         return Promise.reject(content);
       }
-      if (!$config.path.auth) return Promise.reject("The authorization server address is not configured.");
+      if (!$config.path.login) return Promise.reject("The authorization server address is not configured.");
 
       const { code } = await uni.login({}) as unknown as UniApp.LoginRes,
         { data }: Response = await uni.request({
-          url: $config.path.auth as string,
+          url: $config.path.login as string,
           data: { code }
         }) as unknown as Response;
 
       uni.setStorage({
-        key: $config.authInfoStorageKey,
+        key: $config.userInfoStorageKey,
         data: { value: data, validityDay: $config.authValidityDay }
       })
 
@@ -72,7 +72,7 @@ export function requestInvoke(
   args.header["lang"] = uni.getLocale();
 
   args[paramsKey] ?? (args[paramsKey] = {});
-  args[paramsKey][$config.authField] = uni.getStorageSync($config.authInfoStorageKey)?.value?.[$config.authField];
+  args[paramsKey][$config.tokenField] = uni.getStorageSync($config.userInfoStorageKey)?.value?.[$config.tokenField];
 
   for (let key in args[paramsKey]) {
     if ([null, undefined, NaN].includes(args[paramsKey][key])) delete args[paramsKey][key];
@@ -89,6 +89,8 @@ export function requestSuccess({ data, statusCode }: UniApp.RequestSuccessCallba
         return fail(res);
       case 401:
         return notAuth(res);
+      case 402:
+        return uni.navigateTo({ url: $config.page.getUserInfo });
       default:
         return success(res);
     };
@@ -109,7 +111,7 @@ export function requestSuccess({ data, statusCode }: UniApp.RequestSuccessCallba
 export const requestInterceptorOptions = (paramsKey: "data" | "formData"): UniApp.InterceptorOptions => ({
   invoke: (args: UniApp.RequestOptions & UniApp.UploadFileOption):
     UniApp.RequestOptions | UniApp.UploadFileOption => requestInvoke(args, paramsKey),
-  success: (res: UniApp.RequestSuccessCallbackResult): Promise<any> => requestSuccess(res),
+  success: (res: UniApp.RequestSuccessCallbackResult) => requestSuccess(res),
   fail({ errMsg }: UniApp.GeneralCallbackResult): void {
     if (errMsg.includes("abort")) return;
     uni.showToast({ title: String(errMsg), icon: "none" });

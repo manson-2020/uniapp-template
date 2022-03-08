@@ -72,3 +72,32 @@ uni.addInterceptor("getStorage", {
     return Promise.resolve((expireTime && Date.now() >= expireTime) ? uni.removeStorageSync(key) : value);
   }
 });
+
+
+(<any>uni).showWaiting = (args: any) => {
+  // #ifndef APP-PLUS
+  uni.showLoading(args);
+  // #endif
+  // #ifdef APP-PLUS
+  plus.nativeUI.showWaiting(args.title, {
+    loading: {
+      height: "60px",
+      icon: "/static/img/loading.png",
+      interval: 72
+    },
+    size: "16px",
+    width: "128px",
+    height: "101px",
+    modal: args.mask,
+  });
+  // #endif
+}
+
+(<any>uni).hideWaiting = () => {
+  // #ifndef APP-PLUS
+  uni.hideLoading();
+  // #endif
+  // #ifdef APP-PLUS
+  plus.nativeUI.closeWaiting();
+  // #endif
+}

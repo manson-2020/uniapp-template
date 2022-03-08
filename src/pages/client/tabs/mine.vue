@@ -7,13 +7,13 @@
 </template>
 
 <script lang="ts">
-  const { $config } = getApp().globalData;
+  const { $config } = getApp().globalData as any;
 
   export default {
     methods: {
       logout() {
         uni.clearStorage();
-        uni.reLaunch({ url: $config.page.auth });
+        uni.reLaunch({ url: $config.page.login });
       },
     },
   };

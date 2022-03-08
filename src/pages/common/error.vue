@@ -10,7 +10,7 @@
     </text>
     <navigator
       open-type="reLaunch"
-      :url="$config.page.clientHome"
+      :url="$config.page.home[0]"
       hover-class="hover"
       hover-stay-time="50"
       class="return-home"
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-  const { $config } = getApp().globalData;
+  const { $config } = getApp()?.globalData as any;
 </script>
 
 <style lang="scss" scoped>
