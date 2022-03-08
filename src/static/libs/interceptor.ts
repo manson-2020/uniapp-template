@@ -74,7 +74,7 @@ uni.addInterceptor("getStorage", {
 });
 
 
-(<any>uni).showWaiting = (args: any) => {
+uni.showWaiting = (args: UniApp.ShowLoadingOptions) => {
   // #ifndef APP-PLUS
   uni.showLoading(args);
   // #endif
@@ -93,7 +93,7 @@ uni.addInterceptor("getStorage", {
   // #endif
 }
 
-(<any>uni).hideWaiting = () => {
+uni.hideWaiting = () => {
   // #ifndef APP-PLUS
   uni.hideLoading();
   // #endif

@@ -6,3 +6,11 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
+
+
+declare namespace UniApp {
+  interface Uni {
+    showWaiting(arg: UniApp.ShowLoadingOptions): void;
+    hideWaiting(): void;
+  }
+}
