@@ -18,31 +18,30 @@
 </template>
 
 <script lang="ts">
-  const { path, page, validityDay, userInfoStorageKey } =
-    getApp()?.globalData?.$config;
+  const { path, page, validityDay, userInfoStorageKey } =  {} as any; //getApp()!.globalData!.$config;
 
   export default {
     onLoad() {
       uni.getStorage({
         key: userInfoStorageKey,
         success: (res) => {
-          uni.showLoading({ title: "loading···", mask: true });
+          uni.showWaiting({ title: "loading···", mask: true });
           if (!res) return;
           uni.reLaunch({
             url: page.home,
-            complete: uni.hideLoading,
+            complete: uni.hideWaiting,
           });
         },
       });
     },
     methods: {
       async authorization() {
-        uni.showLoading({ title: "正在登录···" });
+        uni.showWaiting({});
 
-        const { encryptedData, iv } = (await uni.getUserProfile({
-            desc: "完善基本信息",
-          })) as any,
-          { code } = (await uni.login({})) as any;
+        const { encryptedData, iv } = await (uni.getUserProfile({
+            desc: "Improve basic information",
+          }) as unknown as Promise<UniApp.GetUserProfileRes>),
+          { code } = await (uni.login({}) as unknown as Promise<UniApp.LoginRes>);
 
         uni.request({
           url: path.setUserInfo,
@@ -58,7 +57,7 @@
             });
             uni.reLaunch({
               url: page.home,
-              complete: uni.hideLoading,
+              complete: uni.hideWaiting,
             });
           },
         });

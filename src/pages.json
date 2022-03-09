@@ -4,15 +4,6 @@
 			"path": "pages/index"
 		},
 		{
-			"path": "pages/auth/login",
-			"style": {
-				"navigationBarTitleText": "Login",
-				"navigationStyle": "custom",
-				"topWindow": false,
-				"leftWindow": false
-			}
-		},
-		{
 			"path": "pages/common/webview"
 		},
 		{
@@ -22,6 +13,15 @@
 				"navigationStyle": "custom",
 				"navigationBarTextStyle": "black",
 				"disableScroll": true
+			}
+		},
+		{
+			"path": "pages/auth/login",
+			"style": {
+				"navigationBarTitleText": "Login",
+				"navigationStyle": "custom",
+				"topWindow": false,
+				"leftWindow": false
 			}
 		},
 		{

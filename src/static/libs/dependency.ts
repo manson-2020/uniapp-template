@@ -6,7 +6,7 @@ export const pretreatment = {
   throttle: false,
   times: 0,
   codeHandler: {
-    notAuth: async ({ msg: content }: Response): Promise<string | void> => {
+    notLoggedIn: async ({ msg: content }: Response): Promise<string | void> => {
       if (pretreatment.throttle) return;
       pretreatment.throttle = true;
 
@@ -26,11 +26,11 @@ export const pretreatment = {
       }
       if (!$config.path.login) return Promise.reject("The authorization server address is not configured.");
 
-      const { code } = await uni.login({}) as unknown as UniApp.LoginRes,
-        { data }: Response = await uni.request({
+      const { code } = await (uni.login({}) as unknown as Promise<UniApp.LoginRes>),
+        { data } = await (uni.request({
           url: $config.path.login as string,
           data: { code }
-        }) as unknown as Response;
+        }) as unknown as Promise<Response>);
 
       uni.setStorage({
         key: $config.userInfoStorageKey,
@@ -38,12 +38,12 @@ export const pretreatment = {
       })
 
       if (++pretreatment.times >= 3) {
-        const { cancel } = await uni.showModal({
+        const { cancel } = await (uni.showModal({
           title: "Prompt",
           content: "Multiple redirects detected, Whether to continue?",
           confirmText: "Continue",
           cancelText: "Cancel"
-        }) as unknown as UniApp.ShowModalRes;
+        }) as unknown as Promise<UniApp.ShowModalRes>);
         if (cancel) return;
       }
       pretreatment.times = 0;
@@ -83,12 +83,12 @@ export function requestInvoke(
 export function requestSuccess({ data, statusCode }: UniApp.RequestSuccessCallbackResult) {
   try {
     const res = typeof (data) === "string" ? JSON.parse(data) : data,
-      { success, notAuth, fail } = pretreatment.codeHandler;
+      { success, notLoggedIn, fail } = pretreatment.codeHandler;
     switch (+res.status) {
       case 400:
         return fail(res);
       case 401:
-        return notAuth(res);
+        return notLoggedIn(res);
       case 402:
         return uni.navigateTo({ url: $config.page.getUserInfo });
       default:
@@ -160,17 +160,22 @@ export async function checkVersion() {
   );
   try {
     // #ifdef MP
-    const { onCheckForUpdate, onUpdateReady, onUpdateFailed, applyUpdate } =
-      uni.getUpdateManager();
+    const {
+      onCheckForUpdate,
+      onUpdateReady,
+      onUpdateFailed,
+      applyUpdate
+    } = uni.getUpdateManager();
 
     onCheckForUpdate(({ hasUpdate }) => {
-      /* Callback after requesting new version information */
-      hasUpdate && uni.clearStorage();
+      console.log(hasUpdate);
     });
 
     onUpdateReady((res) => {
       uni.showModal({
         title: "Update Tips",
+        confirmText: "Restart now",
+        cancelText: "Cancel",
         content:
           "The new version is ready. Do you want to restart the application?",
         success: ({ confirm }) => confirm && applyUpdate(),
@@ -188,69 +193,25 @@ export async function checkVersion() {
     // #ifdef APP-PLUS
     const { checkVersion: checkVersionURL } = $config.path;
     if (!checkVersionURL) return;
-    const { data, msg: title }: any = await uni.request({
+    const { data, msg: title } = await (uni.request({
       url: checkVersionURL,
       data: {
         platform: uni.getSystemInfoSync().platform,
         version: plus.runtime.version,
       },
-    });
+    }) as unknown as Promise<Response>);
 
     if (!data.upgradeUrl) return;
 
-    const [showModalFail, showModalRes]: any = await uni.showModal({
+    const { confirm } = await (uni.showModal({
       title,
       content: data.description,
       showCancel: Boolean(+data.forceUpdate),
-    });
+      confirmText: "go to upgrade"
+    }) as unknown as Promise<UniApp.ShowModalRes>);
 
-    if (showModalFail || !showModalRes.cancel) return;
+    confirm && plus.runtime.openURL(data.upgradeURL);
 
-    if (uni.getSystemInfoSync().platform == "ios") {
-      plus.runtime.openURL(data.upgradeUrl);
-      return;
-    }
-
-    const showLoading = plus.nativeUI.showWaiting("start download...");
-
-    const downloadTask = uni.downloadFile({
-      url: data.upgradeUrl,
-      success: ({ tempFilePath }) => {
-        showLoading.setTitle("Installing...");
-
-        plus.runtime.install(
-          <any>tempFilePath,
-          {},
-          (e) => {
-            plus.nativeUI.closeWaiting();
-            uni.showModal({
-              title: "Update complete",
-              content: "The new version needs to restart the app.",
-              confirmText: "Restart now",
-              showCancel: false,
-              success: plus.runtime.restart,
-            });
-          },
-          (error) => {
-            plus.nativeUI.closeWaiting();
-            uni.showToast({ title: "install failed", icon: "none" });
-          }
-        );
-      },
-      fail() {
-        uni.showToast({ title: "download failed", icon: "none" });
-      },
-    });
-
-    downloadTask.onProgressUpdate(
-      ({ progress, totalBytesWritten, totalBytesExpectedToWrite }) =>
-        showLoading.setTitle(
-          `Downloading (${(totalBytesWritten / 1024 ** 2).toFixed(2)}MB/${(
-            totalBytesExpectedToWrite /
-            1024 ** 2
-          ).toFixed(2)}MB)	${progress}%`
-        )
-    );
     // #endif
   } catch ({ message }) {
     uni.showToast({ title: message as string, icon: "error" });

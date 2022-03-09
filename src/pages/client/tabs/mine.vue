@@ -7,9 +7,10 @@
 </template>
 
 <script lang="ts">
-  const { $config } = getApp().globalData as any;
+  import $config from "../../../static/config";
 
   export default {
+    onLoad() {},
     methods: {
       logout() {
         uni.clearStorage();

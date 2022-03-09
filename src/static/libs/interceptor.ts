@@ -73,7 +73,6 @@ uni.addInterceptor("getStorage", {
   }
 });
 
-
 uni.showWaiting = (args: UniApp.ShowLoadingOptions) => {
   // #ifndef APP-PLUS
   uni.showLoading(args);
@@ -88,7 +87,7 @@ uni.showWaiting = (args: UniApp.ShowLoadingOptions) => {
     size: "16px",
     width: "128px",
     height: "101px",
-    modal: args.mask,
+    modal: args.mask || false,
   });
   // #endif
 }

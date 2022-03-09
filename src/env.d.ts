@@ -7,10 +7,9 @@ declare module '*.vue' {
   export default component
 }
 
-
 declare namespace UniApp {
   interface Uni {
-    showWaiting(arg: UniApp.ShowLoadingOptions): void;
+    showWaiting(arg: ShowLoadingOptions): void;
     hideWaiting(): void;
   }
 }

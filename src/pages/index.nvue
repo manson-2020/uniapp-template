@@ -3,10 +3,10 @@
 <script>
   export default {
     onLoad() {
-      uni.showLoading({ title: "Loading..." });
+      uni.showWaiting({ title: "Loading..." });
       uni.reLaunch({
-        url: getApp().globalData.$config.page.home,
-        complete: uni.hideLoading
+        url: getApp().globalData.$config.page.home[0],
+        complete: uni.hideWaiting
       });
     },
   };

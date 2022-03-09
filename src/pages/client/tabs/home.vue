@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { onLoad } from "@dcloudio/uni-app";
+  import { onLoad, onShow } from "@dcloudio/uni-app";
   import { ref } from "vue";
 
   const title = ref("home");
@@ -15,6 +15,11 @@
         console.log(res);
       },
     });
+  });
+
+  onShow(() => {
+    // plus.runtime.openWeb("https://m.baidu.com");
+    // uni.navigateTo({ url: "/pages/common/webview" });
   });
 </script>
 

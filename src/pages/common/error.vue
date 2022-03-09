@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-  const { $config } = getApp()?.globalData as any;
+  import $config from "../../static/config";
 </script>
 
 <style lang="scss" scoped>
