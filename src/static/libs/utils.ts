@@ -98,7 +98,7 @@ export const isAbsoluteURL = (url: string): boolean => /^([a-z][a-z\d\+\-\.]*:)?
 /**
  * 防抖: 频繁调用函数时重置上次延迟再执行
  * 
- * @param {Function} fn 节流函数
+ * @param {Function} fn 防抖函数
  * @param {delay} delay 延迟时间
  * @param {boolean} immediate 是否立即执行
  * @returns {Task} 返回执行任务,附带cancel方法
