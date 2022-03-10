@@ -122,8 +122,10 @@ export const debounce = (fn: Function, delay = 300, immediate = false) => {
   };
 
   task.cancel = () => {
-    clearTimeout(<number>timer);
-    timer = null;
+    if (timer) {
+      clearTimeout(<number>timer);
+      timer = null;
+    }
   }
 
   return task;
@@ -147,8 +149,10 @@ export const throttle = (fn: Function, delay = 300, immediate = false) => {
     }, delay)));
 
   task.cancel = () => {
-    clearTimeout(<number>timer);
-    timer = null;
+    if (timer) {
+      clearTimeout(<number>timer);
+      timer = null;
+    }
   }
 
   return task;
