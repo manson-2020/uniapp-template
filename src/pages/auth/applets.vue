@@ -12,13 +12,14 @@
       lang="zh_CN"
       @click="authorization"
     >
-      授权登录
+      授权信息
     </button>
   </view>
 </template>
 
 <script lang="ts">
-  const { path, page, validityDay, userInfoStorageKey } =  {} as any; //getApp()!.globalData!.$config;
+  const { path, page, validityDay, userInfoStorageKey } =
+    getApp()!.globalData!.$config;
 
   export default {
     onLoad() {
