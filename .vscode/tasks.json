@@ -32,7 +32,7 @@
                 "command": "/Applications/wechatwebdevtools.app/Contents/MacOS/cli ${input:WeChatDevTool cliArgs}"
             },
             "windows": {
-                "command": "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat ${input:WeChatDevTool cliArgs}"
+                "command": "C:\\'Program Files (x86)'\\Tencent\\微信web开发者工具\\cli.bat ${input:WeChatDevTool cliArgs}"
             }
         }
     ],

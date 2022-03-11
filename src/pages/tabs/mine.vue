@@ -7,14 +7,16 @@
 </template>
 
 <script lang="ts">
-  import $config from "../../../static/config";
+  import $config from "../../static/config";
 
   export default {
     onLoad() {},
     methods: {
       logout() {
-        uni.clearStorage();
-        uni.reLaunch({ url: $config.page.login });
+        uni.reLaunch({
+          url: $config.page.auth[0],
+          success: uni.clearStorage,
+        });
       },
     },
   };

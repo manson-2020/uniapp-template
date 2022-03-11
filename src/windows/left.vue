@@ -74,7 +74,7 @@
         {
           icon: "star-filled",
           title: "系统管理",
-          open: true,
+          open: false,
           children: [
             {
               icon: "list",
@@ -131,7 +131,7 @@
           title: "用户管理",
           url: "/pages/admin/index6",
         },
-      ] as any,
+      ],
     }),
     methods: {
       onClickItems({
@@ -146,7 +146,7 @@
 
         const url =
           typeof itemIndex === "number"
-            ? this.menuItems[menuIndex].children[itemIndex].url
+            ? (<Array<any>>this.menuItems)[menuIndex].children[itemIndex].url
             : this.menuItems[menuIndex].url;
 
         uni.navigateTo({ url });

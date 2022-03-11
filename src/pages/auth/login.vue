@@ -16,7 +16,7 @@
           size="18"
           color="#606266"
         />
-        <uni-easyinput type="number" placeholder="手机号/邮箱" />
+        <uni-easyinput class="f1" type="number" placeholder="手机号/邮箱" />
       </label>
       <label class="mt-44">
         <uni-icons
@@ -25,7 +25,7 @@
           size="18"
           color="#606266"
         />
-        <uni-easyinput type="password" placeholder="密码" />
+        <uni-easyinput class="f1" type="password" placeholder="密码" />
       </label>
 
       <text

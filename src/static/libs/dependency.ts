@@ -1,66 +1,6 @@
-import { isAbsoluteURL, pageData, transformQueryString } from "./utils";
+import { isAbsoluteURL, curEnv } from "./utils";
 import $config from "../config";
 import { Response } from "../type";
-
-export const pretreatment = {
-  throttle: false,
-  times: 0,
-  codeHandler: {
-    notLoggedIn: async ({ msg: content }: Response): Promise<string | void> => {
-      if (pretreatment.throttle) return;
-      pretreatment.throttle = true;
-
-      if ($config.page.login) {
-        pretreatment.throttle = true;
-        uni.showModal({
-          content,
-          showCancel: false,
-          confirmText: "login again",
-          success() {
-            uni.reLaunch({ url: $config.page.login, success: uni.clearStorage });
-            pretreatment.throttle = false;
-          }
-        });
-
-        return Promise.reject(content);
-      }
-      if (!$config.path.login) return Promise.reject("The authorization server address is not configured.");
-
-      const { code } = await (uni.login({}) as unknown as Promise<UniApp.LoginRes>),
-        { data } = await (uni.request({
-          url: $config.path.login as string,
-          data: { code }
-        }) as unknown as Promise<Response>);
-
-      uni.setStorage({
-        key: $config.userInfoStorageKey,
-        data: { value: data, validityDay: $config.authValidityDay }
-      })
-
-      if (++pretreatment.times >= 3) {
-        const { cancel } = await (uni.showModal({
-          title: "Prompt",
-          content: "Multiple redirects detected, Whether to continue?",
-          confirmText: "Continue",
-          cancelText: "Cancel"
-        }) as unknown as Promise<UniApp.ShowModalRes>);
-        if (cancel) return;
-      }
-      pretreatment.times = 0;
-      pretreatment.throttle = false;
-      const { route, options }: any = pageData(-1);
-      uni.reLaunch({ url: `/${route}?${transformQueryString(options)}` });
-      return Promise.reject(content);
-    },
-
-    fail: (res: Response): Promise<Response> => {
-      uni.showToast({ title: res.msg, icon: "none" });
-      return Promise.reject(res)
-    },
-
-    success: (res: Response): Promise<Response> => Promise.resolve(res),
-  }
-}
 
 export function requestInvoke(
   args: UniApp.RequestOptions & UniApp.UploadFileOption,
@@ -80,17 +20,43 @@ export function requestInvoke(
   return args;
 }
 
+const pretreatment = {
+  login: ({ msg: content }: Response): Promise<string | void> => {
+    uni.showModal({
+      content,
+      showCancel: false,
+      confirmText: "login again",
+      success() {
+        uni.reLaunch({
+          url: $config.page.auth[curEnv() === "MP" ? 1 : 0],
+          success: uni.clearStorage
+        });
+      }
+    });
+    return Promise.reject(content);
+  },
+  fail: (res: Response): Promise<Response> => {
+    uni.showToast({ title: res.msg, icon: "none" });
+    return Promise.reject(res)
+  },
+  auth: (res: Response): Promise<Response> => {
+    uni.navigateTo({ url: $config.page.auth[1] });
+    return Promise.reject(res)
+  },
+  success: (res: Response): Promise<Response> => Promise.resolve(res),
+}
+
 export function requestSuccess({ data, statusCode }: UniApp.RequestSuccessCallbackResult) {
   try {
     const res = typeof (data) === "string" ? JSON.parse(data) : data,
-      { success, notLoggedIn, fail } = pretreatment.codeHandler;
-    switch (+res.status) {
+      { success, login, fail, auth } = pretreatment;
+    switch (+res.code) {
       case 400:
         return fail(res);
       case 401:
-        return notLoggedIn(res);
+        return login(res);
       case 402:
-        return uni.navigateTo({ url: $config.page.getUserInfo });
+        return auth(res);
       default:
         return success(res);
     };
@@ -193,22 +159,22 @@ export async function checkVersion() {
     // #ifdef APP-PLUS
     const { checkVersion: checkVersionURL } = $config.path;
     if (!checkVersionURL) return;
-    const { data, msg: title } = await (uni.request({
+    const { data, msg: title } = await (<unknown>uni.request({
       url: checkVersionURL,
       data: {
         platform: uni.getSystemInfoSync().platform,
         version: plus.runtime.version,
       },
-    }) as unknown as Promise<Response>);
+    }) as Promise<Response>);
 
     if (!data.upgradeUrl) return;
 
-    const { confirm } = await (uni.showModal({
+    const { confirm } = await (<unknown>uni.showModal({
       title,
       content: data.description,
       showCancel: Boolean(+data.forceUpdate),
       confirmText: "go to upgrade"
-    }) as unknown as Promise<UniApp.ShowModalRes>);
+    }) as Promise<UniApp.ShowModalRes>);
 
     confirm && plus.runtime.openURL(data.upgradeURL);
 

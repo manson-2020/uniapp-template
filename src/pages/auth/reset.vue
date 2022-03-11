@@ -16,16 +16,16 @@
           size="18"
           color="#606266"
         />
-        <uni-easyinput type="number" placeholder="手机号/邮箱" />
+        <uni-easyinput class="f1" type="number" placeholder="手机号/邮箱" />
       </label>
-      <label class="mt-44">
+      <view class="fd-row ai-center mt-44">
         <uni-icons
           class="mr-30"
           type="locked-filled"
           size="18"
           color="#606266"
         />
-        <uni-easyinput type="number" placeholder="验证码" />
+        <uni-easyinput class="f1" type="number" placeholder="验证码" />
 
         <button
           hover-class="tap-hover"
@@ -37,6 +37,15 @@
         >
           {{ captchaBtn.text }}
         </button>
+      </view>
+      <label class="mt-44">
+        <uni-icons
+          class="mr-30"
+          type="locked-filled"
+          size="18"
+          color="#606266"
+        />
+        <uni-easyinput class="f1" type="password" placeholder="新密码" />
       </label>
       <label class="mt-44">
         <uni-icons
@@ -45,27 +54,21 @@
           size="18"
           color="#606266"
         />
-        <uni-easyinput type="password" placeholder="新密码" />
-      </label>
-      <label class="mt-44">
-        <uni-icons
-          class="mr-30"
-          type="locked-filled"
-          size="18"
-          color="#606266"
-        />
-        <uni-easyinput type="password" placeholder="确认密码" />
+        <uni-easyinput class="f1" type="password" placeholder="确认密码" />
       </label>
 
       <view class="fd-row">
         <button
-          class="f1 bgc-409eff mt-90 lh-60 fs-28 color-fff"
+          type="primary"
+          class="border-none f1 bgc-409eff mt-90 lh-60 fs-28 color-fff"
           hover-class="tap-hover"
         >
           重置
         </button>
         <button
-          class="ml-20 f1 mt-90 lh-60 fs-28"
+          :plain="true"
+          :style="{ border: `1px solid #dcdfe6` }"
+          class="ml-20 f1 mt-90 lh-60 fs-28 color-606266"
           hover-class="tap-hover"
           @click="goBack"
         >

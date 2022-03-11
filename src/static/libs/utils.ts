@@ -101,7 +101,7 @@ export const isAbsoluteURL = (url: string): boolean => /^([a-z][a-z\d\+\-\.]*:)?
  * @param {Function} fn 防抖函数
  * @param {delay} delay 延迟时间
  * @param {boolean} immediate 是否立即执行
- * @returns {Task} 返回执行任务,附带cancel方法
+ * @returns {Function} 返回执行任务,附带cancel方法
  */
 export const debounce = (fn: Function, delay = 300, immediate = false) => {
   let timer: null | number | NodeJS.Timeout = null;
@@ -137,7 +137,7 @@ export const debounce = (fn: Function, delay = 300, immediate = false) => {
  * @param {Function} fn 节流函数
  * @param {delay} delay 延迟时间
  * @param {boolean} immediate 是否立即执行
- * @returns {Task} 返回执行任务,附带cancel方法
+ * @returns {Function} 返回执行任务,附带cancel方法
  */
 export const throttle = (fn: Function, delay = 300, immediate = false) => {
   let timer: null | number | NodeJS.Timeout = null;
@@ -165,11 +165,14 @@ export const curEnv = (): string => {
     navigator.userAgent
       .toLowerCase()
       .indexOf("micromessenger") != -1
-      ? "wechat"
-      : "other";
+      ? "WeChatH5"
+      : "H5";
+  // #endif
+  // #ifdef MP
+  curEnv = "MP";
   // #endif
   // #ifdef APP_PLUS
-  curEnv = "app";
+  curEnv = "APP";
   // #endif
   return curEnv;
 }

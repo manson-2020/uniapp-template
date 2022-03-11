@@ -13,7 +13,7 @@
     </label>
     <uni-icons
       v-else
-      :style="{ transform: `scale(1, 0.7)` }"
+      :style="{ padding: `30rpx 30rpx 30rpx 0`, transform: `scale(1, 0.7)` }"
       type="bars"
       size="30"
       color="#999"
@@ -71,7 +71,7 @@
             switch (tapIndex) {
               case 1:
                 uni.clearStorage();
-                uni.reLaunch({ url: $config.page.login });
+                uni.reLaunch({ url: $config.page.auth[0] });
                 break;
               case 0:
                 uni.navigateTo({ url: "/pages/auth/reset" });

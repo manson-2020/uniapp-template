@@ -4,65 +4,83 @@
 			"path": "pages/index"
 		},
 		{
-			"path": "pages/common/webview"
-		},
-		{
-			"path": "pages/common/error",
+			"path": "pages/tabs/home",
 			"style": {
-				"navigationBarTitleText": "Oops, An error has occurred!",
-				"navigationStyle": "custom",
-				"navigationBarTextStyle": "black",
-				"disableScroll": true
+				"navigationBarTitleText": "Home",
+				"leftWindow": false,
+				"topWindow": false
 			}
 		},
 		{
-			"path": "pages/auth/login",
+			"path": "pages/tabs/mine",
 			"style": {
-				"navigationBarTitleText": "Login",
-				"navigationStyle": "custom",
-				"topWindow": false,
-				"leftWindow": false
-			}
-		},
-		{
-			"path": "pages/auth/register",
-			"style": {
-				"navigationBarTitleText": "Register",
-				"navigationStyle": "custom",
-				"topWindow": false,
-				"leftWindow": false
-			}
-		},
-		{
-			"path": "pages/auth/reset",
-			"style": {
-				"navigationBarTitleText": "Reset",
-				"navigationStyle": "custom",
-				"topWindow": false,
-				"leftWindow": false
+				"navigationBarTitleText": "Mine",
+				"leftWindow": false,
+				"topWindow": false
 			}
 		}
 	],
 	"subPackages": [
 		{
-			"root": "pages/client",
+			"root": "pages/common",
 			"pages": [
 				{
-					"path": "tabs/home",
+					"path": "webview"
+				},
+				{
+					"path": "error",
 					"style": {
-						"navigationBarTitleText": "Home",
+						"navigationBarTitleText": "Oops, An error has occurred!",
+						"navigationStyle": "custom",
+						"navigationBarTextStyle": "black",
+						"disableScroll": true
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/auth",
+			"pages": [
+				{
+					"path": "applets",
+					"style": {
+						"navigationBarTitleText": "Auth",
 						"leftWindow": false,
 						"topWindow": false
 					}
 				},
 				{
-					"path": "tabs/mine",
+					"path": "login",
 					"style": {
-						"navigationBarTitleText": "Mine",
-						"leftWindow": false,
-						"topWindow": false
+						"navigationBarTitleText": "Login",
+						"navigationStyle": "custom",
+						"topWindow": false,
+						"leftWindow": false
 					}
 				},
+				{
+					"path": "register",
+					"style": {
+						"navigationBarTitleText": "Register",
+						"navigationStyle": "custom",
+						"topWindow": false,
+						"leftWindow": false
+					}
+				},
+				{
+					"path": "reset",
+					"style": {
+						"navigationBarTitleText": "Reset",
+						"navigationStyle": "custom",
+						"topWindow": false,
+						"leftWindow": false
+					}
+				}
+			]
+		},
+		{
+			"root": "pages/client",
+			"pages": [
 				{
 					"path": "index"
 				}
@@ -139,21 +157,23 @@
 		}
 	},
 	"tabBar": {
-		"color": "#7a7e83",
-		"selectedColor": "#83a4d4",
+		"color": "#c1c1ca",
+		"fontSize": "11px",
+		"selectedColor": "#f45455",
+		"backgroundColor": "#f5f5f5",
+		"position": "bottom",
 		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
 		"list": [
 			{
-				"pagePath": "pages/client/tabs/home",
-				"iconPath": "static/img/tab-home.png",
-				"selectedIconPath": "static/img/tab-home_.png",
+				"pagePath": "pages/tabs/home",
+				"iconPath": "static/img/tab-home_0.png",
+				"selectedIconPath": "static/img/tab-home_1.png",
 				"text": "Home"
 			},
 			{
-				"pagePath": "pages/client/tabs/mine",
-				"iconPath": "static/img/tab-mine.png",
-				"selectedIconPath": "static/img/tab-mine_.png",
+				"pagePath": "pages/tabs/mine",
+				"iconPath": "static/img/tab-mine_0.png",
+				"selectedIconPath": "static/img/tab-mine_1.png",
 				"text": "Mine"
 			}
 		]

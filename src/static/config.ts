@@ -9,18 +9,20 @@ const config = {
   },
   path: {
     prefix: null,
-    login: null,
+    auth: null,
     checkVersion: null,
     setUserInfo: "",
   },
   page: {
-    login: "/pages/auth/login",
+    auth: [
+      "/pages/auth/login",
+      "/pages/auth/applets"
+    ],
     home: [
-      "/pages/client/tabs/home",
+      "/pages/tabs/home",
       "/pages/admin/index"
     ],
-    error: "/pages/common/error",
-    getUserInfo: "/pages/auth/applets"
+    error: "/pages/common/error"
   },
   userInfoStorageKey: "userInfo",
   tokenField: "token",
