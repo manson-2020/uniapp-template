@@ -113,12 +113,12 @@ export const debounce = (fn: Function, delay = 300, immediate = false) => {
     }
 
     if (immediate) {
-      !timer && fn(args);
+      !timer && fn.apply(this, args);
       timer = setTimeout(() => { timer = null }, delay);
       return;
     }
 
-    timer = setTimeout(() => { fn(args) }, delay);
+    timer = setTimeout(() => { fn.apply(this, args) }, delay);
   };
 
   task.cancel = () => {
@@ -143,8 +143,8 @@ export const throttle = (fn: Function, delay = 300, immediate = false) => {
   let timer: null | number | NodeJS.Timeout = null;
 
   const task = (...args: any[]) => immediate ?
-    fn(args) : (!timer && (timer = setTimeout(() => {
-      fn(args);
+    fn.apply(this, args) : (!timer && (timer = setTimeout(() => {
+      fn.apply(this, args);
       timer = null;
     }, delay)));
 
