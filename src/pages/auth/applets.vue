@@ -37,17 +37,9 @@
 
   export default {
     data() {
-      return {
-        code: "",
-        userInfo: null,
-      };
+      return { userInfo: null };
     },
     onLoad() {
-      uni.login({
-        success: ({ code }) => {
-          this.code = code;
-        },
-      });
       uni.getStorage({
         key: userInfoStorageKey,
         success: (res) => {
@@ -57,52 +49,60 @@
     },
     methods: {
       async authorization({ detail }: any) {
-        if (!detail.encryptedData) {
-          uni.showToast({ title: detail.errMsg, icon: "none" });
-          return;
+        if (!detail.code) return;
+        uni.showWaiting({ mask: true });
+        try {
+          const { code } = detail,
+            { data } = await ((<unknown>uni.request({
+              url: path.auth,
+              data: { code },
+            })) as Promise<Response>);
+          await uni.setStorage({
+            key: "userInfo",
+            data: { value: data, validityDay },
+          });
+          uni.hideWaiting();
+
+          if (!data.PhoneNumber) {
+            await ((<unknown>uni.showModal({
+              title: "授权用户信息",
+              content:
+                "首次登录需要获得你的公开信息(昵称，头像)以作为个人中心展示使用",
+              showCancel: false,
+              confirmText: "立即授权",
+            })) as Promise<UniApp.ShowModalRes>);
+
+            return await this.getUserInfo();
+          }
+
+          uni.navigateBack({});
+        } catch (error) {
+          uni.showToast({ title: <string>error, icon: "none" });
+        } finally {
+          uni.hideWaiting();
         }
-        const { encryptedData, iv } = detail,
-          { data, code } = await ((<unknown>uni.request({
-            url: path.auth,
-            data: {
-              code: this.code,
-              encryptedData,
-              iv,
-            },
-          })) as Promise<Response>);
-
-        if (+code === 403) {
-          await ((<unknown>uni.showModal({
-            title: "授权用户信息",
-            content: "获得你的公开信息(昵称，头像等)",
-            showCancel: false,
-            confirmText: "授权",
-          })) as Promise<UniApp.ShowModalRes>);
-
-          return await this.getUserInfo();
-        }
-
-        uni.setStorage({
-          key: "userInfo",
-          data: { value: data, validityDay },
-          success: uni.navigateBack,
-        });
       },
 
       async getUserInfo() {
-        const { userInfo } = await ((<unknown>uni.getUserProfile({
-            desc: "Improve basic information",
-          })) as Promise<UniApp.GetUserProfileRes>),
-          { data } = await ((<unknown>uni.request({
-            url: path.setUserInfo,
-            data: userInfo,
-          })) as Promise<Response>);
-
-        uni.setStorage({
-          key: "userInfo",
-          data: { value: data, validityDay },
-          success: uni.navigateBack,
-        });
+        uni.showWaiting({ mask: true });
+        try {
+          const { userInfo } = await ((<unknown>uni.getUserProfile({
+              desc: "Improve basic information",
+            })) as Promise<UniApp.GetUserProfileRes>),
+            { data } = await ((<unknown>uni.request({
+              url: path.setUserInfo,
+              data: userInfo,
+            })) as Promise<Response>);
+          uni.setStorage({
+            key: "userInfo",
+            data: { value: data, validityDay, $type: "update" },
+            success: uni.navigateBack,
+          });
+        } catch (error) {
+          uni.showToast({ title: <string>error, icon: "none" });
+        } finally {
+          uni.hideWaiting();
+        }
       },
     },
   };
