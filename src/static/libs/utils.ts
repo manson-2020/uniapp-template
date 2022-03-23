@@ -1,13 +1,6 @@
 
 export const prefixZero = (n: number | string): string => String(+n > 9 ? n : `0${n}`)
 
-
-export const transformURL = (url: string, params: { [key: string]: any }, hash: string | void) => {
-  let paramsArr = Object.keys(params).map(key => `${key}=${params[key]}`);
-
-  return encodeURIComponent(`${url}?${paramsArr.join("&")}${hash ? "#" + hash : ""}`);
-}
-
 export const formatPhoneNumber = (phoneNumber: string): string => {
   return phoneNumber.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
 }
@@ -22,19 +15,21 @@ export const transformQueryString = (params: string | AnyObject): string | AnyOb
       queryStrings.map(item => item.split(/^([^=]*)=*/).filter(item => item))
     ) : {};
   }
-
   if (typeof params === "object") {
     return Object.keys(params).filter(key => params[key]).map(key => `${key}=${params[key]}`).join("&");
   }
-
   throw Error("Parameter error");
 }
+
+export const transformURL = (url: string, params: { [key: string]: any }, hash: string | void) =>
+  encodeURIComponent(url + (params ? `?${transformQueryString(params)}` : "") + (hash ? `#${hash}` : ""));
 
 export const isPhoneNumber = (str: string): boolean => /^1[0-9]{10}$/.test(str)
 
 export const isEmail = (str: string): boolean => /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(str);
 
-export const isIdCard = (str: string): boolean => /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/.test(str);
+export const isIdCard = (str: string): boolean =>
+  /^(^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$)|(^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])((\d{4})|\d{3}[Xx])$)$/.test(str);
 
 export const isEmptyObject = (obj: AnyObject): obj is {} => (Object.getOwnPropertyNames(obj).length === 0);
 
