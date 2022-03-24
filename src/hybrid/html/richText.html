@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body></body>
+<script type="text/javascript" src="js/axios.min.js"></script>
+<script>
+    const transformQueryString = params => {
+        if (typeof params === "string") {
+            const queryStrings = params.match(/[^?&]+=[^?&]+/g);
+
+            return queryStrings ? Object.fromEntries(
+                queryStrings.map(item => item.split(/^([^=]*)=*/).filter(item => item))
+            ) : {};
+        }
+        if (typeof params === "object") {
+            return Object.keys(params).filter(key => params[key]).map(key => `${key}=${params[key]}`).join("&");
+        }
+        alert("Parameter error");
+    }
+
+    const { hash: url, search } = location,
+        { title, params } = transformQueryString(search);
+
+    document.title = title ? decodeURIComponent(title) : "";
+    axios.request({
+        url: url.slice(1),
+        params: JSON.parse(decodeURIComponent(params))
+    }).then(({ data: { data, status, msg } }) => {
+        if (status !== 200) {
+            alert(msg);
+            return;
+        }
+        document.body.innerHTML = data;
+    });
+</script>
+
+</html>

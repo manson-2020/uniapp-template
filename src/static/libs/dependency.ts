@@ -21,7 +21,10 @@ export function requestInvoke(
 }
 
 const pretreatment = {
-  login: ({ msg: content }: Response): Promise<string | void> => {
+  debounce: false,
+  login: ({ msg: content }: Response): Promise<string> | void => {
+    if (pretreatment.debounce === true) return;
+    pretreatment.debounce = true;
     uni.showModal({
       content,
       showCancel: false,
@@ -31,6 +34,10 @@ const pretreatment = {
           url: $config.page.auth[curEnv() === "MP" ? 1 : 0],
           success: uni.clearStorage
         });
+      },
+      complete: () => {
+        pretreatment.debounce = false;
+        uni.hideWaiting();
       }
     });
     return Promise.reject(content);
