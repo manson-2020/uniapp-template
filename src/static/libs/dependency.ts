@@ -27,7 +27,6 @@ const pretreatment = {
     pretreatment.debounce = true;
     uni.showModal({
       content,
-      showCancel: false,
       confirmText: "login again",
       success() {
         uni.reLaunch({
@@ -141,7 +140,7 @@ export async function checkVersion() {
     } = uni.getUpdateManager();
 
     onCheckForUpdate(({ hasUpdate }) => {
-      console.log(hasUpdate);
+      hasUpdate && console.log("New version found !");
     });
 
     onUpdateReady((res) => {
@@ -151,7 +150,10 @@ export async function checkVersion() {
         cancelText: "Cancel",
         content:
           "The new version is ready. Do you want to restart the application?",
-        success: ({ confirm }) => confirm && applyUpdate(),
+        success: ({ confirm }) => {
+          uni.clearStorage();
+          confirm && applyUpdate();
+        },
       });
     });
 
