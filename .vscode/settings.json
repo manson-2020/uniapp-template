@@ -26,17 +26,5 @@
   ],
   "cSpell.enableFiletypes": [
     "vue"
-  ],
-  "better-comments.multilineComments": true,
-  "better-comments.tags": [
-    {
-      "tag": "#",
-      "color": "#aaf",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
-    }
-  ],
+  ]
 }
