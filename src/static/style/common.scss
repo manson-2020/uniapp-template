@@ -7,71 +7,106 @@
   }
 }
 
-@each $fd, $value in (col: column, row: row, rerow: row-reverse, recol: column-reverse) {
+@each $fd,
+$value in (col: column, row: row, rerow: row-reverse, recol: column-reverse) {
   .fd-#{$fd} {
     flex-direction: $value !important;
   }
 }
 
-@each $align, $value in (start: flex-start, center: center, end: flex-end, baseline: baseline) {
+@each $align,
+$value in (start: flex-start,
+  center: center,
+  end: flex-end,
+  /* #ifndef APP-PLUS-NVUE  */
+  baseline: baseline
+
+  /* #endif*/
+) {
   .ai-#{$align} {
     align-items: $value !important;
   }
+
+  // #ifndef APP-PLUS-NVUE
   .as-#{$align} {
     align-self: $value !important;
   }
+
   .ac-#{$align} {
     align-content: $value !important;
   }
+
+  // #endif
 }
 
 @each $justify,
-  $value in (sa: space-around, sb: space-between, se: space-evenly, center: center, start: flex-start, end: flex-end)
-{
+$value in (sa: space-around,
+  sb: space-between,
+  /* #ifndef APP-PLUS-NVUE  */
+  se: space-evenly,
+  /* #endif*/
+  center: center,
+  start: flex-start,
+  end: flex-end) {
   .jc-#{$justify} {
     justify-content: $value !important;
   }
+
+  // #ifndef APP-PLUS-NVUE
+
   .js-#{$justify} {
     justify-self: $value !important;
   }
+
   .ji-#{$justify} {
     justify-items: $value !important;
   }
+
+  // #endif
 }
 
-@each $position in (fixed, relative, absolute, static) {
+@each $position in (fixed,
+  relative,
+  absolute,
+  /* #ifndef APP-PLUS-NVUE  */
+  static
+
+  /* #endif*/
+) {
   .#{$position} {
     position: $position !important;
   }
 }
 
-@each $text in (center, left, right, justify) {
+@each $text in (center, left, right,
+  /* #ifndef APP-PLUS-NVUE  */
+  justify
+
+  /* #endif*/
+) {
   .text-#{$text} {
     text-align: $text !important;
   }
 }
 
 @for $i from 0 through 300 {
+
   @each $wrapper,
-    $box
-      in (
-        top: top,
-        bottom: bottom,
-        left: left,
-        right: right,
-        width: width,
-        height: height,
-        mt: margin-top,
-        mr: margin-right,
-        mb: margin-bottom,
-        ml: margin-left,
-        pt: padding-top,
-        pr: padding-right,
-        pb: padding-bottom,
-        pl: padding-left,
-        fs: font-size
-      )
-  {
+  $box in (top: top,
+    bottom: bottom,
+    left: left,
+    right: right,
+    width: width,
+    height: height,
+    mt: margin-top,
+    mr: margin-right,
+    mb: margin-bottom,
+    ml: margin-left,
+    pt: padding-top,
+    pr: padding-right,
+    pb: padding-bottom,
+    pl: padding-left,
+    fs: font-size) {
     .#{$wrapper}-#{$i * 2} {
       #{$box}: #{$i * 2}rpx !important;
     }
@@ -83,34 +118,46 @@
     }
   }
 
-  @if $i <= 5 {
+  @if $i <=5 {
     .lh-#{$i} {
       line-height: $i !important;
     }
-  } @else {
+  }
+
+  @else {
     .lh-#{$i * 2} {
       line-height: #{$i * 2}rpx !important;
     }
   }
 }
 
-@each $size in (auto, 20, 25, 30, 50, 70, 100) {
-  @if $size == 50 {
+@each $size in (
+
+  /* #ifndef APP-PLUS-NVUE */
+  auto,
+  /* #endif*/
+  20, 25, 30, 50, 70, 100) {
+  @if $size==50 {
     .br-circle {
       border-radius: 50% !important;
     }
   }
-  @if $size == auto {
+
+  @if $size==auto {
     .width-#{$size} {
       width: $size !important;
     }
+
     .height-#{$size} {
       height: $size !important;
     }
-  } @else {
+  }
+
+  @else {
     .width-#{$size}vw {
       width: #{$size}vw !important;
     }
+
     .width-#{$size}percent {
       width: #{$size}#{"%"} !important;
     }
@@ -118,6 +165,7 @@
     .height-#{$size}vh {
       height: #{$size}vh !important;
     }
+
     .height-#{$size}percent {
       height: #{$size}#{"%"} !important;
     }
@@ -125,12 +173,15 @@
     .top-#{$size}percent {
       top: #{$size}#{"%"} !important;
     }
+
     .left-#{$size}percent {
       left: #{$size}#{"%"} !important;
     }
+
     .bottom-#{$size}percent {
       bottom: #{$size}#{"%"} !important;
     }
+
     .right-#{$size}percent {
       right: #{$size}#{"%"} !important;
     }
@@ -141,6 +192,7 @@
   .opacity-dot#{$i} {
     opacity: math.div($i, 10) !important;
   }
+
   .fw-#{$i * 100} {
     font-weight: $i * 100 !important;
   }

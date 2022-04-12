@@ -6,7 +6,7 @@
       mode="aspectFit"
     />
 
-    <text class="mt-60 color-333 fs-32 fw-500 lh-100">系统登录</text>
+    <text class="mt-60 color-4 fs-32 fw-500 lh-100">系统登录</text>
 
     <view :style="{ padding: `30rpx`, borderTop: `2rpx #ececec solid` }">
       <label>
@@ -34,12 +34,12 @@
           cursor: `pointer`,
           textDecoration: `underline`,
         }"
-        class="as-end mt-30 color-007aff fs-26 opacity-dot8"
+        class="as-end mt-30 color-2 fs-26 opacity-dot8"
       >
         忘记密码？
       </text>
       <button
-        class="bgc-409eff mt-60 lh-60 fs-28 ml-0 mr-0 color-fff"
+        class="bgc-2 mt-60 lh-60 fs-28 ml-0 mr-0 color-3"
         hover-class="tap-hover"
         @click="login"
       >
@@ -52,7 +52,7 @@
           cursor: `pointer`,
           textDecoration: `underline`,
         }"
-        class="as-center mt-90 color-007aff fs-26 opacity-dot8"
+        class="as-center mt-90 color-2 fs-26 opacity-dot8"
       >
         如无账号，请先注册...
       </text>

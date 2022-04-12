@@ -10,21 +10,21 @@
           v-model="searchVal"
           @confirm="getData(1)"
           placeholder="请输入搜索内容"
-          placeholder-class="color-999"
+          placeholder-class="color-5"
         />
         <button
-          class="fs-24 ml-20 bgc-transparent color-606266 lh-60 br-6"
+          class="fs-24 ml-20 bgc-0 color-1 lh-60 br-6"
           :style="{ border: `1px solid #dcdfe6` }"
           :plain="true"
           @click="getData(1)"
         >
           搜索
         </button>
-        <button class="fs-24 ml-20 bgc-409eff color-fff lh-60 br-6">
+        <button class="fs-24 ml-20 bgc-2 color-3 lh-60 br-6">
           新增
         </button>
         <button
-          class="fs-24 ml-20 bgc-f56c6c color-fff lh-60 br-6"
+          class="fs-24 ml-20 bgc-1 color-3 lh-60 br-6"
           @click="delTable"
           disabled
         >
@@ -55,10 +55,10 @@
           <uni-td>{{ item.address }}</uni-td>
           <uni-td>
             <view class="fd-row">
-              <button class="bgc-409eff fs-24" size="mini" type="primary">
+              <button class="bgc-2 fs-24" size="mini" type="primary">
                 修改
               </button>
-              <button class="bgc-f56c6c fs-24" size="mini" type="warn">
+              <button class="bgc-1 fs-24" size="mini" type="warn">
                 删除
               </button>
             </view>

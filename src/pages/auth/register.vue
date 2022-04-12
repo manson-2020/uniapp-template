@@ -6,7 +6,7 @@
       mode="aspectFit"
     />
 
-    <text class="mt-60 color-333 fs-32 fw-500 lh-100">系统注册</text>
+    <text class="mt-60 color-4 fs-32 fw-500 lh-100">系统注册</text>
 
     <view :style="{ padding: `30rpx`, borderTop: `2rpx #ececec solid` }">
       <label>
@@ -37,7 +37,7 @@
           :disabled="captchaBtn.disabled"
           @click="sendCaptcha"
           :plain="true"
-          class="fs-24 ml-12 border-none color-007aff"
+          class="fs-24 ml-12 border-none color-2"
         >
           {{ captchaBtn.text }}
         </button>
@@ -64,7 +64,7 @@
       <view class="fd-row">
         <button
           type="primary"
-          class="border-none f1 bgc-409eff mt-90 lh-60 fs-28 color-fff"
+          class="border-none f1 bgc-2 mt-90 lh-60 fs-28 color-3"
           hover-class="tap-hover"
         >
           注册
@@ -72,7 +72,7 @@
         <button
           :plain="true"
           :style="{ border: `1px solid #dcdfe6` }"
-          class="ml-20 f1 mt-90 lh-60 fs-28 color-606266"
+          class="ml-20 f1 mt-90 lh-60 fs-28 color-1"
           hover-class="tap-hover"
           @click="goBack"
         >

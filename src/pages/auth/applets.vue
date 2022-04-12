@@ -33,13 +33,12 @@
 <script lang="ts">
   import { Response } from "../../static/type";
 
-  const { path, validityDay, userInfoStorageKey } = getApp()!.globalData!.$config;
-
   export default {
     data() {
       return { userInfo: null };
     },
     onLoad() {
+      const { userInfoStorageKey } = getApp().globalData!.$config;
       uni.getStorage({
         key: userInfoStorageKey,
         success: (res) => {
@@ -51,6 +50,7 @@
       async authorization({ detail }: any) {
         if (!detail.code) return;
         uni.showWaiting({ mask: true });
+        const { path, validityDay } = getApp().globalData!.$config;
         try {
           const { code } = detail,
             { data } = await ((<unknown>uni.request({
@@ -85,6 +85,8 @@
 
       async getUserInfo() {
         uni.showWaiting({ mask: true });
+        const { path, validityDay } = getApp().globalData!.$config;
+
         try {
           const { userInfo } = await ((<unknown>uni.getUserProfile({
               desc: "Improve basic information",

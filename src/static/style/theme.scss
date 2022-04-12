@@ -1,0 +1,49 @@
+$light: (color: (0: transparent,
+    1: #606266,
+    2: #007aff,
+    3: #fff,
+    4: #333,
+    5: #999),
+  background-color: (0: transparent,
+    1: #f56c6c,
+    2: #409eff,
+    3: #f9f9f9,
+    4: #fff,
+    5: #ccc));
+
+$dark: (color:(1: #fff), background-color: (1: #000));
+
+$themes: (light: $light, dark: $dark);
+
+$styleMaps: (color: color, background-color: bgc);
+
+@mixin set-theme($theme) {
+  @if map-has-key($themes, $theme) {
+
+    @each $key,
+    $colors in map-get($themes, $theme) {
+
+      @each $name,
+      $color in $colors {
+        .#{map-get($styleMaps, $key)}-#{$name} {
+          #{$key}: $color;
+        }
+      }
+    }
+  }
+}
+
+@each $theme,
+$value in $themes {
+  .#{$theme} {
+    @include set-theme($theme);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  @include set-theme("dark");
+}
+
+@media (prefers-color-scheme: light) {
+  @include set-theme("light");
+}
