@@ -45,6 +45,7 @@
     "@dcloudio/uni-mp-toutiao": "3.0.0-alpha-3040420220402002",
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-3040420220402002",
     "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-3040420220402002",
+    "@types/node": "^17.0.23",
     "vue": "^3.2.31",
     "vue-i18n": "^9.1.9",
     "vuex": "^4.0.2"

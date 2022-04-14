@@ -1,6 +1,10 @@
 <script lang="ts">
   import $config from "./static/config";
-  import { checkVersion, openWebsocket } from "./static/libs/dependency";
+  import {
+    checkVersion,
+    openWebsocket,
+    setConfig,
+  } from "./static/libs/dependency";
 
   export default {
     globalData: { $config },
@@ -8,6 +12,7 @@
       // uni.setLocale("en");
       $config.path.checkVersion && checkVersion();
       $config.SOCKET_URL && openWebsocket();
+      $config.path.setConfig && setConfig();
     },
     onPageNotFound() {
       uni.redirectTo({ url: $config.page.error });

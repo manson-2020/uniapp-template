@@ -766,6 +766,11 @@
     estree-walker "^2.0.1"
     picomatch "^2.2.2"
 
+"@types/node@^17.0.23":
+  version "17.0.23"
+  resolved "https://it-artifactory.yitu-inc.com:443/api/npm/npm/@types/node/-/node-17.0.23.tgz#3b41a6e643589ac6442bdbd7a4a3ded62f33f7da"
+  integrity sha1-O0Gm5kNYmsZEK9vXpKPe1i8z99o=
+
 "@vitejs/plugin-legacy@^1.8.0":
   version "1.8.0"
   resolved "https://it-artifactory.yitu-inc.com:443/api/npm/npm/@vitejs/plugin-legacy/-/plugin-legacy-1.8.0.tgz#6521e6de924641094aad5d804eaef3ac7db71284"
