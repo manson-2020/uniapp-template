@@ -14,7 +14,7 @@
     methods: {
       logout() {
         uni.reLaunch({
-          url: $config.page.auth[0],
+          url: $config.page.auth,
           success: uni.clearStorage,
         });
       },

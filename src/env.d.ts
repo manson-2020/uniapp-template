@@ -9,7 +9,8 @@ declare module '*.vue' {
 
 declare namespace UniApp {
   interface Uni {
-    showWaiting(arg: ShowLoadingOptions): void;
+    showWaiting(args: ShowLoadingOptions): void;
     hideWaiting(): void;
+    onUIStyleChange(args: (res: { theme: "dark" | "light" }) => void): void;
   }
 }

@@ -12,12 +12,17 @@ const config = {
     auth: null,
     checkVersion: null,
     setUserInfo: "",
+    setConfig: ""
   },
   page: {
     auth: [
+      // #ifdef MP
+      "/pages/auth/applets",
+      // #endif
+      // #ifndef MP
       "/pages/auth/login",
-      "/pages/auth/applets"
-    ],
+      // #endif
+    ][0],
     home: [
       "/pages/tabs/home",
       "/pages/admin/index"
@@ -37,4 +42,4 @@ export default Object.assign(config, {
   urls,
   API_URL,
   SOCKET_URL
-});
+}, uni.getStorageSync("$config") || {});

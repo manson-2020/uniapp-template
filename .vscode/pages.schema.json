@@ -1,0 +1,212 @@
+{
+  "type": "object",
+  "description": "uniapp pages.json描述",
+  "properties": {
+    "pages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/page"
+      },
+      "description": "设置页面路径及窗口表现"
+    },
+    "globalStyle": {
+      "$ref": "#/definitions/style",
+      "description": "设置默认页面的窗口表现"
+    },
+    "tabBar": {
+      "type": "object",
+      "required": [
+        "color",
+        "selectedColor",
+        "list"
+      ],
+      "properties": {
+        "color": {
+          "format": "color",
+          "description": "tab 上的文字默认颜色"
+        },
+        "selectedColor": {
+          "format": "color",
+          "description": "tab 上的文字选中时的颜色"
+        },
+        "backgroundColor": {
+          "format": "color",
+          "description": "tab 的背景色"
+        },
+        "borderStyle": {
+          "type": "string",
+          "enum": [
+            "black",
+            "white"
+          ],
+          "default": "black",
+          "description": "tabbar 上边框的颜色,可选值 black/white"
+        },
+        "blurEffect": {
+          "type": "string",
+          "enum": [
+            "none",
+            "dark",
+            "extralight",
+            "light"
+          ],
+          "default": "none",
+          "description": "iOS 高斯模糊效果,可选值 dark/extralight/light/none"
+        },
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/listInfo"
+          },
+          "description": "tab 的列表,最少2个、最多5个 tab"
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "bottom",
+            "top"
+          ],
+          "default": "bottom",
+          "description": "可选值 bottom、top"
+        },
+        "fontSize": {
+          "type": "string",
+          "default": "10px",
+          "description": "文字默认大小"
+        },
+        "iconWidth": {
+          "type": "string",
+          "default": "24px",
+          "description": "图标默认宽度（高度等比例缩放）"
+        },
+        "spacing": {
+          "type": "string",
+          "default": "3px",
+          "description": "图标和文字的间距"
+        },
+        "height": {
+          "type": "string",
+          "default": "50px",
+          "description": "tabBar 默认高度"
+        },
+        "midButton": {
+          "type": "object",
+          "description": "中间按钮 仅在 list 项为偶数时有效",
+          "properties": {
+            "width": {
+              "type": "string",
+              "default": "80px",
+              "description": "中间按钮的宽度,tabBar 其它项为减去此宽度后平分,默认值为与其它项平分宽度"
+            },
+            "height": {
+              "type": "string",
+              "default": "50px",
+              "description": "中间按钮的高度,可以大于 tabBar 高度,达到中间凸起的效果"
+            },
+            "text": {
+              "type": "string",
+              "description": "中间按钮的文字"
+            },
+            "iconPath": {
+              "type": "string",
+              "description": "中间按钮的图片路径"
+            },
+            "iconWidth": {
+              "type": "string",
+              "default": "24px",
+              "description": "图片宽度（高度等比例缩放）"
+            },
+            "backgroundImage": {
+              "type": "string",
+              "description": "中间按钮的背景图片路径"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "page": {
+      "required": [
+        "path",
+        "style"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "配置页面路径"
+        },
+        "style": {
+          "$ref": "#/definitions/style",
+          "description": "配置页面窗口表现"
+        }
+      }
+    },
+    "style": {
+      "type": "object",
+      "properties": {
+        "navigationBarBackgroundColor": {
+          "format": "color",
+          "default": "#F7F7F7",
+          "description": "导航栏背景颜色（同状态栏背景色）"
+        },
+        "navigationBarTextStyle": {
+          "type": "string",
+          "default": "white",
+          "enum": [
+            "black",
+            "white"
+          ],
+          "description": "导航栏标题颜色及状态栏前景颜色,仅支持 black/white"
+        },
+        "navigationBarTitleText": {
+          "type": "string",
+          "description": "导航栏标题文字内容"
+        },
+        "backgroundColor": {
+          "format": "color",
+          "default": "#ffffff",
+          "description": "下拉显示出来的窗口的背景色"
+        },
+        "enablePullDownRefresh": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否开启下拉刷新"
+        },
+        "onReachBottomDistance": {
+          "type": "number",
+          "default": 50
+        },
+        "usingComponents": {
+          "type": "object",
+          "description": "引用小程序组件"
+        }
+      }
+    },
+    "listInfo": {
+      "type": "object",
+      "required": [
+        "pagePath",
+        "text"
+      ],
+      "properties": {
+        "pagePath": {
+          "type": "string",
+          "description": "页面路径,必须在 pages 中先定义"
+        },
+        "text": {
+          "type": "string",
+          "description": "tab 上按钮文字,在 App 和 H5 平台为非必填。例如中间可放一个没有文字的+号图标"
+        },
+        "iconPath": {
+          "type": "string",
+          "description": "图片路径,icon 大小限制为40kb,建议尺寸为 81px * 81px,当 postion 为 top 时,此参数无效,不支持网络图片,不支持字体图标"
+        },
+        "selectedIconPath": {
+          "type": "string",
+          "description": "选中时的图片路径,icon 大小限制为40kb,建议尺寸为 81px * 81px ,当 postion 为 top 时,此参数无效"
+        }
+      }
+    }
+  }
+}

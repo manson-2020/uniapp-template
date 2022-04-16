@@ -1,6 +1,6 @@
 <template>
   <scroll-view
-    class="bgc-fff"
+    class="bgc-4"
     scroll-y
     :style="{
       height: `calc(100vh - var(--top-window-height))`,
@@ -45,7 +45,7 @@
           v-for="(item, itemIndex) in menu.children"
           :key="itemIndex"
           @click="onClickItems({ menuIndex, itemIndex })"
-          class="height-110 bgc-f9f9f9"
+          class="height-110 bgc-3"
           :style="{ padding: `0 20px 0 36px` }"
         >
           <uni-icons

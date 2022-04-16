@@ -1,6 +1,6 @@
 <template>
   <view
-    class="root fd-row jc-sb bgc-fff height-100percent ai-center pl-50 pr-50"
+    class="root fd-row jc-sb bgc-4 height-100percent ai-center pl-50 pr-50"
     :style="{ borderBottom: `1px solid #ebebeb` }"
   >
     <label v-if="showLeftWindow" @click="toHome">
@@ -9,7 +9,7 @@
         src="/static/img/logo.png"
         mode="aspectFit"
       />
-      <text class="ml-18 color-999 fs-28">uni-app Admin</text>
+      <text class="ml-18 color-5 fs-28">uni-app Admin</text>
     </label>
     <uni-icons
       v-else
@@ -22,13 +22,13 @@
 
     <text
       v-if="!showLeftWindow"
-      class="ellipsis f1 text-center fs-28 lh-2 color-999 ml-30 mr-30"
+      class="ellipsis f1 text-center fs-28 lh-2 color-5 ml-30 mr-30"
     >
       {{ navigationBarTitleText || $route.meta.navigationBar?.titleText }}
     </text>
     <label @click="showActionItems" :style="{ padding: `16rpx` }">
       <uni-icons type="person-filled" size="16" color="#666" />
-      <text class="ml-8 mr-8 color-999 fs-28">admin</text>
+      <text class="ml-8 mr-8 color-5 fs-28">admin</text>
       <uni-icons type="arrowdown" size="14" color="#999" />
     </label>
   </view>
@@ -71,7 +71,7 @@
             switch (tapIndex) {
               case 1:
                 uni.clearStorage();
-                uni.reLaunch({ url: $config.page.auth[0] });
+                uni.reLaunch({ url: $config.page.auth });
                 break;
               case 0:
                 uni.navigateTo({ url: "/pages/auth/reset" });

@@ -1,0 +1,141 @@
+{
+  "type": "object",
+  "description": "文件是应用的配置文件,用于指定应用的名称、图标、权限等",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "应用名称"
+    },
+    "appid": {
+      "type": "string",
+      "description": "应用标识"
+    },
+    "description": {
+      "type": "string",
+      "description": "应用描述"
+    },
+    "versionName": {
+      "type": "string",
+      "description": "版本名称,例如:1.0.0。"
+    },
+    "versionCode": {
+      "type": "string",
+      "description": "版本号,例如:36"
+    },
+    "transformPx": {
+      "type": "boolean",
+      "default": true,
+      "description": "是否转换项目的px,为true时将px转换为rpx,为false时,px为传统的实际像素"
+    },
+    "networkTimeout": {
+      "type": "object",
+      "description": "网络超时时间",
+      "properties": {
+        "request": {
+          "type": "number",
+          "default": 60000,
+          "description": "uni.request 的超时时间,单位毫秒。"
+        },
+        "connectSocket": {
+          "type": "number",
+          "default": 60000,
+          "description": "uni.connectSocket 的超时时间,单位毫秒。"
+        },
+        "uploadFile": {
+          "type": "number",
+          "default": 60000,
+          "description": "uni.uploadFile 的超时时间,单位毫秒。"
+        },
+        "downloadFile": {
+          "type": "number",
+          "default": 60000,
+          "description": "uni.downloadFile 的超时时间,单位毫秒。"
+        }
+      }
+    },
+    "debug": {
+      "type": "boolean",
+      "default": false,
+      "description": "是否开启 debug 模式,开启后调试信息以 info 的形式给出,其信息有页面的注册,页面路由,数据更新,事件触发等"
+    },
+    "uniStatistics": {
+      "type": "object",
+      "required": [
+        "eanble"
+      ],
+      "description": "是否开启 uni 统计,全局配置",
+      "properties": {
+        "enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否开启uni统计"
+        }
+      }
+    },
+    "app-plus": {
+      "type": "object",
+      "description": "App 特有配置"
+    },
+    "h5": {
+      "type": "object",
+      "description": "H5 特有配置"
+    },
+    "quickapp": {
+      "type": "object",
+      "description": "快应用特有配置,即将支持"
+    },
+    "mp-weixin": {
+      "type": "object",
+      "description": "微信小程序特有配置",
+      "properties": {
+        "appid": {
+          "type": "string",
+          "description": "微信小程序的AppID,登录 https://mp.weixin.qq.com 申请"
+        },
+        "usingComponents": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否启用自定义组件模式,v1.8.0+,默认为false"
+        },
+        "setting": {
+          "type": "object",
+          "description": "微信小程序项目设置",
+          "properties": {
+            "urlCheck": {
+              "type": "boolean",
+              "description": "是否检查安全域名和 TLS 版本"
+            },
+            "es6": {
+              "type": "boolean",
+              "description": "ES6 转 ES5"
+            },
+            "postcss": {
+              "type": "boolean",
+              "description": "上传代码时样式是否自动补全"
+            },
+            "minified": {
+              "type": "boolean",
+              "description": "上传代码时是否自动压缩"
+            }
+          }
+        }
+      }
+    },
+    "mp-alipay": {
+      "type": "object",
+      "description": "支付宝小程序未提供可配置项"
+    },
+    "mp-baidu": {
+      "type": "object",
+      "description": "百度小程序特有配置"
+    },
+    "mp-toutiao": {
+      "type": "object",
+      "description": "字节跳动小程序特有配置"
+    },
+    "mp-qq": {
+      "type": "object",
+      "description": "qq 小程序特有配置"
+    }
+  }
+}

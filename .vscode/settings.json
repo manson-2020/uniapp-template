@@ -1,17 +1,7 @@
 {
-  "editor.tabSize": 2,
-  "editor.formatOnType": true,
-  "files.associations": {
-    "*.nvue": "html",
-    "*.json": "jsonc"
-  },
-  "vetur.format.options.tabSize": 2,
-  "vetur.format.scriptInitialIndent": true,
-  "vetur.format.styleInitialIndent": true,
-  "vetur.format.options.useTabs": false,
-  "path-autocomplete.pathMappings": {
-    "/": "${folder}/src/"
-  },
+  "cSpell.enableFiletypes": [
+    "vue"
+  ],
   "cSpell.ignoreWords": [
     "autoplay",
     "concat",
@@ -24,19 +14,31 @@
     "scrolltolower",
     "swiper"
   ],
-  "cSpell.enableFiletypes": [
-    "vue"
-  ],
-  "better-comments.multilineComments": true,
-  "better-comments.tags": [
+  "editor.formatOnType": true,
+  "editor.tabSize": 2,
+  "files.associations": {
+    "*.json": "jsonc",
+    "*.nvue": "html"
+  },
+  "json.schemas": [
     {
-      "tag": "#",
-      "color": "#aaf",
-      "strikethrough": false,
-      "underline": false,
-      "backgroundColor": "transparent",
-      "bold": false,
-      "italic": false
+      "fileMatch": [
+        "/src/pages.json"
+      ],
+      "url": "./.vscode/pages.schema.json"
+    },
+    {
+      "fileMatch": [
+        "/src/manifest.json"
+      ],
+      "url": "./.vscode/manifest.schema.json"
     }
   ],
+  "path-autocomplete.pathMappings": {
+    "/": "${folder}/src/"
+  },
+  "vetur.format.options.tabSize": 2,
+  "vetur.format.options.useTabs": false,
+  "vetur.format.scriptInitialIndent": true,
+  "vetur.format.styleInitialIndent": true
 }

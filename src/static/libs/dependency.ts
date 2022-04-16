@@ -1,4 +1,4 @@
-import { isAbsoluteURL, curEnv } from "./utils";
+import { isAbsoluteURL } from "./utils";
 import $config from "../config";
 import { Response } from "../type";
 
@@ -30,7 +30,7 @@ const pretreatment = {
       confirmText: "login again",
       success() {
         uni.reLaunch({
-          url: $config.page.auth[curEnv() === "MP" ? 1 : 0],
+          url: $config.page.auth,
           success: uni.clearStorage
         });
       },
@@ -46,7 +46,7 @@ const pretreatment = {
     return Promise.reject(res)
   },
   auth: (res: Response): Promise<Response> => {
-    uni.navigateTo({ url: $config.page.auth[1] });
+    uni.navigateTo({ url: $config.page.auth });
     return Promise.reject(res)
   },
   success: (res: Response): Promise<Response> => Promise.resolve(res),
@@ -89,11 +89,7 @@ export const requestInterceptorOptions = (paramsKey: "data" | "formData"): UniAp
     uni.showToast({ title: String(errMsg), icon: "none" });
   },
   complete(res: UniApp.GeneralCallbackResult): void {
-    console.log(
-      `%c Response `,
-      "color: #cfefdf; font-weight:500; background-color: #108ee9; padding: 1px; border-radius: 3px;",
-      res
-    );
+    console.log(`%c Response `, "color: #cfefdf;", res);
   }
 });
 
@@ -191,4 +187,13 @@ export async function checkVersion() {
   } catch ({ message }) {
     uni.showToast({ title: message as string, icon: "error" });
   }
+}
+
+export function setConfig() {
+  uni.request({
+    url: $config.path.setConfig,
+    success({ data }) {
+      uni.setStorageSync("$config", data);
+    }
+  })
 }
