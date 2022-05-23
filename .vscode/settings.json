@@ -18,7 +18,7 @@
   "editor.tabSize": 2,
   "files.associations": {
     "*.json": "jsonc",
-    "*.nvue": "html"
+    "*.nvue": "vue"
   },
   "json.schemas": [
     {

@@ -21,13 +21,16 @@
     ],
     "types": [
       "@dcloudio/types",
-      "@types/node"
+      "@types/node",
+      "vite/client",
+      "uni-base-components-types"
     ]
   },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.vue"
+    "src/**/*.vue",
+    "src/**/*.nvue",
   ]
 }
