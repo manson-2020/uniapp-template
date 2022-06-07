@@ -1,4 +1,4 @@
-// #ifndef APP-PLUS-NVUE
+/* #ifndef APP-PLUS-NVUE */
 
 page,
 view,
@@ -100,7 +100,11 @@ scroll-view {
   border: none;
 }
 
-// #endif
+label,
+[nvue] label {
+  flex-direction: row;
+  align-items: center;
+}
 
 page {
   font-weight: 500;
@@ -108,26 +112,22 @@ page {
   background-color: #fcfcfc;
 }
 
-label,
-[nvue] label {
-  flex-direction: row;
-  align-items: center;
-}
-
 picker[disabled],
 button[disabled] {
   opacity: 0.5;
 }
+
+/* #endif */
 
 .tap-hover {
   opacity: 0.6;
 }
 
 .input {
-  // #ifndef APP-PLUS-NVUE
+  /* #ifndef APP-PLUS-NVUE */
   border: none;
   outline: none;
-  // #endif
+  /* #endif */
   background-color: transparent;
 }
 

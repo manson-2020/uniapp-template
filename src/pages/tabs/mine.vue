@@ -7,21 +7,22 @@
 </template>
 
 <script lang="ts">
-  import $config from "../../static/config";
+import { defineComponent } from "vue";
+import $config from "../../static/config";
 
-  export default {
-    onLoad() {},
-    methods: {
-      logout() {
-        uni.reLaunch({
-          url: $config.page.auth,
-          success: uni.clearStorage,
-        });
-      },
+export default defineComponent({
+  onLoad() { },
+  methods: {
+    logout() {
+      uni.reLaunch({
+        url: $config.page.auth,
+        success: uni.clearStorage,
+      });
     },
-  };
+  },
+});
 </script>
 
 <style lang="scss" scoped>
-  // scss
+// scss
 </style>

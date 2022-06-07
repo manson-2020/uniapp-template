@@ -3,17 +3,19 @@
 </template>
 
 <script lang="ts">
-  export default {
-    data: () => ({
-      url: "",
-      webviewStyles: {
-        progress: {
-          color: "#1ba0ff",
-        },
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  data: () => ({
+    url: "",
+    webviewStyles: {
+      progress: {
+        color: "#1ba0ff",
       },
-    }),
-    onLoad({ url = "https://m.baidu.com" }) {
-      this.url = decodeURIComponent(url);
     },
-  };
+  }),
+  onLoad({ url = "https://m.baidu.com" }) {
+    this.url = decodeURIComponent(url);
+  },
+});
 </script>

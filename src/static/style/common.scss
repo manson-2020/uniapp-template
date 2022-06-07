@@ -3,14 +3,14 @@
 // 公共样式类
 @for $flex from 1 through 6 {
   .f#{$flex} {
-    flex: $flex !important;
+    flex: $flex  !important;
   }
 }
 
 @each $fd,
 $value in (col: column, row: row, rerow: row-reverse, recol: column-reverse) {
   .fd-#{$fd} {
-    flex-direction: $value !important;
+    flex-direction: $value  !important;
   }
 }
 
@@ -18,74 +18,110 @@ $value in (col: column, row: row, rerow: row-reverse, recol: column-reverse) {
 $value in (start: flex-start,
   center: center,
   end: flex-end,
-  /* #ifndef APP-PLUS-NVUE  */
-  baseline: baseline
+  baseline: baseline) {
+  @if $align ==baseline {
 
-  /* #endif*/
-) {
-  .ai-#{$align} {
-    align-items: $value !important;
+    /* #ifndef APP-PLUS-NVUE  */
+    .ai-#{$align} {
+      align-items: $value  !important;
+    }
+
+    /* #endif*/
   }
 
-  // #ifndef APP-PLUS-NVUE
+  @else {
+    .ai-#{$align} {
+      align-items: $value  !important;
+    }
+
+  }
+
+  /* #ifndef APP-PLUS-NVUE */
   .as-#{$align} {
-    align-self: $value !important;
+    align-self: $value  !important;
   }
 
   .ac-#{$align} {
-    align-content: $value !important;
+    align-content: $value  !important;
   }
 
-  // #endif
+  /* #endif */
 }
 
 @each $justify,
 $value in (sa: space-around,
   sb: space-between,
-  /* #ifndef APP-PLUS-NVUE  */
   se: space-evenly,
-  /* #endif*/
   center: center,
   start: flex-start,
   end: flex-end) {
-  .jc-#{$justify} {
-    justify-content: $value !important;
+
+  @if $justify ==se {
+
+    /* #ifndef APP-PLUS-NVUE  */
+    .jc-#{$justify} {
+      justify-content: $value  !important;
+    }
+
+    /* #endif*/
   }
 
-  // #ifndef APP-PLUS-NVUE
+  @else {
+    .jc-#{$justify} {
+      justify-content: $value  !important;
+    }
+  }
+
+  /* #ifndef APP-PLUS-NVUE */
 
   .js-#{$justify} {
-    justify-self: $value !important;
+    justify-self: $value  !important;
   }
 
   .ji-#{$justify} {
-    justify-items: $value !important;
+    justify-items: $value  !important;
   }
 
-  // #endif
+  /* #endif*/
 }
 
 @each $position in (fixed,
   relative,
   absolute,
-  /* #ifndef APP-PLUS-NVUE  */
-  static
 
-  /* #endif*/
-) {
-  .#{$position} {
-    position: $position !important;
+  static) {
+  @if $position ==static {
+
+    /* #ifndef APP-PLUS-NVUE  */
+    .#{$position} {
+      position: $position  !important;
+    }
+
+    /* #endif*/
+  }
+
+  @else {
+    .#{$position} {
+      position: $position  !important;
+    }
   }
 }
 
-@each $text in (center, left, right,
-  /* #ifndef APP-PLUS-NVUE  */
-  justify
+@each $text in (center, left, right, justify) {
+  @if $text ==justify {
 
-  /* #endif*/
-) {
-  .text-#{$text} {
-    text-align: $text !important;
+    /* #ifndef APP-PLUS-NVUE  */
+    .text-#{$text} {
+      text-align: $text  !important;
+    }
+
+    /* #endif*/
+  }
+
+  @else {
+    .text-#{$text} {
+      text-align: $text  !important;
+    }
   }
 }
 
@@ -120,7 +156,7 @@ $value in (sa: space-around,
 
   @if $i <=5 {
     .lh-#{$i} {
-      line-height: $i !important;
+      line-height: $i  !important;
     }
   }
 
@@ -131,12 +167,7 @@ $value in (sa: space-around,
   }
 }
 
-@each $size in (
-
-  /* #ifndef APP-PLUS-NVUE */
-  auto,
-  /* #endif*/
-  20, 25, 30, 50, 70, 100) {
+@each $size in (auto, 20, 25, 30, 50, 70, 100) {
   @if $size==50 {
     .br-circle {
       border-radius: 50% !important;
@@ -144,13 +175,17 @@ $value in (sa: space-around,
   }
 
   @if $size==auto {
+
+    /* #ifndef APP-PLUS-NVUE */
     .width-#{$size} {
-      width: $size !important;
+      width: $size  !important;
     }
 
     .height-#{$size} {
-      height: $size !important;
+      height: $size  !important;
     }
+
+    /* #endif */
   }
 
   @else {

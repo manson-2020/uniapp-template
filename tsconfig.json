@@ -26,6 +26,9 @@
       "uni-base-components-types"
     ]
   },
+  "vueCompilerOptions": {
+    "experimentalDisableTemplateSupport": true
+  },
   "include": [
     "src/**/*.ts",
     "src/**/*.d.ts",
