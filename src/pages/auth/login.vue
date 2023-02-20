@@ -1,59 +1,33 @@
 <template>
-  <view class="f1 jc-center" :style="{ padding: `0 60rpx 240rpx` }">
-    <image
-      class="width-80 height-80 as-center"
-      src="/static/img/logo.png"
-      mode="aspectFit"
-    />
+  <view class="f1 jc-center">
+    <image class="width-120 height-120 as-center" src="/static/logo.png" mode="aspectFit" />
 
-    <text class="mt-60 color-4 fs-32 fw-500 lh-100">系统登录</text>
+    <text class="mt-60 color-primary fs-36 fw-500 lh-100">系统登录</text>
 
     <view :style="{ padding: `30rpx`, borderTop: `2rpx #ececec solid` }">
       <label>
-        <uni-icons
-          class="mr-30"
-          type="person-filled"
-          size="18"
-          color="#606266"
-        />
-        <uni-easyinput class="f1" type="number" placeholder="手机号/邮箱" />
+        <uni-icons class="mr-30" type="person-filled" size="24" color="#606266" />
+        <uni-easyinput v-model="form.account" class="f1 height-100" type="number" placeholder="手机号/邮箱" />
       </label>
       <label class="mt-44">
-        <uni-icons
-          class="mr-30"
-          type="locked-filled"
-          size="18"
-          color="#606266"
-        />
-        <uni-easyinput class="f1" type="password" placeholder="密码" />
+        <uni-icons class="mr-30" type="locked-filled" size="24" color="#606266" />
+        <uni-easyinput v-model="form.password" class="f1 height-100" type="password" placeholder="密码" />
       </label>
 
-      <text
-        @click="to(`navigateTo`, `/pages/auth/reset`)"
-        :style="{
-          cursor: `pointer`,
-          textDecoration: `underline`,
-        }"
-        class="as-end mt-30 color-2 fs-26 opacity-dot8"
-      >
+      <text @click="to(`navigateTo`, `/pages/auth/reset`)" :style="{
+        cursor: `pointer`,
+        textDecoration: `underline`,
+      }" class="as-end mt-30 color-normal fs-26 opacity-dot8">
         忘记密码？
       </text>
-      <button
-        class="bgc-2 mt-60 lh-60 fs-28 ml-0 mr-0 color-3"
-        hover-class="tap-hover"
-        @click="login"
-      >
+      <button class="bgc-primary mt-60 lh-88 fs-32 ml-0 mr-0 color-inverse" hover-class="tap-hover" @click="login">
         登录
       </button>
 
-      <text
-        @click="to('navigateTo', `/pages/auth/register`)"
-        :style="{
-          cursor: `pointer`,
-          textDecoration: `underline`,
-        }"
-        class="as-center mt-90 color-2 fs-26 opacity-dot8"
-      >
+      <text @click="to('navigateTo', `/pages/auth/register`)" :style="{
+        cursor: `pointer`,
+        textDecoration: `underline`,
+      }" class="as-center mt-90 color-normal fs-26 opacity-dot8">
         如无账号，请先注册...
       </text>
     </view>
@@ -61,32 +35,30 @@
 </template>
 
 <script lang="ts" setup>
-  import $config from "../../static/config";
+import { reactive } from "vue";
+import $config from "@/static/config";
 
-  const to = (
-    method: "reLaunch" | "navigateTo" | "switchTab" | "redirectTo",
-    url: string
-  ) => uni[method]({ url });
+const { PAGE_CLIENT_HOME } = $config;
+const to = (
+  method: "reLaunch" | "navigateTo" | "switchTab" | "redirectTo",
+  url: string
+) => uni[method]({ url });
 
-  function login() {
-    uni.showActionSheet({
-      itemList: ["user", "admin"],
-      itemColor: "#666",
-      success: async ({ tapIndex }) => {
-        await uni.setStorage({
-          key: $config.userInfoStorageKey,
-          data: { [$config.tokenField]: 1 },
-        });
-        to(`reLaunch`, [$config.page.home[0], $config.page.home[1]][tapIndex]);
-      },
-    });
-  }
+const form = reactive({
+  account: "",
+  password: ""
+});
+
+function login() {
+  to(`reLaunch`, PAGE_CLIENT_HOME);
+}
 </script>
 
-<style lang="scss" scoped>
-  // scss
-  page {
-    max-width: 750rpx;
-    margin: auto;
-  }
+<style lang="scss">
+// scss
+page {
+  height: 100%;
+  width: 450px;
+  margin: 0 auto;
+}
 </style>

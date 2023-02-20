@@ -1,6 +1,6 @@
 <template>
   <view class="root flex-1">
-    <button class="bg-purple-500 text-size-[32px] text-[#fff]-700">{{ title }}</button>
+    <button>{{ title }}</button>
   </view>
 </template>
 

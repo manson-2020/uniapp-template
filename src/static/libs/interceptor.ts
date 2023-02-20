@@ -12,12 +12,11 @@ uni.addInterceptor("setStorage", {
         if (typeof (args.data.value) !== "object") {
           return Promise.reject(Error(`Invalid prop: type check failed for prop "value". Expected Object with value, got "${String(args.data.value)}".`));
         }
-        const originalData = uni.getStorageSync(args.key);
-        if (!originalData) return Promise.reject(Error(`No data found to update.`));
-        const { value, key, createTime, expireTime } = originalData;
+        const originalData = uni.getStorageSync(args.key) || {};
+        const { value = {}, createTime, expireTime } = originalData;
         args.data = {
           value: { ...value, ...args.data.value },
-          key,
+          key: args.key,
           createTime,
           expireTime
         };
@@ -45,7 +44,7 @@ uni.addInterceptor("setStorage", {
         };
       case undefined: {
         const createTime = Date.now(),
-          validityDay = args.data?.validityDay;
+          validityDay = args.data?.validityDay || 0;
         args.data = {
           value: args.data?.value || args.data,
           key: args.key,
@@ -72,32 +71,3 @@ uni.addInterceptor("getStorage", {
     return Promise.resolve((expireTime && Date.now() >= expireTime) ? uni.removeStorageSync(key) : value);
   }
 });
-
-uni.showWaiting = (args: UniApp.ShowLoadingOptions) => {
-  uni.hideWaiting();
-  // #ifndef APP-PLUS
-  uni.showLoading(args);
-  // #endif
-  // #ifdef APP-PLUS
-  plus.nativeUI.showWaiting(args.title, {
-    loading: {
-      height: "60px",
-      icon: "/static/img/loading.png",
-      interval: 72
-    },
-    size: "16px",
-    width: "128px",
-    height: "101px",
-    modal: args.mask || false,
-  });
-  // #endif
-}
-
-uni.hideWaiting = () => {
-  // #ifndef APP-PLUS
-  uni.hideLoading();
-  // #endif
-  // #ifdef APP-PLUS
-  plus.nativeUI.closeWaiting();
-  // #endif
-}

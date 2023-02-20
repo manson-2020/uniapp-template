@@ -17,8 +17,7 @@
       </view>
     </view>
     <view :style="{ padding: `30rpx` }">
-      <uni-table :loading="loading" border stripe type="selection" emptyText="暂无更多数据"
-        @selection-change="selectionChange">
+      <uni-table :loading="loading" border stripe type="selection" emptyText="暂无更多数据" @selection-change="selectionChange">
         <uni-tr>
           <uni-th width="150" align="center">日期</uni-th>
           <uni-th width="150" align="center">姓名</uni-th>

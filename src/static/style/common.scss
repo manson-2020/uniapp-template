@@ -3,14 +3,14 @@
 // 公共样式类
 @for $flex from 1 through 6 {
   .f#{$flex} {
-    flex: $flex  !important;
+    flex: $flex;
   }
 }
 
 @each $fd,
 $value in (col: column, row: row, rerow: row-reverse, recol: column-reverse) {
   .fd-#{$fd} {
-    flex-direction: $value  !important;
+    flex-direction: $value;
   }
 }
 
@@ -23,7 +23,7 @@ $value in (start: flex-start,
 
     /* #ifndef APP-PLUS-NVUE  */
     .ai-#{$align} {
-      align-items: $value  !important;
+      align-items: $value;
     }
 
     /* #endif*/
@@ -31,18 +31,17 @@ $value in (start: flex-start,
 
   @else {
     .ai-#{$align} {
-      align-items: $value  !important;
+      align-items: $value;
     }
-
   }
 
   /* #ifndef APP-PLUS-NVUE */
   .as-#{$align} {
-    align-self: $value  !important;
+    align-self: $value;
   }
 
   .ac-#{$align} {
-    align-content: $value  !important;
+    align-content: $value;
   }
 
   /* #endif */
@@ -60,7 +59,7 @@ $value in (sa: space-around,
 
     /* #ifndef APP-PLUS-NVUE  */
     .jc-#{$justify} {
-      justify-content: $value  !important;
+      justify-content: $value;
     }
 
     /* #endif*/
@@ -68,18 +67,18 @@ $value in (sa: space-around,
 
   @else {
     .jc-#{$justify} {
-      justify-content: $value  !important;
+      justify-content: $value;
     }
   }
 
   /* #ifndef APP-PLUS-NVUE */
 
   .js-#{$justify} {
-    justify-self: $value  !important;
+    justify-self: $value;
   }
 
   .ji-#{$justify} {
-    justify-items: $value  !important;
+    justify-items: $value;
   }
 
   /* #endif*/
@@ -94,7 +93,7 @@ $value in (sa: space-around,
 
     /* #ifndef APP-PLUS-NVUE  */
     .#{$position} {
-      position: $position  !important;
+      position: $position;
     }
 
     /* #endif*/
@@ -102,7 +101,7 @@ $value in (sa: space-around,
 
   @else {
     .#{$position} {
-      position: $position  !important;
+      position: $position;
     }
   }
 }
@@ -112,7 +111,7 @@ $value in (sa: space-around,
 
     /* #ifndef APP-PLUS-NVUE  */
     .text-#{$text} {
-      text-align: $text  !important;
+      text-align: $text;
     }
 
     /* #endif*/
@@ -120,7 +119,7 @@ $value in (sa: space-around,
 
   @else {
     .text-#{$text} {
-      text-align: $text  !important;
+      text-align: $text;
     }
   }
 }
@@ -134,6 +133,8 @@ $value in (sa: space-around,
     right: right,
     width: width,
     height: height,
+    m: margin,
+    p: padding,
     mt: margin-top,
     mr: margin-right,
     mb: margin-bottom,
@@ -144,91 +145,104 @@ $value in (sa: space-around,
     pl: padding-left,
     fs: font-size) {
     .#{$wrapper}-#{$i * 2} {
-      #{$box}: #{$i * 2}rpx !important;
+      #{$box}: #{$i * 2}rpx;
     }
   }
 
   @if $i < 30 {
     .br-#{$i * 2} {
-      border-radius: #{$i * 2}rpx !important;
+      border-radius: #{$i * 2}rpx;
     }
   }
 
   @if $i <=5 {
     .lh-#{$i} {
-      line-height: $i  !important;
+      line-height: $i;
     }
   }
 
   @else {
     .lh-#{$i * 2} {
-      line-height: #{$i * 2}rpx !important;
+      line-height: #{$i * 2}rpx;
     }
   }
 }
 
-@each $size in (auto, 20, 25, 30, 50, 70, 100) {
-  @if $size==50 {
-    .br-circle {
-      border-radius: 50% !important;
-    }
-  }
-
+@each $size in (auto, 20, 25, 30, 50, 70, 90, 100) {
   @if $size==auto {
 
     /* #ifndef APP-PLUS-NVUE */
     .width-#{$size} {
-      width: $size  !important;
+      width: $size;
     }
 
     .height-#{$size} {
-      height: $size  !important;
+      height: $size;
     }
 
-    /* #endif */
+    .mt-#{$size} {
+      margin-top: $size;
+    }
+
+    .mr-#{$size} {
+      margin-right: $size;
+    }
+
+    .mb-#{$size} {
+      margin-bottom: $size;
+    }
+
+    .ml-#{$size} {
+      margin-left: $size;
+    }
+     /* #endif */
   }
 
   @else {
+    .br-#{$size}percent {
+      border-radius: #{$size}#{"%"};
+    }
+
     .width-#{$size}vw {
-      width: #{$size}vw !important;
+      width: #{$size}vw;
     }
 
     .width-#{$size}percent {
-      width: #{$size}#{"%"} !important;
+      width: #{$size}#{"%"};
     }
 
     .height-#{$size}vh {
-      height: #{$size}vh !important;
+      height: #{$size}vh;
     }
 
     .height-#{$size}percent {
-      height: #{$size}#{"%"} !important;
+      height: #{$size}#{"%"};
     }
 
     .top-#{$size}percent {
-      top: #{$size}#{"%"} !important;
+      top: #{$size}#{"%"};
     }
 
     .left-#{$size}percent {
-      left: #{$size}#{"%"} !important;
+      left: #{$size}#{"%"};
     }
 
     .bottom-#{$size}percent {
-      bottom: #{$size}#{"%"} !important;
+      bottom: #{$size}#{"%"};
     }
 
     .right-#{$size}percent {
-      right: #{$size}#{"%"} !important;
+      right: #{$size}#{"%"};
     }
   }
 }
 
 @for $i from 1 to 10 {
-  .opacity-dot#{$i} {
-    opacity: math.div($i, 10) !important;
+  .opacity-0#{$i} {
+    opacity: math.div($i, 10);
   }
 
   .fw-#{$i * 100} {
-    font-weight: $i * 100 !important;
+    font-weight: $i * 100;
   }
 }

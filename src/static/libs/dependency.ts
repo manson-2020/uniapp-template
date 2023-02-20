@@ -6,13 +6,17 @@ export function requestInvoke(
   args: UniApp.RequestOptions & UniApp.UploadFileOption,
   paramsKey: "data" | "formData"
 ): UniApp.RequestOptions | UniApp.UploadFileOption {
-  args.url = isAbsoluteURL(args.url) ? args.url : $config.API_URL + args.url;
+  args.url = isAbsoluteURL(args.url) ? args.url : $config.URL_REMOTE + $config.API_PREFIX + args.url;
   args.header ?? (args.header = {});
   paramsKey === "data" && (args.header["Content-type"] = "application/x-www-form-urlencoded");
   args.header["lang"] = uni.getLocale();
-
   args[paramsKey] ?? (args[paramsKey] = {});
-  args[paramsKey][$config.tokenField] = uni.getStorageSync($config.userInfoStorageKey)?.value?.[$config.tokenField];
+
+  const token = uni.getStorageSync($config.STORAGE_KEY_USER_INFO)?.value?.[$config.FIELD_TOKEN];
+  if (token) {
+    args.header[$config.FIELD_TOKEN] = token;
+    // args[paramsKey][$config.FIELD_TOKEN] = token;
+  }
 
   for (let key in args[paramsKey]) {
     if ([null, undefined, NaN].includes(args[paramsKey][key])) delete args[paramsKey][key];
@@ -22,31 +26,89 @@ export function requestInvoke(
 
 const pretreatment = {
   debounce: false,
-  login: ({ msg: content }: Response): Promise<string> | void => {
-    if (pretreatment.debounce === true) return;
+  login: ({ msg: content, data }: Response): Promise<string> | void => {
+    if (pretreatment.debounce) return Promise.reject(content);
     pretreatment.debounce = true;
     uni.showModal({
+      title: "温馨提示",
       content,
-      confirmText: "login again",
-      success() {
-        uni.reLaunch({
-          url: $config.page.auth,
-          success: uni.clearStorage
+      confirmText: "去登录",
+      success({ confirm, cancel }) {
+        uni.removeStorage({ key: $config.STORAGE_KEY_USER_INFO });
+        cancel && +data?.forcedLogin && uni.navigateBack();
+        confirm && uni.navigateTo({
+          url: [
+            // #ifdef MP
+            $config.PAGE_LOGIN_APPLETS,
+            // #endif
+            // #ifndef MP
+            $config.PAGE_LOGIN_ACCOUNT
+            // #endif
+          ][0]
         });
       },
       complete: () => {
         pretreatment.debounce = false;
-        uni.hideWaiting();
       }
     });
     return Promise.reject(content);
   },
-  fail: (res: Response): Promise<Response> => {
-    uni.showToast({ title: res.msg, icon: "none" });
-    return Promise.reject(res)
+  buy({ msg, data }: Response): Promise<string> | void {
+    uni.showModal({
+      title: "温馨提示",
+      content: `${msg}, 要现在去购买吗？`,
+      confirmText: "去购买",
+      success({ confirm, cancel }) {
+        // #ifdef APP-PLUS
+        if (confirm) {
+          uni.navigateTo({
+            url: `${$config.PAGE_PLACE_AN_ORDER}?mode=1&id=${+data.id}&type=${+data.type}`
+          });
+        }
+        // #endif
+
+        // #ifndef APP-PLUS
+        confirm && uni.showToast({
+          title: "请前往APP购买",
+          icon: "none",
+          duration: 1200,
+          success: () => setTimeout(uni.navigateBack, 1200)
+        });
+        // #endif
+
+        cancel && uni.navigateBack();
+      }
+    });
+    return Promise.reject(msg);
   },
-  auth: (res: Response): Promise<Response> => {
-    uni.navigateTo({ url: $config.page.auth });
+  subscription({ msg: content }: Response): Promise<string> | void {
+    uni.showModal({
+      title: "温馨提示",
+      content,
+      confirmText: "去开通",
+      success({ confirm, cancel }) {
+        // #ifdef APP-PLUS
+        confirm && uni.navigateTo({
+          url: $config.PAGE_SUBSCRIPTION
+        });
+        // #endif
+
+        // #ifndef APP-PLUS
+        confirm && uni.showToast({
+          title: "请前往APP开通",
+          icon: "none",
+          duration: 1200,
+          success: () => setTimeout(uni.navigateBack, 1200)
+        });
+        // #endif
+
+        cancel && uni.navigateBack();
+      }
+    });
+    return Promise.reject(content);
+  },
+  fail(res: Response): Promise<Response> {
+    uni.showToast({ title: res.msg, icon: "none" });
     return Promise.reject(res)
   },
   success: (res: Response): Promise<Response> => Promise.resolve(res),
@@ -55,19 +117,22 @@ const pretreatment = {
 export function requestSuccess({ data, statusCode }: UniApp.RequestSuccessCallbackResult) {
   try {
     const res = typeof (data) === "string" ? JSON.parse(data) : data,
-      { success, login, fail, auth } = pretreatment;
+      { success, login, fail, buy, subscription } = pretreatment;
     switch (+res.code) {
-      case 400:
+      case 0:
         return fail(res);
+      case 2:
+        return buy(res);
       case 401:
         return login(res);
-      case 402:
-        return auth(res);
+      case 405:
+        return subscription(res);
       default:
         return success(res);
     };
   } catch (error) {
-    const content = String(data) || "No Response!";
+    // DEBUG MODE
+    const content = JSON.stringify(data || "服务器无响应", null, 2);
     uni.showModal({
       title: `StatusCode ${statusCode}`,
       content,
@@ -89,14 +154,15 @@ export const requestInterceptorOptions = (paramsKey: "data" | "formData"): UniAp
     uni.showToast({ title: String(errMsg), icon: "none" });
   },
   complete(res: UniApp.GeneralCallbackResult): void {
-    console.log(`%c Response `, "color: #cfefdf;", res);
+    console.log(`%c Response`, "color: #5b6cf2;", res);
   }
 });
 
-export function openWebsocket() {
+export function connectWebsocket() {
+  if (!$config.URL_WEBSOCKET) return;
   let [socketOpen, socketMsgQueue]: [boolean, string[]] = [false, []];
 
-  uni.connectSocket({ url: $config.SOCKET_URL });
+  uni.connectSocket({ url: $config.URL_WEBSOCKET });
   uni.onSocketOpen((res) => {
     socketOpen = true;
     for (let i = 0; i < socketMsgQueue.length; i++) {
@@ -119,81 +185,78 @@ export function openWebsocket() {
   });
 }
 
-export async function checkVersion() {
+export function checkVersion({ showToast } = { showToast: false }) {
+  const { appName, appVersion } = uni.getSystemInfoSync();
   console.log(
-    `%c uni Admin %c enjoy! %c`,
+    `%c ${appName} %c Version ${appVersion} %c`,
     "background: #35495e; padding: 1px; border-radius: 3px 0 0 3px; color: #fff",
     "background: #007aff; padding: 1px; margin: 1px; border-radius: 0 3px 3px 0; color: #fff; font-weight: bold;",
     "background: transparent"
   );
-  try {
-    // #ifdef MP
-    const {
-      onCheckForUpdate,
-      onUpdateReady,
-      onUpdateFailed,
-      applyUpdate
-    } = uni.getUpdateManager();
 
-    onCheckForUpdate(({ hasUpdate }) => {
-      hasUpdate && console.log("New version found !");
-    });
+  // #ifdef MP
+  const { onCheckForUpdate, onUpdateReady, onUpdateFailed, applyUpdate } = uni.getUpdateManager();
 
-    onUpdateReady((res) => {
-      uni.showModal({
-        title: "Update Tips",
-        confirmText: "Restart now",
-        cancelText: "Cancel",
-        content:
-          "The new version is ready. Do you want to restart the application?",
-        success: ({ confirm }) => {
-          uni.clearStorage();
-          confirm && applyUpdate();
-        },
-      });
-    });
+  onCheckForUpdate(({ hasUpdate }) => {
+    showToast && uni.showToast({ title: hasUpdate ? "发现新版本，正在更新..." : "已是最新版本！", icon: "none" });
 
-    onUpdateFailed((res) => {
-      uni.showToast({
-        title: "Failed to download the new version. Please try again later.",
-        icon: "none",
-      });
-    });
-    // #endif
+    hasUpdate && console.log("New version found !");
+  });
 
-    // #ifdef APP-PLUS
-    const { checkVersion: checkVersionURL } = $config.path;
-    if (!checkVersionURL) return;
-    const { data, msg: title } = await (<unknown>uni.request({
-      url: checkVersionURL,
-      data: {
-        platform: uni.getSystemInfoSync().platform,
-        version: plus.runtime.version,
+  onUpdateReady((res) => {
+    uni.showModal({
+      title: "Update Tips",
+      confirmText: "Restart",
+      cancelText: "Cancel",
+      content:
+        "The new version is ready. Do you want to restart the application?",
+      success: ({ confirm }) => {
+        uni.clearStorage();
+        confirm && applyUpdate();
       },
-    }) as Promise<Response>);
+    });
+  });
 
-    if (!data.upgradeUrl) return;
+  onUpdateFailed((res) => {
+    uni.showToast({
+      title: "Failed to download the new version. Please try again later.",
+      icon: "none",
+    });
+  });
+  // #endif
 
-    const { confirm } = await (<unknown>uni.showModal({
-      title,
-      content: data.description,
-      showCancel: Boolean(+data.forceUpdate),
-      confirmText: "go to upgrade"
-    }) as Promise<UniApp.ShowModalRes>);
-
-    confirm && plus.runtime.openURL(data.upgradeURL);
-
-    // #endif
-  } catch ({ message }) {
-    uni.showToast({ title: message as string, icon: "error" });
-  }
+  // #ifdef APP-PLUS
+  if (!$config.API_CHECK_VERSION) return;
+  const { osName, appVersionCode, deviceBrand } = uni.getSystemInfoSync();
+  uni.request({
+    url: $config.API_CHECK_VERSION,
+    data: { osName, appVersionCode, deviceBrand },
+    success: <AnyFunction>(({ data, msg: title }: Response) => {
+      if (!data?.upgradeURL) {
+        showToast && uni.showToast({ title, icon: "none" });
+        return;
+      };
+      uni.setStorage({
+        key: "upgradeInfo",
+        data: { title, ...data },
+        success() {
+          uni.navigateTo({ url: $config.PAGE_UPGRADE });
+        }
+      });
+    }),
+    fail({ errMsg: title }) {
+      uni.showToast({ title, icon: "error" });
+    }
+  });
+  // #endif
 }
 
 export function setConfig() {
+  if (!$config.API_CONFIG_GET) return;
   uni.request({
-    url: $config.path.setConfig,
+    url: $config.API_CONFIG_GET,
     success({ data }) {
-      uni.setStorageSync("$config", data);
+      uni.setStorage({ key: "$config", data });
     }
   })
 }

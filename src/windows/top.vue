@@ -2,7 +2,7 @@
   <view class="root fd-row jc-sb bgc-4 height-100percent ai-center pl-50 pr-50"
     :style="{ borderBottom: `1px solid #ebebeb` }">
     <label v-if="showLeftWindow" @click="toHome">
-      <image class="width-60 height-60" src="/static/img/logo.png" mode="aspectFit" />
+      <image class="width-60 height-60" src="/static/logo.png" mode="aspectFit" />
       <text class="ml-18 color-5 fs-28">uni-app Admin</text>
     </label>
     <uni-icons v-else :style="{ padding: `30rpx 30rpx 30rpx 0`, transform: `scale(1, 0.7)` }" type="bars" size="30"

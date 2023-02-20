@@ -1,6 +1,6 @@
 <template>
   <view class="root">
-    <image class="logo" mode="aspectFit" src="/static/img/logo.png" />
+    <image class="logo" mode="aspectFit" src="/static/logo.png" />
     <view class="content lh-2">
       <text class="title fs-30">申请获取以下权限</text>
       <text class="explain fs-28">获得登录账号(手机号码)</text>
@@ -38,7 +38,7 @@ export default defineComponent({
   methods: {
     async authorization({ detail }: any) {
       if (!detail.code) return;
-      uni.showWaiting({ mask: true });
+      uni.showLoading({ mask: true });
       const { path, validityDay } = getApp().globalData!.$config;
       try {
         const { code } = detail,
@@ -50,7 +50,7 @@ export default defineComponent({
           key: "userInfo",
           data: { value: data, validityDay },
         });
-        uni.hideWaiting();
+        uni.hideLoading();
 
         if (!data.PhoneNumber) {
           await ((<unknown>uni.showModal({
@@ -68,12 +68,12 @@ export default defineComponent({
       } catch (error) {
         uni.showToast({ title: <string>error, icon: "none" });
       } finally {
-        uni.hideWaiting();
+        uni.hideLoading();
       }
     },
 
     async getUserInfo() {
-      uni.showWaiting({ mask: true });
+      uni.showLoading({ mask: true });
       const { path, validityDay } = getApp().globalData!.$config;
 
       try {
@@ -92,7 +92,7 @@ export default defineComponent({
       } catch (error) {
         uni.showToast({ title: <string>error, icon: "none" });
       } finally {
-        uni.hideWaiting();
+        uni.hideLoading();
       }
     },
   },

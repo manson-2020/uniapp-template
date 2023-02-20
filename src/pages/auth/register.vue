@@ -2,7 +2,7 @@
   <view class="f1 jc-center" :style="{ padding: `0 60rpx 240rpx` }">
     <image
       class="width-80 height-80 as-center"
-      src="/static/img/logo.png"
+      src="/static/logo.png"
       mode="aspectFit"
     />
 

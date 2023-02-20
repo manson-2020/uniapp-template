@@ -1,13 +1,25 @@
-<template></template>
+<template>
+  <view class="f1 height-100percent ai-center jc-center p-30">
+    <uni-load-more status="loading" />
+  </view>
+</template>
 
-<script>
-  export default {
-    onLoad() {
-      uni.showWaiting({ title: "Loading..." });
-      uni.reLaunch({
-        url: getApp().globalData.$config.page.home[0],
-        complete: uni.hideWaiting,
-      });
-    },
-  };
+<script setup>
+import { ref } from "vue";
+import { onLoad } from "@dcloudio/uni-app";
+
+const { PAGE_LOGIN_ACCOUNT } = getApp().globalData.$config;
+
+onLoad(() => uni.reLaunch({ url: PAGE_LOGIN_ACCOUNT }));
+
 </script>
+
+<style lang="scss">
+// #ifndef APP-PLUS
+page {
+  height: 100%;
+  flex: 1;
+}
+
+// #endif
+</style>

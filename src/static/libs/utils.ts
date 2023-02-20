@@ -2,7 +2,7 @@
 export const prefixZero = (n: number | string): string => String(+n > 9 ? n : `0${n}`)
 
 export const formatPhoneNumber = (phoneNumber: string): string => {
-  return phoneNumber.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
+  return phoneNumber && phoneNumber.replace(/(\d{3})\d{4}(\d{4})/, "$1****$2");
 }
 
 export const rand = (min: number, max: number): number => ~~(Math.random() * (max - min + 1) + min);
@@ -10,13 +10,12 @@ export const rand = (min: number, max: number): number => ~~(Math.random() * (ma
 export const transformQueryString = (params: string | AnyObject): string | AnyObject | void => {
   if (typeof params === "string") {
     const queryStrings: RegExpMatchArray | null = params.match(/[^?&]+=[^?&]+/g);
-
     return queryStrings ? Object.fromEntries(
       queryStrings.map(item => item.split(/^([^=]*)=*/).filter(item => item))
     ) : {};
   }
   if (typeof params === "object") {
-    return Object.keys(params).filter(key => params[key]).map(key => `${key}=${params[key]}`).join("&");
+    return Object.keys(params).filter(key => ![undefined, null].includes(params[key])).map(key => `${key}=${params[key]}`).join("&");
   }
   throw Error("Parameter error");
 }
@@ -38,16 +37,17 @@ export const pageData = (page: number = -2): Page.PageInstance => {
   return pages[pages.length + page];
 }
 
-export const sleep = (second: number): Promise<number> => (new Promise(resolve => setTimeout(resolve, second * 1000)));
+export const sleep = (delay: number): Promise<number> => (new Promise(resolve => setTimeout(resolve, delay * 1000)));
 
-export const formatDate = (format = "Y-M-D h:m:s", timestamp = Date.now()): string => {
-  /**
-   * @method prefixZero
-   * @param {timestamp} number
-   * @param {format} string
-   * @return {string}
-   */
-  const date = new Date(timestamp)
+
+/**
+ * @param {number} timestamp
+ * @param {string} format
+ * @return Format Date
+*/
+export const formatDate = ({ format = "Y-M-D h:m:s", timestamp = Date.now() }): string => {
+
+  const date = new Date(String(timestamp).length !== 13 ? timestamp * 1000 : timestamp)
 
   const time = {
     Y: date.getFullYear(),
@@ -76,11 +76,33 @@ export const formatDate = (format = "Y-M-D h:m:s", timestamp = Date.now()): stri
 export const formatEveryDay = (start: Date, end: Date, format: undefined | string = undefined): Array<string> => {
   let dateList = [];
   while ((end.getTime() - start.getTime()) >= 0) {
-    dateList.push(formatDate(format, start.getTime()));
+    dateList.push(formatDate({ format, timestamp: start.getTime() }));
     start.setDate(start.getDate() + 1);
   }
   return dateList;
 }
+
+export const formatDuration = (seconds: number) => {
+  const h = ~~(seconds / 3600)
+  const m = ~~(seconds / 60 % 60)
+  const s = Math.ceil(seconds % 60)
+
+  const hours = h < 10 ? '0' + h : h;
+  const formatSecond = s > 59 ? 59 : s;
+  return `${hours > 0 ? `${hours}:` : ''}${m < 10 ? '0' + m : m}:${formatSecond < 10 ? '0' + formatSecond : formatSecond}`;
+}
+
+export const parseJSON = (str: string) => {
+  try {
+    return JSON.parse(str);
+  } catch (error) {
+    return null;
+  }
+}
+
+export const sortLetter = (letters: string) => [...letters.replaceAll(",", "")]
+  .sort((a, b) => Number(a.charCodeAt(0).toString(16)) - Number(b.charCodeAt(0).toString(16)))
+  .join(",")
 
 /**
  * Determines whether the specified URL is absolute
@@ -108,12 +130,12 @@ export const debounce = (fn: Function, delay = 300, immediate = false) => {
     }
 
     if (immediate) {
-      !timer && fn.apply(this, args);
+      !timer && fn(args);
       timer = setTimeout(() => { timer = null }, delay);
       return;
     }
 
-    timer = setTimeout(() => { fn.apply(this, args) }, delay);
+    timer = setTimeout(() => { fn(args) }, delay);
   };
 
   task.cancel = () => {
@@ -138,8 +160,8 @@ export const throttle = (fn: Function, delay = 300, immediate = false) => {
   let timer: null | number | NodeJS.Timeout = null;
 
   const task = (...args: any[]) => immediate ?
-    fn.apply(this, args) : (!timer && (timer = setTimeout(() => {
-      fn.apply(this, args);
+    fn(args) : (!timer && (timer = setTimeout(() => {
+      fn(args);
       timer = null;
     }, delay)));
 
@@ -153,7 +175,7 @@ export const throttle = (fn: Function, delay = 300, immediate = false) => {
   return task;
 }
 
-export const curEnv = (): string => {
+export const curEnv = () => {
   let curEnv;
   // #ifdef H5
   curEnv =
