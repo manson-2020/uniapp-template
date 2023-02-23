@@ -175,6 +175,18 @@ export const throttle = (fn: Function, delay = 300, immediate = false) => {
   return task;
 }
 
+export const uniNavigator = ({ type = "navigateTo", url }: {
+  type?: "reLaunch" | "navigateTo" | "switchTab" | "redirectTo",
+  url: string
+}) => {
+  return {
+    reLaunch: () => uni.reLaunch({ url }),
+    navigateTo: () => uni.navigateTo({ url }),
+    switchTab: () => uni.switchTab({ url }),
+    redirectTo: () => uni.redirectTo({ url }),
+  }[type]();
+}
+
 export const curEnv = () => {
   let curEnv;
   // #ifdef H5

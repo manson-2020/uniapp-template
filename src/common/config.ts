@@ -1,12 +1,11 @@
-
 const SERVER_URL = {
   development: {
-    URL_ASSETS: "http://localhost:3000",
+    URL_ASSETS: "http://localhost:8080",
     URL_REMOTE: "",
     URL_WEBSOCKET: null,
   },
   production: {
-    URL_ASSETS: "",
+    URL_ASSETS: "http://192.168.1.139:3000",
     URL_REMOTE: "",
     URL_WEBSOCKET: null,
   }
@@ -23,6 +22,7 @@ const config = {
   API_CONFIG_GET: null,
 
   PAGE_CLIENT_HOME: "/pages/client/index",
+  PAGE_ADMIN_HOME: "/pages/admin/index",
   PAGE_LOGIN_ACCOUNT: "/pages/auth/login",
   PAGE_ERROR: "/pages/common/error",
   PAGE_UPGRADE: "/pages/common/upgrade",
@@ -38,4 +38,4 @@ let URL_STATIC = config.PATH_STATIC;
 URL_STATIC = config.URL_ASSETS + URL_STATIC;
 // #endif
 
-export default Object.assign(config, { URL_STATIC }, uni.getStorageSync("$config") || {});
+export default Object.assign(config, { URL_STATIC }, uni.getStorageSync("$config")?.value || {});

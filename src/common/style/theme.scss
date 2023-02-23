@@ -1,19 +1,32 @@
 $light: (
   color: (transparent: transparent,
     primary: $uni-color-primary,
+    success: $uni-color-success,
+    warning: $uni-color-warning,
+    error: $uni-color-error,
     normal: $uni-text-color,
     grey: $uni-text-color-grey,
     inverse: $uni-text-color-inverse,
+    disable: $uni-text-color-disable,
+    placeholder: $uni-text-color-placeholder,
+    border: $uni-border-color,
+    title: $uni-color-title,
+    subtitle: $uni-color-subtitle,
+    paragraph: $uni-color-paragraph,
   ),
   background-color: (transparent: transparent,
-    primary: $uni-bg-color,
-    normal: #fff,
+    btn: $uni-color-primary,
+    base: $uni-bg-color,
+    primary: $uni-bg-color-primary,
+    grey: $uni-bg-color-grey,
+    hover: $uni-bg-color-hover,
+    mask: $uni-bg-color-mask,
   )
 );
 
 $dark: (
-  color:(0: transparent),
-  background-color: (0: transparent)
+  color:(transparent: transparent),
+  background-color: (transparent: transparent)
 );
 
 $themes: (

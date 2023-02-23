@@ -1,5 +1,5 @@
 <template>
-	<text style="opacity: 0;"><slot/></text>
+	<text style="opacity: 0;height: 0;"><slot/></text>
 </template>
 
 <script>

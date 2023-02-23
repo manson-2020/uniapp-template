@@ -18,6 +18,9 @@
 					views:[]
 				},
 			}
+		},
+		mounted() {
+			
 		}
 	}
 </script>

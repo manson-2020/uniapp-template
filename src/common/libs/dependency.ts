@@ -231,7 +231,7 @@ export function checkVersion({ showToast } = { showToast: false }) {
   uni.request({
     url: $config.API_CHECK_VERSION,
     data: { osName, appVersionCode, deviceBrand },
-    success: <AnyFunction>(({ data, msg: title }: Response) => {
+    success: <any>(({ data, msg: title }: Response) => {
       if (!data?.upgradeURL) {
         showToast && uni.showToast({ title, icon: "none" });
         return;
@@ -251,12 +251,15 @@ export function checkVersion({ showToast } = { showToast: false }) {
   // #endif
 }
 
-export function setConfig() {
-  if (!$config.API_CONFIG_GET) return;
-  uni.request({
-    url: $config.API_CONFIG_GET,
-    success({ data }) {
-      uni.setStorage({ key: "$config", data });
-    }
-  })
+export async function setConfig() {
+  await uni.setStorage({
+    key: "$config",
+    data: await uni.request({ url: `${$config.URL_ASSETS}/static/config.json` })
+  });
+
+  if ($config.API_CONFIG_GET) {
+    const { data } = await <unknown>uni.request({ url: $config.API_CONFIG_GET }) as Response;
+    await uni.setStorage({ key: "$config", data: { $type: "update", value: data } });
+  };
+
 }

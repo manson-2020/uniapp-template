@@ -1,0 +1,193 @@
+/* #ifndef APP-PLUS-NVUE */
+
+@mixin initStyle {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+// restore
+// #ifdef H5
+
+uni-app {
+  // #endif
+
+  @each $tag in (page,
+    uni-left-window,
+    uni-top-window,
+    view,
+    picker,
+    button,
+    label,
+    swiper,
+    scroll-view,
+    cover-view,
+    navigator,
+    swiper,
+    swiper-item,
+    radio,
+    radio-group,
+    checkbox-group,
+    checkbox) {
+
+    #{$tag} {
+      @include initStyle;
+    }
+
+    #{$tag}.block {
+      display: block;
+    }
+
+    #{$tag}.content-box {
+      box-sizing: content-box;
+    }
+  }
+
+  page {
+    background-color: $uni-bg-color;
+    color: $uni-text-color-inverse;
+  }
+
+  scroll-view {
+    width: auto;
+  }
+
+  swiper {
+    touch-action: none;
+  }
+
+  image {
+    will-change: transform;
+  }
+
+  label,
+  [nvue] label {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  picker[disabled],
+  button[disabled] {
+    opacity: 0.5;
+  }
+
+  // #ifdef H5
+}
+
+// #endif
+
+.uni-app--showleftwindow {
+  uni-main {
+    position: relative;
+  }
+
+  uni-page-wrapper {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    bottom: 0;
+    padding: 15px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background-color: $uni-bg-color;
+  }
+
+  uni-page-body {
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: -1px -1px 5px 0 rgba(0, 0, 0, 0.1);
+    background-color: $uni-bg-color-primary;
+  }
+}
+
+
+::selection {
+  background: #409eff;
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 32px;
+}
+
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgb(204, 204, 204, 0.6);
+  background-color: rgba($uni-text-color-grey, 1);
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(204, 204, 204, 0.6);
+  border-radius: 10px;
+  background-color: rgba($uni-bg-color-primary, 1);
+}
+
+.word-break-all {
+  word-break: break-all;
+}
+
+.ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  min-width: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.multi-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  word-break: break-all;
+}
+
+.safe-area-inset-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.border-none {
+  border: none !important;
+}
+
+/* #endif */
+
+
+.tap-hover {
+  opacity: 0.6;
+}
+
+.input {
+  /* #ifndef APP-PLUS-NVUE */
+  border: none;
+  outline: none;
+  /* #endif */
+  background-color: transparent;
+}
+
+.shelter {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(51, 51, 51, 0.3);
+}
+
+.oh {
+  overflow: hidden;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}

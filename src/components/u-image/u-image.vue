@@ -1,20 +1,18 @@
 <template>
-	<uni-transition mode-class="fade" :show="show" :duration="fade ? 1000 : 0">
-		<view class="u-image" @tap="onClick" :style="wrapStyle">
-			<image v-if="!isError" :src="src" :mode="mode" @error="onErrorHandler" @load="onLoadHandler"
-				:show-menu-by-longpress="showMenuByLongpress" :lazy-load="lazyLoad" class="u-image__image" :style="showStyle" />
-			<view v-if="showLoading && loading" class="u-image__loading" :style="showStyle">
-				<slot name="loading">
-					<uni-icons :type="loadingIcon" :size="Math.min(width, height) / 4" />
-				</slot>
-			</view>
-			<view v-if="showError && isError && !loading" class="u-image__error" :style="showStyle">
-				<slot name="error">
-					<uni-icons :type="errorIcon" :size="width" />
-				</slot>
-			</view>
+	<view class="u-image" @tap="onClick" :style="wrapStyle">
+		<image v-if="!isError" :src="src" :mode="mode" @error="onErrorHandler" @load="onLoadHandler"
+			:show-menu-by-longpress="showMenuByLongpress" :lazy-load="lazyLoad" class="u-image__image" :style="showStyle" />
+		<view v-if="showLoading && loading" class="u-image__loading" :style="showStyle">
+			<slot name="loading">
+				<uni-icons :type="loadingIcon" :size="Math.min(width, height) / 4" />
+			</slot>
 		</view>
-	</uni-transition>
+		<view v-if="showError && isError && !loading" class="u-image__error" :style="showStyle">
+			<slot name="error">
+				<uni-icons :type="errorIcon" :size="width" />
+			</slot>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -180,7 +178,7 @@ const defaultProps = {
 	showError: true,
 	fade: true,
 	webp: false,
-	duration: 500,
+	duration: 600,
 	bgColor: '#f3f4f6'
 };
 
@@ -294,9 +292,7 @@ export default {
 			// 过渡时间，因为props的值无法修改，故需要一个中间值
 			durationTime: this.duration,
 			// 图片加载完成时，去掉背景颜色，因为如果是png图片，就会显示灰色的背景
-			backgroundStyle: {},
-			// 用于fade模式的控制组件显示与否
-			show: false
+			backgroundStyle: {}
 		};
 	},
 	watch: {
@@ -323,14 +319,18 @@ export default {
 			// 如果是显示圆形，设置一个很多的半径值即可
 			style.borderRadius = this.shape == 'circle' ? '10000px' : addUnit(this.radius)
 			// 如果设置圆角，必须要有hidden，否则可能圆角无效
-			style.overflow = this.radius > 0 ? 'hidden' : 'visible'
-			// if (this.fade) {
-			// 	style.opacity = this.opacity
-			// 	// nvue下，这几个属性必须要分开写
-			// 	style.transitionDuration = `${this.durationTime}ms`
-			// 	style.transitionTimingFunction = 'ease-in-out'
-			// 	style.transitionProperty = 'opacity'
-			// }
+			style.overflow = this.radius > 0 ? 'hidden' : 'visible';
+
+			if (this.fade) {
+				style.opacity = 0;
+				if (!this.loading) {
+					style.opacity = this.opacity
+					// nvue下，这几个属性必须要分开写
+					style.transitionDuration = `${this.durationTime}ms`
+					style.transitionTimingFunction = 'ease-in-out'
+					style.transitionProperty = 'opacity'
+				}
+			}
 			return deepMerge(style, addStyle(this.customStyle));
 		},
 		showStyle() {
@@ -339,9 +339,6 @@ export default {
 				this.width ? { width: addUnit(this.width) } : {}, this.height ? { height: addUnit(this.height) } : {}
 			]
 		}
-	},
-	mounted() {
-		this.show = true;
 	},
 	emits: ['click', 'error', 'load'],
 	methods: {

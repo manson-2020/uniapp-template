@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useMapState } from "@/static/libs/store";
+import { useMapState } from "@/common/libs/store";
 import { onLoad, onReachBottom } from "@dcloudio/uni-app";
 import { reactive } from "vue";
 const { theme } = useMapState(["theme"]);

@@ -6,11 +6,3 @@ declare module '*.vue' {
   const component: DefineComponent<{}, {}, any>
   export default component
 }
-
-declare namespace UniApp {
-  interface Uni {
-    showWaiting(args: ShowLoadingOptions): void;
-    hideWaiting(): void;
-    onUIStyleChange(args: (res: { theme: "dark" | "light" }) => void): void;
-  }
-}
